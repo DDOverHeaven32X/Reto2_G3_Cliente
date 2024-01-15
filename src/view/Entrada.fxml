@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="662.0" fitWidth="1000.0" layoutY="38.0">
+         <image>
+            <Image url="@../Imagenes%20Reto%202/rio.jpg" />
+         </image>
+      </ImageView>
+      <AnchorPane fx:id="anchorEntrada" layoutX="122.0" layoutY="89.0" prefHeight="168.0" prefWidth="527.0" style="-fx-border-color: #8D7656; -fx-border-radius: 20; -fx-border-width: 6; -fx-background-color: white; -fx-background-radius: 23;">
+         <children>
+            <Label fx:id="lbl_precio" layoutX="47.0" layoutY="25.0" prefHeight="18.0" prefWidth="115.0" text="Precio de la entrada" />
+            <Label fx:id="lbl_zona" layoutX="291.0" layoutY="25.0" prefHeight="18.0" prefWidth="100.0" text="Tipo de entrada" />
+            <TextField fx:id="txtPrecioEntrada" layoutX="47.0" layoutY="50.0" prefHeight="26.0" prefWidth="181.0" />
+            <Label fx:id="lbl_fecha" layoutX="47.0" layoutY="98.0" prefHeight="18.0" prefWidth="115.0" text="Fecha" />
+            <DatePicker fx:id="dtpFecha" layoutX="47.0" layoutY="116.0" prefHeight="25.0" prefWidth="181.0" promptText="DD/MM/YYYY" />
+            <Label fx:id="lbl_precio1" layoutX="230.0" layoutY="54.0" prefHeight="18.0" prefWidth="16.0" text="€" />
+            <ComboBox fx:id="comboEntrada" layoutX="291.0" layoutY="51.0" prefWidth="150.0" />
+         </children>
+      </AnchorPane>
+      <Button fx:id="btnCrear" layoutX="716.0" layoutY="89.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Crear" />
+      <Button fx:id="btnModificar" layoutX="716.0" layoutY="142.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Modificar" />
+      <Button fx:id="btnEliminar" layoutX="716.0" layoutY="199.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Eliminar" />
+      <TableView fx:id="tblEntrada" layoutX="46.0" layoutY="280.0" prefHeight="390.0" prefWidth="688.0">
+         <columns>
+            <TableColumn fx:id="tbcIdEntrada" prefWidth="181.0" text="Entrada" />
+            <TableColumn fx:id="tbcTipo" prefWidth="159.0" text="Tipo" />
+            <TableColumn fx:id="tbcPrecio" prefWidth="168.0" text="Precio" />
+            <TableColumn fx:id="tbcFecha" prefWidth="179.0" text="Fecha" />
+         </columns>
+         <contextMenu>
+            <ContextMenu>
+              <items>
+                  <MenuItem mnemonicParsing="false" text="Borrar" />
+                  <MenuItem mnemonicParsing="false" text="Ver tus Entradas" />
+              </items>
+            </ContextMenu>
+         </contextMenu>
+      </TableView>
+      <ComboBox fx:id="cbcFiltro" layoutX="776.0" layoutY="280.0" prefHeight="25.0" prefWidth="159.0" promptText="Filtrar" />
+      <Button fx:id="btnBuscar" layoutX="884.0" layoutY="369.0" mnemonicParsing="false" text="Buscar" />
+      <Button fx:id="btnInforme" layoutX="796.0" layoutY="639.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Informe" />
+      <Button fx:id="btnComprar" layoutX="796.0" layoutY="590.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Comprar" />
+      <DatePicker fx:id="dtpFiltradoFecha" layoutX="776.0" layoutY="325.0" prefHeight="25.0" prefWidth="159.0" promptText="DD/MM/YYYY" />
+      <TextField fx:id="txtFiltrar" layoutX="776.0" layoutY="325.0" prefHeight="25.0" prefWidth="159.0" />
+      <Button fx:id="btnTusEntradas" layoutX="796.0" layoutY="542.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Tus Entradas" />
+      <MenuBar fx:id="menuBar" prefHeight="44.0" prefWidth="1000.0" style="-fx-background-color: #4CAF50; -fx-padding: 0px 0px; -fx-color: brown;">
+         <menus>
+            <Menu fx:id="menuPrincipal" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 89px;" text="PRINCIPAL">
+               <items>
+                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 98px;" text="Inicio" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuNavegar" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="NAVEGAR">
+               <items>
+                  <MenuItem fx:id="mItemAnimales" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Animales" />
+                  <MenuItem fx:id="mItemZonas" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Zonas" />
+                  <MenuItem fx:id="mItemEntradas" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Entradas" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuAyuda" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="AYUDA">
+               <items>
+                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 59px;" text="Tuto. Animales" />
+                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 59px;" text="Tuto. Zonas" />
+                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 59px;" text="Tuto. Entradas" />
+               </items>
+            </Menu>
+            <Menu fx:id="menuCerrarSesion" mnemonicParsing="false" style="-fx-padding: 12px 90px; -fx-font-size: 14px;" text="CERRAR SESION">
+               <items>
+                  <MenuItem mnemonicParsing="false" style="-fx-padding: 0px 91px;" text="Cerrar Sesion" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+   </children>
+</Pane>

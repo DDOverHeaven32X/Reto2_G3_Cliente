@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #EBBE8C;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="130.0" layoutY="37.0" text="CAMBIAR CONTRASEÑA" textFill="#4caf50">
+         <font>
+            <Font name="Calibri Bold" size="44.0" />
+         </font>
+      </Label>
+      <Button fx:id="btn_cancelar" layoutX="185.0" layoutY="380.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="129.0" style="-fx-background-color: #059f1e; -fx-background-radius: 20;" text="Cancelar" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btn_cambiar" layoutX="387.0" layoutY="380.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="129.0" style="-fx-background-color: #059f1e; -fx-background-radius: 20;" text="Cambiar" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Label layoutX="72.0" layoutY="112.0" prefHeight="34.0" prefWidth="557.0" text="Introduzca su contraseña:" textAlignment="JUSTIFY" textFill="#00610f" wrapText="true">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txt_contraReve1" layoutX="117.0" layoutY="146.0" prefHeight="27.0" prefWidth="455.0" promptText="Contraseña antigua" style="-fx-border-color: #70FF84;" />
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="72.0" layoutY="147.0">
+         <image>
+            <Image url="@../Imagenes%20Reto%202/contra.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="72.0" layoutY="187.0" prefHeight="34.0" prefWidth="557.0" text="Introduzca la nueva contraseña:" textAlignment="JUSTIFY" textFill="#00610f" wrapText="true">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txt_contraReve2" layoutX="117.0" layoutY="221.0" prefHeight="27.0" prefWidth="455.0" promptText="Contraseña nueva" style="-fx-border-color: #70FF84;" />
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="72.0" layoutY="222.0">
+         <image>
+            <Image url="@../Imagenes%20Reto%202/contra.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="72.0" layoutY="261.0" prefHeight="34.0" prefWidth="557.0" text="Introduzca de nuevo la nueva contraseña:" textAlignment="JUSTIFY" textFill="#00610f" wrapText="true">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txt_contraReve3" layoutX="117.0" layoutY="295.0" prefHeight="27.0" prefWidth="455.0" promptText="Repetir contraseña nueva" style="-fx-border-color: #70FF84;" />
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="72.0" layoutY="296.0">
+         <image>
+            <Image url="@../Imagenes%20Reto%202/contra.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btn_verContraVieja" layoutX="584.0" layoutY="147.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="45.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
+         <graphic>
+            <ImageView fx:id="img_ojo21" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Imagenes%20Reto%202/ojo.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="btn_verContraNueva" layoutX="584.0" layoutY="222.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="45.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
+         <graphic>
+            <ImageView fx:id="img_ojo211" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Imagenes%20Reto%202/ojo.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="btn_verContraNueva2" layoutX="583.0" layoutY="295.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="45.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
+         <graphic>
+            <ImageView fx:id="img_ojo212" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Imagenes%20Reto%202/ojo.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <PasswordField fx:id="pswContraseña1" layoutX="117.0" layoutY="146.0" prefHeight="27.0" prefWidth="455.0" promptText="Contraseña antigua" style="-fx-border-color: #70FF84;" />
+      <PasswordField fx:id="pswContraseña2" layoutX="117.0" layoutY="221.0" prefHeight="27.0" prefWidth="455.0" promptText="Contraseña nueva" style="-fx-border-color: #70FF84;" />
+      <PasswordField fx:id="pswContraseña3" layoutX="117.0" layoutY="295.0" prefHeight="27.0" prefWidth="455.0" promptText="Repetir contraseña nueva" style="-fx-border-color: #70FF84;" />
+   </children>
+</Pane>
