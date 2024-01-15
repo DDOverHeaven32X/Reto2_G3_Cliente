@@ -34,7 +34,7 @@
       <TextField fx:id="txt_tele" layoutX="102.0" layoutY="347.0" promptText="Telefono" style="-fx-border-color: #70FF84;" />
       <Button fx:id="btn_verContra" layoutX="270.0" layoutY="178.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="45.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
          <graphic>
-            <ImageView fx:id="img_ojo21" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="img_ojo" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../imagenes/ojo.png" />
                </image>
@@ -113,7 +113,7 @@
       </ImageView>
       <Button fx:id="btn_verPin" layoutX="270.0" layoutY="427.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="29.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
          <graphic>
-            <ImageView fx:id="img_ojo22" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="img_ojo3" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../imagenes/ojo.png" />
                </image>

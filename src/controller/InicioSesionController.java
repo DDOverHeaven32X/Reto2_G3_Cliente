@@ -29,6 +29,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Usuario;
@@ -41,15 +42,12 @@ import model.Usuario;
 public class InicioSesionController {
 
     private Stage stage;
-
+    @FXML
+    private Pane pane;
     @FXML
     private Label lbl_Inicio;
     @FXML
     private Label error;
-    @FXML
-    private Label lblEmail;
-    @FXML
-    private Label lblPassword;
     @FXML
     private Button btn_verContra;
     @FXML
@@ -61,7 +59,9 @@ public class InicioSesionController {
     @FXML
     private Button btnInicioSesion;
     @FXML
-    private Hyperlink lblCuenta;
+    private Hyperlink hyperlinkCuentaIS;
+    @FXML
+    private Hyperlink idPasswdOlvidada;
     @FXML
     private PasswordField pswContraseña;
     //Aqui asignamos el patron del email
@@ -99,7 +99,7 @@ public class InicioSesionController {
         //El campo error esta habilitado.
         error.setDisable(false);
         //El texto cuenta esta habilitado.
-        lblCuenta.setDisable(false);
+        hyperlinkCuentaIS.setDisable(false);
         //Al inicio de la ventana el foco estará puesto en el campo email del usuario (textEmail).
         textEmail.requestFocus();
         //Hacemos que el lbl error no se vea
@@ -113,7 +113,7 @@ public class InicioSesionController {
         stage.setScene(scene);
 
         //Mediante este evento llamamos al metodo de cambiar a la ventana de registro.
-        lblCuenta.setOnMouseClicked(event -> {
+        hyperlinkCuentaIS.setOnMouseClicked(event -> {
             handleLblCuentaClick();
         });
         //Mediante esta propiedad llamamos al metodo camposInformados()
@@ -245,7 +245,7 @@ public class InicioSesionController {
      */
     private void handleLblCuentaClick() {
         try {
-            Stage ventanaActual = (Stage) lblCuenta.getScene().getWindow();
+            Stage ventanaActual = (Stage) hyperlinkCuentaIS.getScene().getWindow();
             ventanaActual.close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Registro.fxml"));
             Parent root = loader.load();

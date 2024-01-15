@@ -58,7 +58,7 @@ public class RegistroController {
     @FXML
     private TextField txt_email;
     @FXML
-    private Hyperlink lbl_hyperlinkCuenta;
+    private Hyperlink hyperlinkCuentaR;
     @FXML
     private Button btn_registro;
     @FXML
@@ -66,9 +66,13 @@ public class RegistroController {
     @FXML
     private Button btn_verContra2;
     @FXML
+    private Button btn_verPin;
+    @FXML
     private ImageView img_ojo;
     @FXML
     private ImageView img_ojo2;
+    @FXML
+    private ImageView img_ojo3;
     @FXML
     private Label lbl_direcion;
     @FXML
@@ -77,6 +81,8 @@ public class RegistroController {
     private Label lbl_zip;
     @FXML
     private Label lbl_tele;
+    @FXML
+    private TextField txt_tarjeta;
     @FXML
     private TextField txt_zip;
     @FXML
@@ -89,6 +95,11 @@ public class RegistroController {
     private PasswordField psw_contra;
     @FXML
     private PasswordField psw_contraRepe;
+    @FXML
+    private PasswordField psw_pin;
+    @FXML
+    private TextField txt_pinReve;
+    
     private Stage stage;
 
     private String email, contraseña, zip, telefono, nombre;
@@ -127,14 +138,14 @@ public class RegistroController {
         //El campo de mostrar errores es invisible
         lbl_error.setVisible(false);
         //El campo del hyper-link esthá habilitado
-        lbl_hyperlinkCuenta.setDisable(false);
+        hyperlinkCuentaR.setDisable(false);
         //Los campos de mostrar la contraseña estarán deshabilitados e invisibles
         txt_contraReve.setDisable(true);
         txt_contraReve.setVisible(false);
         txt_contraRepeReve.setDisable(true);
         txt_contraRepeReve.setVisible(false);
         //Evento hyper-enlace que te envia a la ventana de inicio de sesion
-        lbl_hyperlinkCuenta.setOnMouseClicked(this::tienesCuenta);
+        hyperlinkCuentaR.setOnMouseClicked(this::tienesCuenta);
         //Eventos que habilitan la validacion de los textareas
         txt_nombre.textProperty().addListener(this::estanVacios);
         txt_email.textProperty().addListener(this::estanVacios);
