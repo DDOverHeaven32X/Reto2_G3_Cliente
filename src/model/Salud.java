@@ -7,7 +7,7 @@ package model;
 
 /**
  *
- * @author 2dam
+ * @author Adrian
  */
 public enum Salud {
     SANO, ENFERMO

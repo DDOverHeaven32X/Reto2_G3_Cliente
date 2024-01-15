@@ -7,7 +7,7 @@ package model;
 
 /**
  *
- * @author 2dam
+ * @author Ander
  */
 public enum Alimentacion {
     HERBIVORO, CARNIVORO, OMNIVORO
