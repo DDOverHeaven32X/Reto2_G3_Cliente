@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegistroController">
+   <children>
+      <Label fx:id="lbl_registro" alignment="CENTER" layoutX="90.0" layoutY="3.0" text="REGISTRO" textAlignment="JUSTIFY" textFill="#97815f">
+         <font>
+            <Font name="Lucida Sans Demibold" size="36.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbl_error" alignment="CENTER" layoutX="31.0" layoutY="54.0" prefHeight="34.0" prefWidth="304.0" text="Aqui mostramos los errores de esta ventana" textAlignment="JUSTIFY" textFill="RED">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <TextField fx:id="txt_nombre" layoutX="102.0" layoutY="94.0" promptText="Nombre" style="-fx-border-color: #70FF84;" />
+      <TextField fx:id="txt_email" layoutX="102.0" layoutY="135.0" promptText="Email" style="-fx-border-color: #70FF84;" />
+      <Button fx:id="btn_registro" layoutX="113.0" layoutY="462.0" mnemonicParsing="false" prefHeight="3.0" prefWidth="129.0" style="-fx-background-color: #059f1e; -fx-background-radius: 20;" text="Registrarse" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font></Button>
+      <TextField fx:id="txt_direccion" layoutX="102.0" layoutY="269.0" promptText="Direccion" style="-fx-border-color: #70FF84;" />
+      <TextField fx:id="txt_zip" layoutX="102.0" layoutY="309.0" promptText="Codigo Postal" style="-fx-border-color: #70FF84;" />
+      <TextField fx:id="txt_tele" layoutX="102.0" layoutY="347.0" promptText="Telefono" style="-fx-border-color: #70FF84;" />
+      <Button fx:id="btn_verContra" layoutX="270.0" layoutY="178.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="45.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
+         <graphic>
+            <ImageView fx:id="img_ojo" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagenes/ojo.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="btn_verContra2" layoutX="270.0" layoutY="222.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="29.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
+         <graphic>
+            <ImageView fx:id="img_ojo2" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagenes/ojo.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <TextField fx:id="txt_contraReve" layoutX="102.0" layoutY="178.0" promptText="Contraseña" style="-fx-border-color: #70FF84;" />
+      <TextField fx:id="txt_contraRepeReve" layoutX="102.0" layoutY="222.0" promptText="Repetir Contraseña" style="-fx-border-color: #70FF84;" />
+      <Hyperlink fx:id="hyperlinkCuentaR" layoutX="112.0" layoutY="516.0" text="¿Tienes ya una cuenta?" />
+      <VBox layoutX="367.0" prefHeight="550.0" prefWidth="490.0">
+         <children>
+            <ImageView fitHeight="550.0" fitWidth="490.0">
+               <image>
+                  <Image url="@../imagenes/paisaje%203.jpg" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+      <Separator layoutY="505.0" prefHeight="3.0" prefWidth="366.0" />
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="347.0">
+         <image>
+            <Image url="@../imagenes/tlf.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="309.0">
+         <image>
+            <Image url="@../imagenes/zip.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="95.0">
+         <image>
+            <Image url="@../imagenes/user-green.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="179.0">
+         <image>
+            <Image url="@../imagenes/contra.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="223.0">
+         <image>
+            <Image url="@../imagenes/contra.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="55.0" layoutY="267.0">
+         <image>
+            <Image url="@../imagenes/direccion.png" />
+         </image>
+      </ImageView>
+      <Separator layoutY="50.0" prefHeight="3.0" prefWidth="366.0" />
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="58.0" layoutY="137.0">
+         <image>
+            <Image url="@../imagenes/email.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="txt_tarjeta" layoutX="102.0" layoutY="387.0" promptText="Nº Tarjeta" style="-fx-border-color: #70FF84;" />
+      <TextField fx:id="txt_pinReve" layoutX="102.0" layoutY="426.0" promptText="PIN" style="-fx-border-color: #70FF84;" />
+      <ImageView fitHeight="25.0" fitWidth="37.0" layoutX="52.0" layoutY="388.0">
+         <image>
+            <Image url="@../imagenes/Tarjeta.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="427.0">
+         <image>
+            <Image url="@../imagenes/contra.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btn_verPin" layoutX="270.0" layoutY="427.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="29.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
+         <graphic>
+            <ImageView fx:id="img_ojo3" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagenes/ojo.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <PasswordField fx:id="psw_pin" layoutX="103.0" layoutY="426.0" promptText="PIN" style="-fx-border-color: #70FF84;" />
+      <PasswordField fx:id="psw_contra" layoutX="102.0" layoutY="178.0" promptText="Contraseña" style="-fx-border-color: #70FF84;" />
+      <PasswordField fx:id="psw_contraRepe" layoutX="102.0" layoutY="222.0" promptText="Repetir Contraseña" style="-fx-border-color: #70FF84;" />
+   </children>
+</Pane>
