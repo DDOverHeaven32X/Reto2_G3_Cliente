@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.RegistroController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegistroController">
    <children>
       <Label fx:id="lbl_registro" alignment="CENTER" layoutX="90.0" layoutY="3.0" text="REGISTRO" textAlignment="JUSTIFY" textFill="#97815f">
          <font>
@@ -36,7 +36,7 @@
          <graphic>
             <ImageView fx:id="img_ojo21" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Imagenes%20Reto%202/ojo.png" />
+                  <Image url="@../imagenes/ojo.png" />
                </image>
             </ImageView>
          </graphic>
@@ -45,7 +45,7 @@
          <graphic>
             <ImageView fx:id="img_ojo2" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Imagenes%20Reto%202/ojo.png" />
+                  <Image url="@../imagenes/ojo.png" />
                </image>
             </ImageView>
          </graphic>
@@ -57,7 +57,7 @@
          <children>
             <ImageView fitHeight="550.0" fitWidth="490.0">
                <image>
-                  <Image url="@../Imagenes%20Reto%202/paisaje%203.jpg" />
+                  <Image url="@../imagenes/paisaje%203.jpg" />
                </image>
             </ImageView>
          </children>
@@ -65,57 +65,57 @@
       <Separator layoutY="505.0" prefHeight="3.0" prefWidth="366.0" />
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="347.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/tlf.png" />
+            <Image url="@../imagenes/tlf.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="309.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/zip.png" />
+            <Image url="@../imagenes/zip.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="95.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/user-green.png" />
+            <Image url="@../imagenes/user-green.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="179.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/contra.png" />
+            <Image url="@../imagenes/contra.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="223.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/contra.png" />
+            <Image url="@../imagenes/contra.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="55.0" layoutY="267.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/direccion.png" />
+            <Image url="@../imagenes/direccion.png" />
          </image>
       </ImageView>
       <Separator layoutY="50.0" prefHeight="3.0" prefWidth="366.0" />
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="58.0" layoutY="137.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/email.png" />
+            <Image url="@../imagenes/email.png" />
          </image>
       </ImageView>
       <TextField fx:id="txt_tarjeta" layoutX="102.0" layoutY="387.0" promptText="Nº Tarjeta" style="-fx-border-color: #70FF84;" />
       <TextField fx:id="txt_pinReve" layoutX="102.0" layoutY="426.0" promptText="PIN" style="-fx-border-color: #70FF84;" />
       <ImageView fitHeight="25.0" fitWidth="37.0" layoutX="52.0" layoutY="388.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/Tarjeta.jpg" />
+            <Image url="@../imagenes/Tarjeta.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="57.0" layoutY="427.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/contra.png" />
+            <Image url="@../imagenes/contra.png" />
          </image>
       </ImageView>
       <Button fx:id="btn_verPin" layoutX="270.0" layoutY="427.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="29.0" style="-fx-background-radius: 30px; -fx-background-color: #059f1e;" textFill="#059f1e">
          <graphic>
             <ImageView fx:id="img_ojo22" fitHeight="20.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Imagenes%20Reto%202/ojo.png" />
+                  <Image url="@../imagenes/ojo.png" />
                </image>
             </ImageView>
          </graphic>

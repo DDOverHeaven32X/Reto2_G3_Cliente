@@ -4,7 +4,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar fx:id="menuBar" prefHeight="44.0" prefWidth="1000.0" style="-fx-background-color: #4CAF50; -fx-padding: 0px 0px; -fx-color: brown;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<MenuBar fx:id="menuBar" prefHeight="44.0" prefWidth="1000.0" style="-fx-background-color: #4CAF50; -fx-padding: 0px 0px; -fx-color: brown;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuBarController">
    <menus>
       <Menu fx:id="menuPrincipal" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 89px;" text="PRINCIPAL">
          <items>

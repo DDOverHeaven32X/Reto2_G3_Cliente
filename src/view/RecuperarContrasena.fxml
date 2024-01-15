@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #EBBE8C;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="700.0" style="-fx-background-color: #EBBE8C;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RecuperarContrasenaController">
    <children>
       <Label layoutX="109.0" layoutY="37.0" text="RECUPERAR CONTRASEÑA" textFill="#4caf50">
          <font>
@@ -19,7 +18,7 @@
       <TextField fx:id="txt_email" layoutX="113.0" layoutY="257.0" prefHeight="27.0" prefWidth="515.0" promptText="Email" style="-fx-border-color: #70FF84;" />
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="76.0" layoutY="258.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/email.png" />
+            <Image url="@../imagenes/email.png" />
          </image>
       </ImageView>
       <Button fx:id="btn_cancelar" layoutX="185.0" layoutY="380.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="129.0" style="-fx-background-color: #059f1e; -fx-background-radius: 20;" text="Cancelar" textFill="WHITE">

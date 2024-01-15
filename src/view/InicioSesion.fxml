@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.InicioSesionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InicioSesionController">
    <children>
       <Label fx:id="error" alignment="CENTER" layoutX="470.0" layoutY="93.0" prefHeight="50.0" prefWidth="358.0" style="-fx-font-size: 15;" text="Aqui mostramos los errores de esta ventana" textFill="RED" />
       <Button fx:id="btnInicioSesion" alignment="CENTER" layoutX="570.0" layoutY="391.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="158.0" style="-fx-background-radius: 30; -fx-background-color: #059f1e; -fx-font-style: white; -fx-font-size: 15;" text="Iniciar Sesion" textFill="#fcfcfc" />
@@ -22,7 +22,7 @@
          <children>
             <ImageView fitHeight="552.0" fitWidth="447.0">
                <image>
-                  <Image url="@../Imagenes%20Reto%202/monte%202%20(1).jpg" />
+                  <Image url="@../imagenes/monte%202%20(1).jpg" />
                </image>
             </ImageView>
          </children>
@@ -31,7 +31,7 @@
       <Pane layoutX="507.0" layoutY="251.0" prefHeight="46.0" prefWidth="53.0" />
       <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="461.0" layoutY="254.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/symbole-de-cle-verte.png" />
+            <Image url="@../imagenes/symbole-de-cle-verte.png" />
          </image>
       </ImageView>
       <TextField fx:id="txt_contraReve" layoutX="506.0" layoutY="249.0" prefHeight="50.0" prefWidth="269.0" promptText="Contraseña" style="-fx-border-color: #70FF84;" />
@@ -39,19 +39,15 @@
          <graphic>
             <ImageView fx:id="img_ojo" fitHeight="30.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Imagenes%20Reto%202/ojo.png" />
+                  <Image url="@../imagenes/ojo.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <ImageView fx:id="img_ojo" fitHeight="30.0" fitWidth="26.0" layoutX="507.0" layoutY="251.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@/utilidades/abierto.png" />
-         </image>
-      </ImageView>
+      
       <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="464.0" layoutY="171.0">
          <image>
-            <Image url="@../Imagenes%20Reto%202/user-green.png" />
+            <Image url="@../imagenes/user-green.png" />
          </image>
       </ImageView>
       <TextField fx:id="textEmail" layoutX="506.0" layoutY="164.0" prefHeight="49.0" prefWidth="269.0" promptText="Correo Electronico" style="-fx-border-color: #70FF84;" />
