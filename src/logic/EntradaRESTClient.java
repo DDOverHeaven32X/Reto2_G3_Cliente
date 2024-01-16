@@ -24,7 +24,7 @@ import model.Entrada;
  *        client.close();
  * </pre>
  *
- * @author conke
+ * @author Diego
  */
 public class EntradaRESTClient implements EntradaInterfaz {
 
@@ -37,6 +37,7 @@ public class EntradaRESTClient implements EntradaInterfaz {
         webTarget = client.target(BASE_URI).path("entidades.entrada");
     }
 
+    @Override
     public List<Entrada>  filtrarEntradaPorFecha_XML(Class<Entrada> responseType, String fechaCon) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("verEntradasporFecha/{0}", new Object[]{fechaCon}));
@@ -44,6 +45,7 @@ public class EntradaRESTClient implements EntradaInterfaz {
         });
     }
 
+    @Override
     public List<Entrada> filtrarEntradaPorFecha_JSON(Class<Entrada> responseType, String fechaCon) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("verEntradasporFecha/{0}", new Object[]{fechaCon}));
@@ -51,14 +53,17 @@ public class EntradaRESTClient implements EntradaInterfaz {
         });
     }
 
+    @Override
     public void edit_XML(Object requestEntity) throws WebApplicationException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
+    @Override
     public void edit_JSON(Object requestEntity) throws WebApplicationException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
+    @Override
     public List<Entrada> find_XML(Class<Entrada> responseType, String id) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("buscarEntradaPorId/{0}", new Object[]{id}));
@@ -66,6 +71,7 @@ public class EntradaRESTClient implements EntradaInterfaz {
         });
     }
 
+    @Override
     public List<Entrada> find_JSON(Class<Entrada> responseType, String id) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("buscarEntradaPorId/{0}", new Object[]{id}));
@@ -73,14 +79,17 @@ public class EntradaRESTClient implements EntradaInterfaz {
         });
     }
 
+    @Override
     public void create_XML(Object requestEntity) throws WebApplicationException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
+    @Override
     public void create_JSON(Object requestEntity) throws WebApplicationException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
+    @Override
     public List<Entrada> filtrarEntradaPorPrecio_XML(Class<Entrada> responseType, String precio) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("verEntradasporPrecio/{0}", new Object[]{precio}));
@@ -88,6 +97,7 @@ public class EntradaRESTClient implements EntradaInterfaz {
         });
     }
 
+    @Override
     public List<Entrada> filtrarEntradaPorPrecio_JSON(Class<Entrada> responseType, String precio) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("verEntradasporPrecio/{0}", new Object[]{precio}));
@@ -95,29 +105,33 @@ public class EntradaRESTClient implements EntradaInterfaz {
         });
     }
 
+    @Override
     public List<Entrada> findAll_XML(Class<Entrada> responseType) throws WebApplicationException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(new GenericType<List<Entrada>>() {
         });
     }
 
+    @Override
     public List<Entrada> findAll_JSON(Class<Entrada> responseType) throws WebApplicationException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Entrada>>() {
         });
     }
 
+    @Override
     public void remove(String id) throws WebApplicationException {
         webTarget.path(java.text.MessageFormat.format("borrarEntrada/{0}", new Object[]{id})).request().delete();
     }
 
+    @Override
     public List<Entrada>  filtrarEntradaDeUsuario_XML(Class<Entrada> responseType, String login) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("verEntradaCliente/{0}", new Object[]{login}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(new GenericType<List<Entrada>>() {
         });
     }
-
+    @Override
     public List<Entrada>  filtrarEntradaDeUsuario_JSON(Class<Entrada> responseType, String login) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("verEntradaCliente/{0}", new Object[]{login}));

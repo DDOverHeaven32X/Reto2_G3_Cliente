@@ -6,9 +6,14 @@
 package logic;
 
 /**
- *
- * @author conke
+ * Factoria de Entrada, permite usar las instancias de el manager de entrada (EntradaInterfaz)
+ * en otras clases que la soliciten
+ * @author Diego
  */
 public class EntradaFactoria {
+    public EntradaInterfaz getFactory(){
+        EntradaInterfaz entInf = new EntradaRESTClient();
+        return entInf;
+    }
     
 }
