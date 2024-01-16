@@ -25,7 +25,7 @@
       <AnchorPane fx:id="anchorEntrada" layoutX="122.0" layoutY="89.0" prefHeight="168.0" prefWidth="527.0" style="-fx-border-color: #8D7656; -fx-border-radius: 20; -fx-border-width: 6; -fx-background-color: white; -fx-background-radius: 23;">
          <children>
             <Label fx:id="lbl_precio" layoutX="47.0" layoutY="25.0" prefHeight="18.0" prefWidth="115.0" text="Precio de la entrada" />
-            <Label fx:id="lbl_zona" layoutX="291.0" layoutY="25.0" prefHeight="18.0" prefWidth="100.0" text="Tipo de entrada" />
+            <Label fx:id="lbl_tipo" layoutX="291.0" layoutY="25.0" prefHeight="18.0" prefWidth="100.0" text="Tipo de entrada" />
             <TextField fx:id="txtPrecioEntrada" layoutX="47.0" layoutY="50.0" prefHeight="26.0" prefWidth="181.0" />
             <Label fx:id="lbl_fecha" layoutX="47.0" layoutY="98.0" prefHeight="18.0" prefWidth="115.0" text="Fecha" />
             <DatePicker fx:id="dtpFecha" layoutX="47.0" layoutY="116.0" prefHeight="25.0" prefWidth="181.0" promptText="DD/MM/YYYY" />
