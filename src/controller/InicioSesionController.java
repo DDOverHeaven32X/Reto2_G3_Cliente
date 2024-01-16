@@ -83,9 +83,10 @@ public class InicioSesionController {
         LOGGER.info("Iniciando la ventana de Inicio de Sesion");
 
         Scene scene = new Scene(root);
+        Stage stage = new Stage();
 
         //El boton inicio de sesion esta deshabilitado.
-        btnInicioSesion.setDisable(true);
+        btnInicioSesion.setDisable(false);
         //El campo email estará habilitado.
         textEmail.setDisable(false);
         //El campo contraseña estará habilitado.
@@ -150,7 +151,7 @@ public class InicioSesionController {
     private void handleSignInAction(ActionEvent event) {
 
         try {
-            error.setText("");
+            /*error.setText("");
             if (camposInformados() && maxCarecteres()) {
                 Usuario user = new Usuario();
                 user.setLogin(textEmail.getText());
@@ -158,18 +159,18 @@ public class InicioSesionController {
                     user.setContraseña(pswContraseña.getText());
                 } else {
                     user.setContraseña(txt_contraReve.getText());
-                }
-
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/vista/Usuario.fxml"));
-
+                }*/
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                 Parent root = loader.load();
-
-            }
-
-        } catch (Exception ex) {
+                PrincipalController princiController = ((PrincipalController) loader.getController());
+                princiController.setStage(stage);
+                princiController.initiStage(root);
+                
+        } catch (IOException ex) {
             error.setVisible(true);
             error.setText("Ha habido algun error durante el inicio de sesion.");
         }
+        
 
     }
 

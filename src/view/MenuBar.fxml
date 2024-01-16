@@ -6,15 +6,15 @@
 
 <MenuBar fx:id="menuBar" prefHeight="44.0" prefWidth="1000.0" style="-fx-background-color: #4CAF50; -fx-padding: 0px 0px; -fx-color: brown;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuBarController">
    <menus>
-      <Menu fx:id="menuPrincipal" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 89px;" text="PRINCIPAL">
+      <Menu fx:id="menuPrincipal" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 89px;"  text="PRINCIPAL">
          <items>
-            <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 98px;" text="Inicio" />
+            <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 98px;" onAction="#miPrincipal" text="Inicio" />
          </items></Menu>
       <Menu fx:id="menuNavegar" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="NAVEGAR">
          <items>
-            <MenuItem fx:id="mItemAnimales" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Animales" />
-            <MenuItem fx:id="mItemZonas" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Zonas" />
-            <MenuItem fx:id="mItemEntradas" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Entradas" />
+            <MenuItem fx:id="mItemAnimales" mnemonicParsing="false" style="-fx-padding: 2px 85px;" onAction="#miAnimales" text="Animales" />
+            <MenuItem fx:id="mItemZonas" mnemonicParsing="false" style="-fx-padding: 2px 85px;" onAction="#miZonas" text="Zonas" />
+            <MenuItem fx:id="mItemEntradas" mnemonicParsing="false" style="-fx-padding: 2px 85px;" onAction="#miEntradas" text="Entradas" />
          </items>
       </Menu>
       <Menu fx:id="menuAyuda" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="AYUDA">
@@ -23,7 +23,7 @@
             <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 59px;" text="Tuto. Zonas" />
             <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 59px;" text="Tuto. Entradas" />
          </items></Menu>
-      <Menu fx:id="menuCerrarSesion" mnemonicParsing="false" style="-fx-padding: 12px 90px; -fx-font-size: 14px;" text="CERRAR SESION">
+      <Menu fx:id="menuCerrarSesion" mnemonicParsing="false" style="-fx-padding: 12px 90px; -fx-font-size: 14px;" onAction="#miSesión" text="CERRAR SESION">
          <items>
             <MenuItem mnemonicParsing="false" style="-fx-padding: 0px 91px;" text="Cerrar Sesion" />
          </items></Menu>

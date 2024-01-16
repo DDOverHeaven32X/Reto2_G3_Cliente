@@ -2,19 +2,17 @@
 
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #EBBE8C;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #EBBE8C;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
    <children>
+      <fx:include fx:id="menuBar" source="MenuBar.fxml" />
       <Pane layoutY="614.0" prefHeight="86.0" prefWidth="1000.0" style="-fx-background-color: #8D7656;">
          <children>
-            <Label layoutX="28.0" layoutY="17.0" prefHeight="17.0" prefWidth="160.0" text="Nombre de Usuario " textFill="WHITE">
+            <Label fx:id="lblUsuario" layoutX="28.0" layoutY="17.0" prefHeight="17.0" prefWidth="160.0" text="Nombre de Usuario " textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -23,32 +21,18 @@
                <font>
                   <Font size="16.0" />
                </font></Hyperlink>
-            <Label layoutX="28.0" layoutY="50.0" prefHeight="17.0" prefWidth="160.0" text="Email" textFill="WHITE">
+            <Label fx:id="lblEmail" layoutX="28.0" layoutY="50.0" prefHeight="17.0" prefWidth="160.0" text="Email" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
          </children></Pane>
-      <MenuBar prefHeight="44.0" prefWidth="1000.0" style="-fx-background-color: #4CAF50; -fx-padding: 0px 0px; -fx-color: brown;">
-         <menus>
-            <Menu mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 89px;" text="PRINCIPAL" />
-            <Menu mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="NAVEGAR">
-               <items>
-                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Animales" />
-                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Zonas" />
-                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Entradas" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="AYUDA" />
-            <Menu mnemonicParsing="false" style="-fx-padding: 12px 90px; -fx-font-size: 14px;" text="CERRAR SESION" />
-         </menus>
-      </MenuBar>
       <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="512.0" layoutY="6.0">
          <image>
             <Image url="@../imagenes/logo.png" />
          </image>
       </ImageView>
-      <Label layoutX="289.0" layoutY="67.0" prefHeight="77.0" prefWidth="303.0" text="PARQUE NATURAL DE" textFill="#0596c3">
+      <Label fx:id="lblTexto" layoutX="289.0" layoutY="67.0" prefHeight="77.0" prefWidth="303.0" text="PARQUE NATURAL DE" textFill="#0596c3">
          <font>
             <Font name="Calibri Bold" size="28.0" />
          </font>

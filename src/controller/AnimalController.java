@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Menu;
@@ -19,13 +21,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author 2dam
  */
-public class AnimalController implements Initializable {
+public class AnimalController{
+    
+    
 
     @FXML
     private Pane paneAnimal;
@@ -85,29 +90,23 @@ public class AnimalController implements Initializable {
     private ComboBox<?> comboFiltrarAlimentacion;
     @FXML
     private ComboBox<?> comboFiltrarEspecie;
-    @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Menu menuPrincipal;
-    @FXML
-    private Menu menuNavegar;
-    @FXML
-    private MenuItem mItemAnimales;
-    @FXML
-    private MenuItem mItemZonas;
-    @FXML
-    private MenuItem mItemEntradas;
-    @FXML
-    private Menu menuAyuda;
-    @FXML
-    private Menu menuCerrarSesion;
+    
+    
+    private Stage stage;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    
+    public void initiStage(Parent root) {
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Animal");
+        stage.show();
     }    
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+    
+    
     
 }

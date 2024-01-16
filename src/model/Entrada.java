@@ -23,7 +23,7 @@ public class Entrada implements Serializable {
     private String tipo_entrada;
     private Float precio;
     private Set<Compra> listaCompras;
-
+    private Set<Zona> listaZonas;
     private Admin admin;
 
     /**
@@ -96,6 +96,23 @@ public class Entrada implements Serializable {
      */
     public void setListaCompras(Set<Compra> listaCompras) {
         this.listaCompras = listaCompras;
+    }
+    /**
+     * Getter de la lista de zonas
+     *
+     * @return listaZonas
+     */
+    public Set<Zona> getListaZonas() {
+        return listaZonas;
+    }
+
+    /**
+     * Setter de la lista de Zonas
+     *
+     * @param listaZonas
+     */
+    public void setListaZonas(Set<Zona> listaZonas) {
+        this.listaZonas = listaZonas;
     }
 
     /**

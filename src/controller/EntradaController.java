@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -20,13 +22,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author 2dam
  */
-public class EntradaController implements Initializable {
+public class EntradaController {
 
     @FXML
     private AnchorPane anchorEntrada;
@@ -74,29 +77,21 @@ public class EntradaController implements Initializable {
     private TextField txtFiltrar;
     @FXML
     private Button btnTusEntradas;
-    @FXML
-    private MenuBar menuBar;
-    @FXML
-    private Menu menuPrincipal;
-    @FXML
-    private Menu menuNavegar;
-    @FXML
-    private MenuItem mItemAnimales;
-    @FXML
-    private MenuItem mItemZonas;
-    @FXML
-    private MenuItem mItemEntradas;
-    @FXML
-    private Menu menuAyuda;
-    @FXML
-    private Menu menuCerrarSesion;
+    
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    private Stage stage;
+
+    
+    public void initiStage(Parent root) {
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Entrada");
+        stage.show();
     }    
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
     
 }

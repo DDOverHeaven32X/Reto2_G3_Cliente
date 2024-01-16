@@ -5,8 +5,6 @@
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,8 +14,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EntradaController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EntradaController">
    <children>
+      <fx:include fx:id="menuBar" source="MenuBar.fxml" />
       <ImageView fitHeight="662.0" fitWidth="1000.0" layoutY="38.0">
          <image>
             <Image url="@../imagenes/rio.jpg" />
@@ -60,33 +59,5 @@
       <DatePicker fx:id="dtpFiltradoFecha" layoutX="776.0" layoutY="325.0" prefHeight="25.0" prefWidth="159.0" promptText="DD/MM/YYYY" />
       <TextField fx:id="txtFiltrar" layoutX="776.0" layoutY="325.0" prefHeight="25.0" prefWidth="159.0" />
       <Button fx:id="btnTusEntradas" layoutX="796.0" layoutY="542.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="139.0" text="Tus Entradas" />
-      <MenuBar fx:id="menuBar" prefHeight="44.0" prefWidth="1000.0" style="-fx-background-color: #4CAF50; -fx-padding: 0px 0px; -fx-color: brown;">
-         <menus>
-            <Menu fx:id="menuPrincipal" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 89px;" text="PRINCIPAL">
-               <items>
-                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 98px;" text="Inicio" />
-               </items>
-            </Menu>
-            <Menu fx:id="menuNavegar" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="NAVEGAR">
-               <items>
-                  <MenuItem fx:id="mItemAnimales" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Animales" />
-                  <MenuItem fx:id="mItemZonas" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Zonas" />
-                  <MenuItem fx:id="mItemEntradas" mnemonicParsing="false" style="-fx-padding: 2px 85px;" text="Entradas" />
-               </items>
-            </Menu>
-            <Menu fx:id="menuAyuda" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="AYUDA">
-               <items>
-                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 59px;" text="Tuto. Animales" />
-                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 59px;" text="Tuto. Zonas" />
-                  <MenuItem mnemonicParsing="false" style="-fx-padding: 2px 59px;" text="Tuto. Entradas" />
-               </items>
-            </Menu>
-            <Menu fx:id="menuCerrarSesion" mnemonicParsing="false" style="-fx-padding: 12px 90px; -fx-font-size: 14px;" text="CERRAR SESION">
-               <items>
-                  <MenuItem mnemonicParsing="false" style="-fx-padding: 0px 91px;" text="Cerrar Sesion" />
-               </items>
-            </Menu>
-         </menus>
-      </MenuBar>
    </children>
 </Pane>

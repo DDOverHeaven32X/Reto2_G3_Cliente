@@ -20,6 +20,7 @@ public class Zona implements Serializable {
     private String tipo_animal;
     private String descripcion;
     private Set<Animal> listaAnimales;
+    private Set<Entrada> listaEntradas;
     private Admin admin;
 
     //Getters y Setters
@@ -129,6 +130,23 @@ public class Zona implements Serializable {
      */
     public void setAdmin(Admin admin) {
         this.admin = admin;
+    }
+    /**
+     * Obtiene la lista de entradas asociadas a la zona.
+     *
+     * @return Conjunto de entradas de la zona.
+     */
+    public Set<Entrada> getListaEntradas() {
+        return listaEntradas;
+    }
+
+    /**
+     * Establece la lista de entradas asociadas a la zona.
+     *
+     * @param listaEntradas Nuevo conjunto de entradas de la zona a establecer.
+     */
+    public void setListaEntradas(Set<Entrada> listaEntradas) {
+        this.listaEntradas = listaEntradas;
     }
 
     /**

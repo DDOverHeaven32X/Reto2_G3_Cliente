@@ -9,15 +9,18 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author 2dam
  */
-public class PrincipalController implements Initializable {
+public class PrincipalController {
 
     @FXML
     private Pane pane;
@@ -25,13 +28,19 @@ public class PrincipalController implements Initializable {
     private Hyperlink hyp_cambiarContrasena;
     @FXML
     private Pane panelInicio;
+    
+    private Stage stage;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+   
+    public void initiStage(Parent root) {
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Principal");
+        stage.show();
     }    
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
     
 }
