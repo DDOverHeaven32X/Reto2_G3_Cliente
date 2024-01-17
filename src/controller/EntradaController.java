@@ -251,7 +251,7 @@ public class EntradaController {
     //Método que vacia los campos si hay algúna alteracion en la ventana
     @FXML
     private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
-        if (txtPrecioEntrada.getText().trim().isEmpty() || comboEntrada.getValue().toString().trim().isEmpty() || tbcFecha.getText().trim().isEmpty()) {
+        if (txtPrecioEntrada.getText().trim().isEmpty() || comboEntrada == null || tbcFecha.getText().trim().isEmpty()) {
             btnCrear.setDisable(true);
             btnEliminar.setDisable(true);
             btnModificar.setDisable(true);
