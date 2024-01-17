@@ -37,7 +37,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.ws.rs.core.GenericType;
 import logic.EntradaFactoria;
 import model.Admin;
 import model.Entrada;
@@ -51,18 +50,17 @@ import model.Usuario;
 public class EntradaController {
 
     private static final Logger LOGGER = Logger.getLogger("/controller/EntradaController");
-     
+
     private final EntradaFactoria factoryEnt = new EntradaFactoria();
-    
+
     private Entrada entrada = new Entrada();
-    
+
     private Usuario user = new Usuario();
-    
+
     private Admin admin = new Admin();
-    
+
     private ObservableList<Entrada> entradaData;
-    
-     
+
     @FXML
     private AnchorPane anchorEntrada;
     @FXML
@@ -109,11 +107,9 @@ public class EntradaController {
     private TextField txtFiltrar;
     @FXML
     private Button btnTusEntradas;
-    
 
     private Stage stage;
 
-    
     public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -148,55 +144,58 @@ public class EntradaController {
         //Los datos de la fila selecionada se añadirán a los campos con esto
         tblEntrada.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         //Combo con sus datos ya introducidos
-        comboEntrada.getItems().addAll("Infantil(0-12)","Adulto","Senior(+65)","Minúsvalido");
+        comboEntrada.getItems().addAll("Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
         cbcFiltro.getItems().addAll("Filtrar por dinero", "Filtrar por fecha");
         //Asignacion de botones
         btnCrear.setOnAction(this::handleCreateButtonAction);
         btnModificar.setOnAction(this::handleModifyButtonAction);
         btnEliminar.setOnAction(this::handleDeleteButtonAction);
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
-         cbcFiltro.setOnAction(new EventHandler<ActionEvent>(){
+        cbcFiltro.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                if(null == cbcFiltro.getValue().toString()){
-            txtFiltrar.setDisable(true);
-            dtpFiltradoFecha.setDisable(true);
-            btnBuscar.setVisible(false);
-        }else switch (cbcFiltro.getValue().toString()) {
-            case "Filtrar por dinero":
-                txtFiltrar.setDisable(false);
-                txtFiltrar.setVisible(true);
-                dtpFiltradoFecha.setDisable(true);
-                dtpFiltradoFecha.setVisible(false);
-                btnBuscar.setVisible(true);
-                btnBuscar.setDisable(false);
-                break;
-            case "Filtrar por fecha":
-                dtpFiltradoFecha.setDisable(false);
-                dtpFiltradoFecha.setVisible(true);
-                txtFiltrar.setDisable(true);
-                txtFiltrar.setVisible(false);
-                btnBuscar.setVisible(true);
-                btnBuscar.setDisable(false);               
-                break;
-            default:
-                txtFiltrar.setDisable(true);
-                txtFiltrar.setVisible(false);
-                dtpFiltradoFecha.setDisable(true);
-                dtpFiltradoFecha.setVisible(false);
-                btnBuscar.setVisible(true);
-                btnBuscar.setDisable(false);
-                cargarTodo();
-                break;
-        }
+                if (null == cbcFiltro.getValue().toString()) {
+                    txtFiltrar.setDisable(true);
+                    dtpFiltradoFecha.setDisable(true);
+                    btnBuscar.setVisible(false);
+                } else {
+                    switch (cbcFiltro.getValue().toString()) {
+                        case "Filtrar por dinero":
+                            txtFiltrar.setDisable(false);
+                            txtFiltrar.setVisible(true);
+                            dtpFiltradoFecha.setDisable(true);
+                            dtpFiltradoFecha.setVisible(false);
+                            btnBuscar.setVisible(true);
+                            btnBuscar.setDisable(false);
+                            break;
+                        case "Filtrar por fecha":
+                            dtpFiltradoFecha.setDisable(false);
+                            dtpFiltradoFecha.setVisible(true);
+                            txtFiltrar.setDisable(true);
+                            txtFiltrar.setVisible(false);
+                            btnBuscar.setVisible(true);
+                            btnBuscar.setDisable(false);
+                            break;
+                        default:
+                            txtFiltrar.setDisable(true);
+                            txtFiltrar.setVisible(false);
+                            dtpFiltradoFecha.setDisable(true);
+                            dtpFiltradoFecha.setVisible(false);
+                            btnBuscar.setVisible(true);
+                            btnBuscar.setDisable(false);
+                            cargarTodo();
+                            break;
+                    }
+                }
             }
-        
+
         });
         //Establecemos las factorias para los valores de celda
         //Formateo de la fecha para formáto estándar
-        try{
+        try {
             tbcFecha.setCellFactory(column -> {
                 TableCell<Entrada, Date> cell = new TableCell<Entrada, Date>() {
                     private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+
                     @Override
                     protected void updateItem(Date item, boolean empty) {
                         super.updateItem(item, empty);
@@ -223,84 +222,89 @@ public class EntradaController {
         } catch (Exception e) {
             LOGGER.severe("Error a la hora de cargar los datos");
         }
-        
+
         stage.show();
-    }    
-    
+    }
+
     /**
-     * Método que frente a cualquier cambio de la tabla la pone en estado neutral, 
-     * vacia los campos y muestra los datos de la tabla haciendo un select simple
-    */
+     * Método que frente a cualquier cambio de la tabla la pone en estado
+     * neutral, vacia los campos y muestra los datos de la tabla haciendo un
+     * select simple
+     */
     @FXML
-    private ObservableList<Entrada> cargarTodo(){
-        ObservableList<Entrada> listObjetivo;
+    private ObservableList<Entrada> cargarTodo() {
+        ObservableList<Entrada> listEntrada;
         List<Entrada> todosEntrada;
         todosEntrada = FXCollections.observableArrayList(factoryEnt.getFactory().findAll_XML(Entrada.class));
-        
-        listObjetivo = FXCollections.observableArrayList(todosEntrada);
+
+        listEntrada = FXCollections.observableArrayList(todosEntrada);
         //Vacia los datos cuando carga datos
         txtPrecioEntrada.setText("");
         comboEntrada.setValue("");
         dtpFecha.setValue(null);
-        tblEntrada.setItems(listObjetivo);
+        tblEntrada.setItems(listEntrada);
         tblEntrada.refresh();
-        return listObjetivo;
+        return listEntrada;
     }
+
     //Método que vacia los campos si hay algúna alteracion en la ventana
     @FXML
-    private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue){
-        if(txtPrecioEntrada.getText().trim().isEmpty() ||  comboEntrada.getValue().toString().trim().isEmpty() || tbcFecha.getText().trim().isEmpty()){
+    private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
+        if (txtPrecioEntrada.getText().trim().isEmpty() || comboEntrada.getValue().toString().trim().isEmpty() || tbcFecha.getText().trim().isEmpty()) {
             btnCrear.setDisable(true);
             btnEliminar.setDisable(true);
             btnModificar.setDisable(true);
-        }else{
+        } else {
             btnCrear.setDisable(false);
             btnEliminar.setDisable(false);
             btnModificar.setDisable(false);
         }
     }
+
     //Método para relalizar el CRUD de POST en la tabla
     @FXML
-    private void handleCreateButtonAction(ActionEvent event){
+    private void handleCreateButtonAction(ActionEvent event) {
         //Conversiones necesarias para hacer la inserción
         String precio;
         precio = txtPrecioEntrada.getText();
         float precioReal = Float.parseFloat(precio);
-        
+
         LocalDate fecha = dtpFecha.getValue();
         Date fechaBuena = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        
-            entrada.setPrecio(precioReal);
-            entrada.setTipo_entrada(comboEntrada.getValue().toString());
-            entrada.setFecha_entrada(fechaBuena);
-            //entrada.setAdmin(admin);
-            factoryEnt.getFactory().create_XML(entrada);
-            //Cargamos la tabla con el dato nuevo
-            entradaData = FXCollections.observableArrayList(cargarTodo());
+
+        entrada.setPrecio(precioReal);
+        entrada.setTipo_entrada(comboEntrada.getValue().toString());
+        entrada.setFecha_entrada(fechaBuena);
+        //entrada.setAdmin(admin);
+        factoryEnt.getFactory().create_XML(entrada);
+        //Cargamos la tabla con el dato nuevo
+        entradaData = FXCollections.observableArrayList(cargarTodo());
     }
+
     //Método para relalizar el CRUD de PUT en la tabla
     @FXML
-    private void handleModifyButtonAction(ActionEvent event){
+    private void handleModifyButtonAction(ActionEvent event) {
         //Conversiones necesarias para hacer la inserción
         String precio;
         precio = txtPrecioEntrada.getText();
         float precioReal = Float.parseFloat(precio);
-     
+
         LocalDate fecha = dtpFecha.getValue();
         Date fechaBuena = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            //Escogemos el Id para indicar al programa cual entrada debe modificar
-            entrada.setId_entrada(tblEntrada.getSelectionModel().getSelectedItem().getId_entrada());
-            entrada.setPrecio(precioReal);
-            entrada.setTipo_entrada(comboEntrada.getValue().toString());
-            entrada.setFecha_entrada(fechaBuena);
-            
-            factoryEnt.getFactory().edit_XML(entrada);
-            //Cargamos la tabla con el dato nuevo
-            entradaData = FXCollections.observableArrayList(cargarTodo());
+        //Escogemos el Id para indicar al programa cual entrada debe modificar
+        entrada.setId_entrada(tblEntrada.getSelectionModel().getSelectedItem().getId_entrada());
+        entrada.setPrecio(precioReal);
+        entrada.setTipo_entrada(comboEntrada.getValue().toString());
+        entrada.setFecha_entrada(fechaBuena);
+
+        factoryEnt.getFactory().edit_XML(entrada);
+        //Cargamos la tabla con el dato nuevo
+        entradaData = FXCollections.observableArrayList(cargarTodo());
     }
+
     //Método para relalizar el CRUD de PUT en la tabla
     @FXML
-    private void handleDeleteButtonAction(ActionEvent event){
+    private void handleDeleteButtonAction(ActionEvent event) {
         //Para realizar el borrado lo hacemos mediante el id de la Entrada
         Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
         factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
@@ -308,28 +312,27 @@ public class EntradaController {
         //Cargamos la tabla con el dato nuevo
         entradaData = FXCollections.observableArrayList(cargarTodo());
     }
+
     //Método que incrusta los datos de la tabla a los campos de parametrización
     @FXML
-    private void handleUsersTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue){
-        
+    private void handleUsersTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue) {
+
         if (newValue != null) {
-            
+
             Entrada ticket = (Entrada) newValue;
             //Conversion necesaria para hacer el camambio de texto
             Date fecha = new Date();
             fecha = ticket.getFecha_entrada();
             LocalDate fechaNueva = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            
+
             txtPrecioEntrada.setText(ticket.getPrecio().toString());
             comboEntrada.setValue(ticket.getTipo_entrada());
             dtpFecha.setValue(fechaNueva);
         }
     }
-    
-    
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
 }
