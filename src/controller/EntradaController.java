@@ -150,6 +150,7 @@ public class EntradaController {
         btnCrear.setOnAction(this::handleCreateButtonAction);
         btnModificar.setOnAction(this::handleModifyButtonAction);
         btnEliminar.setOnAction(this::handleDeleteButtonAction);
+        btnBuscar.setOnAction(this::handleSearchButton);
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         cbcFiltro.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -330,6 +331,43 @@ public class EntradaController {
             dtpFecha.setValue(fechaNueva);
         }
     }
+    //Método de busqueda del botón, sirve para realizar las consultas parametrizadas
+    @FXML
+    private void handleSearchButton(ActionEvent actionEvent){
+        switch(cbcFiltro.getValue().toString()){
+            case("Filtrar por dinero"):
+                cargarFiltro1();
+            break;
+            case("Filtrar por fecha"):
+                cargarFiltro2();
+            break;
+        }
+    }
+    //Método que se encarga de realizar la búsqueda de entradas por un precio fijado
+    @FXML
+    private ObservableList<Entrada> cargarFiltro1(){
+        ObservableList<Entrada> listaEntradas;
+        List<Entrada> FiltradoParam;
+        FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorPrecio_XML(Entrada.class, txtFiltrar.getText()));
+        
+        listaEntradas = FXCollections.observableArrayList(FiltradoParam);
+        tblEntrada.setItems(listaEntradas);
+        tblEntrada.refresh();
+        return listaEntradas;
+    }
+    //Método que se encarga de realizar la búsqueda de entradas por una fecha fijada
+    @FXML
+    private ObservableList<Entrada> cargarFiltro2(){
+        ObservableList<Entrada> listaEntradas;
+        List<Entrada> FiltradoParam;
+        FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorFecha_XML(Entrada.class, dtpFiltradoFecha.getValue().toString()));
+        
+        listaEntradas = FXCollections.observableArrayList(FiltradoParam);
+        tblEntrada.setItems(listaEntradas);
+        tblEntrada.refresh();
+        return listaEntradas;
+    }
+    
 
     public void setStage(Stage stage) {
         this.stage = stage;
