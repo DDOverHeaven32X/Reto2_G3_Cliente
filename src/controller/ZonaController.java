@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -64,7 +65,7 @@ public class ZonaController {
     @FXML
     private TextField txtNombreZona;
     @FXML
-    private ComboBox<?> txtTipoAnimalZona;
+    private ComboBox txtTipoAnimalZona;
     @FXML
     private TextArea txtDescripcionZona;
     @FXML
@@ -115,11 +116,19 @@ public class ZonaController {
         //Ponemos el foco al inicio de la ventana
         txtNombreZona.requestFocus();
 
+        //Metodo para el cambio de texto
+        txtNombreZona.textProperty().addListener(this::cambioTexto);
         //Asignacion de botones
         btnCrearZona.setOnAction(this::handleCreateButtonAction);
-        /*
+
+        //Cargamos la combo con los valores posibles 
+        txtTipoAnimalZona.getItems().addAll("Peces", "Anfibios", "Arácnidos", "Artrópodos", "Mamíferos", "Aves", "Reptiles", "Insectos");
+        //Metodo para modificar la zona
         btnModificarZona.setOnAction(this::handleModifyButtonAction);
-        btnEliminarZona.setOnAction(this::handleDeleteButtonAction);*/
+        //Metodo para eliminar la zona
+        btnEliminarZona.setOnAction(this::handleDeleteButtonAction);
+        //Metodo para cargar los datos de la zona seleccionada
+        tableZona.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         //Establecemos las factorias para los valores de celda
         try {
 
@@ -165,7 +174,7 @@ public class ZonaController {
         //Conversiones necesarias para hacer la inserción
         String nombre = txtNombreZona.getText();
         String descricpion = txtDescripcionZona.getText();
-        String tipoAnimal = txtTipoAnimalZona.getSelectionModel().toString();
+        String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
         zona.setNombre(nombre);
         zona.setDescripcion(descricpion);
         zona.setTipo_animal(tipoAnimal);
@@ -174,6 +183,64 @@ public class ZonaController {
         zonaFact.getFactory().create_XML(zona);
         //Cargamos la tabla con el dato nuevo
         zonaData = FXCollections.observableArrayList(cargarTodo());
+    }
+    //Método para relalizar el CRUD de PUT en la tabla
+
+    @FXML
+    private void handleModifyButtonAction(ActionEvent event) {
+        //Conversiones necesarias para hacer la inserción
+        String nombre = txtNombreZona.getText();
+        String descricpion = txtDescripcionZona.getText();
+        String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
+
+        //Escogemos el Id para indicar al programa cual entrada debe modificar
+        zona.setId_zona(tableZona.getSelectionModel().getSelectedItem().getId_zona());
+        zona.setNombre(nombre);
+        zona.setDescripcion(descricpion);
+        zona.setTipo_animal(tipoAnimal);
+
+        zonaFact.getFactory().edit_XML(zona);
+        //Cargamos la tabla con el dato nuevo
+        zonaData = FXCollections.observableArrayList(cargarTodo());
+    }
+
+    @FXML
+    private void handleDeleteButtonAction(ActionEvent event) {
+        //Para realizar el borrado lo hacemos mediante el id de la Entrada
+        Zona selectedZona = tableZona.getSelectionModel().getSelectedItem();
+        zonaFact.getFactory().remove(selectedZona.getId_zona().toString());
+
+        //Cargamos la tabla con el dato nuevo
+        zonaData = FXCollections.observableArrayList(cargarTodo());
+    }
+
+    //Metodo que introduce los datos en los fields de la zona seleccionada.
+    @FXML
+    private void handleUsersTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue) {
+
+        if (newValue != null) {
+
+            Zona zona = (Zona) newValue;
+            //Conversion necesaria para hacer el camambio de texto
+
+            txtNombreZona.setText(zona.getNombre());
+            txtDescripcionZona.setText(zona.getDescripcion());
+            txtTipoAnimalZona.setValue(zona.getTipo_animal());
+        }
+    }
+
+    //Método que vacia los campos si hay algúna alteracion en la ventana
+    @FXML
+    private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
+        if (txtNombreZona.getText().trim().isEmpty() || txtTipoAnimalZona.getValue().toString().trim().isEmpty() || txtDescripcionZona.getText().trim().isEmpty()) {
+            btnCrearZona.setDisable(true);
+            btnEliminarZona.setDisable(true);
+            btnModificarZona.setDisable(true);
+        } else {
+            btnCrearZona.setDisable(false);
+            btnEliminarZona.setDisable(false);
+            btnModificarZona.setDisable(false);
+        }
     }
 
     public void setStage(Stage stage) {
