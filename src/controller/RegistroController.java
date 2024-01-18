@@ -31,6 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Cliente;
 
 /**
  * Esta clase funciona como el controlador de la ventana de Registro.
@@ -101,6 +102,8 @@ public class RegistroController {
     private TextField txt_pinReve;
     
     private Stage stage;
+    
+    
 
     private String email, contraseña, zip, telefono, nombre;
 
@@ -326,7 +329,28 @@ public class RegistroController {
                 Las excepciones de IncorrectPasswordException y IncorrectPatternException se mostrarán en el
                 lbl_error, las excepciones genericas se mostraran en consola a través de un logger
              */
-
+            //Si los parametros son correctos creamos el nuevo cliente
+            Cliente clie = new Cliente();
+            //Medida para pasar datos String a integers si hace falta
+            String telef = txt_tele.getText();
+            String tarjeta = txt_tarjeta.getText();
+            String pin = txt_pinReve.getText();
+            Integer telefono = Integer.parseInt(telef);
+            Integer pinSecreto = Integer.parseInt(pin);
+            Long numTarj = Long.parseLong(tarjeta);
+            
+            clie.setNombre_completo(txt_nombre.getText());
+            clie.setLogin(txt_email.getText());
+            clie.setContraseña(psw_contra.getText());
+            clie.setDireccion(txt_direccion.getText());
+            clie.setTelefono(telefono);
+            clie.setN_tarjeta(numTarj);
+            clie.setPin(pinSecreto);
+            
+            
+            
+            
+            
             //Mostramos al usuario que el registro ha sido satisfactorio
             Alert ventana = new Alert(Alert.AlertType.INFORMATION);
             ventana.setHeaderText(null);
