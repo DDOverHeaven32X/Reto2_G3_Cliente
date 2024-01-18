@@ -188,7 +188,7 @@ public class Zona implements Serializable {
      */
     @Override
     public String toString() {
-        return "Entidades.Zona[ id=" + id_zona + " ]";
+        return this.nombre;
     }
 
 }
