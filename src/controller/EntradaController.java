@@ -130,9 +130,9 @@ public class EntradaController {
         btnBuscar.setVisible(false);
         dtpFiltradoFecha.setVisible(false);
         //Los siguientes campos están deshabilitados
-        btnCrear.setDisable(false);
-        btnModificar.setDisable(false);
-        btnEliminar.setDisable(false);
+        btnCrear.setDisable(true);
+        btnModificar.setDisable(true);
+        btnEliminar.setDisable(true);
         btnComprar.setDisable(true);
         txtFiltrar.setDisable(true);
         btnBuscar.setDisable(true);
@@ -140,11 +140,11 @@ public class EntradaController {
         //El foco está en el campo del precio
         txtPrecioEntrada.requestFocus();
         //Activacion del cambio de texto
-        txtPrecioEntrada.textProperty().addListener(this::cambioTexto);
+        
         //Los datos de la fila selecionada se añadirán a los campos con esto
         tblEntrada.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         //Combo con sus datos ya introducidos
-        comboEntrada.getItems().addAll("Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
+        comboEntrada.getItems().addAll(null,"Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
         cbcFiltro.getItems().addAll("Filtrar por dinero", "Filtrar por fecha");
         //Asignacion de botones
         btnCrear.setOnAction(this::handleCreateButtonAction);
@@ -250,17 +250,17 @@ public class EntradaController {
 
     //Método que vacia los campos si hay algúna alteracion en la ventana
     @FXML
-    private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
-        if (txtPrecioEntrada.getText().trim().isEmpty() || comboEntrada == null || tbcFecha.getText().trim().isEmpty()) {
-            btnCrear.setDisable(true);
-            btnEliminar.setDisable(true);
-            btnModificar.setDisable(true);
-        } else {
-            btnCrear.setDisable(false);
-            btnEliminar.setDisable(false);
-            btnModificar.setDisable(false);
-        }
+private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
+    if (txtPrecioEntrada.getText() != null && comboEntrada.getValue() != null && tbcFecha.getText() != null) {
+        btnCrear.setDisable(false);
+        btnEliminar.setDisable(false);
+        btnModificar.setDisable(false);
+    } else {
+        btnCrear.setDisable(true);
+        btnEliminar.setDisable(true);
+        btnModificar.setDisable(true);
     }
+}
 
     //Método para relalizar el CRUD de POST en la tabla
     @FXML

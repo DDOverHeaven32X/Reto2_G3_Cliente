@@ -9,6 +9,7 @@ import exception.UserNotFoundException;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import logic.UsuarioFactoria;
+import model.Admin;
+import model.Cliente;
+import model.Privilegio;
 import model.Usuario;
 
 /**
@@ -72,6 +77,10 @@ public class InicioSesionController {
     private static final Pattern PASSWORD__PATTERN = Pattern.compile(PASSWORD_REGEX);
 
     private static final Logger LOGGER = Logger.getLogger("/controlador/InicioSesionController");
+    
+    private UsuarioFactoria userFact = new UsuarioFactoria();
+    
+    //private Usuario user = new Usuario();
 
     /**
      * Initializes the controller class.
@@ -151,24 +160,53 @@ public class InicioSesionController {
     private void handleSignInAction(ActionEvent event) {
 
         try {
-            /*error.setText("");
+            error.setText("");
             if (camposInformados() && maxCarecteres()) {
                 Usuario user = new Usuario();
                 user.setLogin(textEmail.getText());
+                user.setContraseña(pswContraseña.getText());
                 if (pswContraseña.isVisible()) {
                     user.setContraseña(pswContraseña.getText());
                 } else {
                     user.setContraseña(txt_contraReve.getText());
-                }*/
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
-                Parent root = loader.load();
-                PrincipalController princiController = ((PrincipalController) loader.getController());
-                princiController.setStage(stage);
-                princiController.initiStage(root);
+                }
+                //Comprobamos si el usuario está registrado en la base de datos
+                List<Usuario> listaUser;
+                listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), pswContraseña.getText() );
+                //Si la consulta no devuelve nada se lanza una excepción de UserNotFoundException
+                if(listaUser.isEmpty()){
+                    throw new UserNotFoundException();
+                }
+                //Si la consulta devuelve algo se setearan los datos User devueltos a un Cliente o un Admin
+                    Admin admin = new Admin();
+                    Cliente client = new Cliente();
+                    System.out.println(user.getLogin());
+                    System.out.println(user.getContraseña());
+                    if (user.getLogin().equals("admin@gmail.com") && user.getContraseña().equals("Abcd*1234")) {
+                        user.setTipo_usuario(Privilegio.ADMIN);
+                        admin.setId_user(listaUser.get(0).getId_user());
+                        admin.setTipo_usuario(user.getTipo_usuario());
+                    } else {
+                        user.setTipo_usuario(Privilegio.CLIENT);
+                        client.setId_user(listaUser.get(0).getId_user());
+                        client.setTipo_usuario(user.getTipo_usuario());
+                    }
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
+                    Parent root = loader.load();
+                    PrincipalController princiController = ((PrincipalController) loader.getController());
+                    princiController.setUser(user);
+                    princiController.setStage(stage);
+                    princiController.initiStage(root, user);
                 
-        } catch (IOException ex) {
+            }
+
+        } catch (IOException  ex) {
             error.setVisible(true);
             error.setText("Ha habido algun error durante el inicio de sesion.");
+        } catch(UserNotFoundException e){
+            error.setVisible(true);
+            error.setText("Usuario no encontrado.");
         }
         
 
@@ -306,7 +344,7 @@ public class InicioSesionController {
 
             }
 
-            img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/utilidades/abierto.png" : "/utilidades/cerrado.png"));
+            img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         } else {
             txt_contraReve.setDisable(true);
             txt_contraReve.setVisible(false);
@@ -321,7 +359,7 @@ public class InicioSesionController {
 
             }
 
-            img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/utilidades/abierto.png" : "/utilidades/cerrado.png"));
+            img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         }
     }
 
