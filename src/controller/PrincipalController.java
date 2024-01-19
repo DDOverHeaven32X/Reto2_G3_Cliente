@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Usuario;
 
 /**
  * FXML Controller class
@@ -30,9 +31,11 @@ public class PrincipalController {
     private Pane panelInicio;
     
     private Stage stage;
+    
+    private Usuario user;
 
    
-    public void initiStage(Parent root) {
+    public void initiStage(Parent root, Usuario user) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -42,5 +45,11 @@ public class PrincipalController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
+    
+    
     
 }

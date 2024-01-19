@@ -14,6 +14,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import model.Usuario;
 
 /**
  * FXML Controller class
@@ -23,6 +24,8 @@ import javafx.stage.Stage;
 public class MenuBarController{
     
     private Stage stage;
+    
+    private Usuario user;
 
     @FXML
     private MenuBar menuBar;
@@ -89,7 +92,7 @@ public class MenuBarController{
             Parent root = (Parent) loader.load();
             PrincipalController priController = ((PrincipalController) loader.getController());
             priController.setStage(stage);
-            priController.initiStage(root);
+            priController.initiStage(root, user);
         } catch (IOException e) {
             
         }
