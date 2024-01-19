@@ -135,7 +135,7 @@ public class EntradaController {
         btnBuscar.setVisible(false);
         dtpFiltradoFecha.setVisible(false);
         //Los siguientes campos están deshabilitados
-        btnCrear.setDisable(true);
+        btnCrear.setDisable(false);
         btnModificar.setDisable(true);
         btnEliminar.setDisable(true);
         btnComprar.setDisable(true);
@@ -145,7 +145,7 @@ public class EntradaController {
         //El foco está en el campo del precio
         txtPrecioEntrada.requestFocus();
         //Activacion del cambio de texto
-
+        txtPrecioEntrada.textProperty().addListener(this::cambioTexto);
         //Los datos de la fila selecionada se añadirán a los campos con esto
         tblEntrada.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         //Combo con sus datos ya introducidos
@@ -255,14 +255,12 @@ public class EntradaController {
     //Método que vacia los campos si hay algúna alteracion en la ventana
     @FXML
     private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
-        if (txtPrecioEntrada.getText() != null && comboEntrada.getValue() != null && tbcFecha.getText() != null) {
-            btnCrear.setDisable(false);
-            btnEliminar.setDisable(false);
-            btnModificar.setDisable(false);
-        } else {
-            btnCrear.setDisable(true);
+        if (tblEntrada.getSelectionModel().getSelectedItem() == null) {
             btnEliminar.setDisable(true);
             btnModificar.setDisable(true);
+        } else {
+            btnEliminar.setDisable(false);
+            btnModificar.setDisable(false);
         }
     }
 
@@ -280,7 +278,6 @@ public class EntradaController {
         entrada.setPrecio(precioReal);
         entrada.setTipo_entrada(comboEntrada.getValue().toString());
         entrada.setFecha_entrada(fechaBuena);
-        entrada.setId_entrada(tblEntrada.getSelectionModel().getSelectedItem().getId_entrada());
 
         // Comprobar si la entrada ya existe
         if (entradaExiste(fechaBuena, entrada.getTipo_entrada())) {
@@ -312,7 +309,7 @@ public class EntradaController {
      */
     private boolean entradaExiste(Date fecha, String tipoEntrada) {
         // Buscar entradas con la misma fecha y tipo de entrada
-        listaEntrada = factoryEnt.getFactory().find_XML(Entrada.class, entrada.getId_entrada().toString());
+        listaEntrada = factoryEnt.getFactory().findAll_XML(Entrada.class);
         for (Entrada e : listaEntrada) {
             if (e.getFecha_entrada().equals(fecha) && e.getTipo_entrada().equals(tipoEntrada)) {
                 return true;
