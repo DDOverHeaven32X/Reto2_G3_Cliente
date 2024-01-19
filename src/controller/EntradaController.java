@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -22,7 +23,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -60,6 +63,8 @@ public class EntradaController {
     private Admin admin = new Admin();
 
     private ObservableList<Entrada> entradaData;
+
+    private List<Entrada> listaEntrada;
 
     @FXML
     private AnchorPane anchorEntrada;
@@ -140,11 +145,11 @@ public class EntradaController {
         //El foco está en el campo del precio
         txtPrecioEntrada.requestFocus();
         //Activacion del cambio de texto
-        
+
         //Los datos de la fila selecionada se añadirán a los campos con esto
         tblEntrada.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         //Combo con sus datos ya introducidos
-        comboEntrada.getItems().addAll(null,"Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
+        comboEntrada.getItems().addAll(null, "Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
         cbcFiltro.getItems().addAll("Filtrar por dinero", "Filtrar por fecha");
         //Asignacion de botones
         btnCrear.setOnAction(this::handleCreateButtonAction);
@@ -206,7 +211,6 @@ public class EntradaController {
                             if (item != null) {
                                 setText(format.format(item));
                             }
-
                         }
                     }
                 };
@@ -250,17 +254,17 @@ public class EntradaController {
 
     //Método que vacia los campos si hay algúna alteracion en la ventana
     @FXML
-private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
-    if (txtPrecioEntrada.getText() != null && comboEntrada.getValue() != null && tbcFecha.getText() != null) {
-        btnCrear.setDisable(false);
-        btnEliminar.setDisable(false);
-        btnModificar.setDisable(false);
-    } else {
-        btnCrear.setDisable(true);
-        btnEliminar.setDisable(true);
-        btnModificar.setDisable(true);
+    private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
+        if (txtPrecioEntrada.getText() != null && comboEntrada.getValue() != null && tbcFecha.getText() != null) {
+            btnCrear.setDisable(false);
+            btnEliminar.setDisable(false);
+            btnModificar.setDisable(false);
+        } else {
+            btnCrear.setDisable(true);
+            btnEliminar.setDisable(true);
+            btnModificar.setDisable(true);
+        }
     }
-}
 
     //Método para relalizar el CRUD de POST en la tabla
     @FXML
@@ -276,10 +280,45 @@ private void cambioTexto(ObservableValue observable, Object oldValue, Object new
         entrada.setPrecio(precioReal);
         entrada.setTipo_entrada(comboEntrada.getValue().toString());
         entrada.setFecha_entrada(fechaBuena);
-        //entrada.setAdmin(admin);
+        entrada.setId_entrada(tblEntrada.getSelectionModel().getSelectedItem().getId_entrada());
+
+        // Comprobar si la entrada ya existe
+        if (entradaExiste(fechaBuena, entrada.getTipo_entrada())) {
+            Alert ventanita = new Alert(Alert.AlertType.ERROR);
+            ventanita.setHeaderText(null);
+            ventanita.setTitle("Error");
+            ventanita.setContentText("La entrada que intentas crear ya existe");
+            Optional<ButtonType> action3 = ventanita.showAndWait();
+            if (action3.get() == ButtonType.OK) {
+                txtPrecioEntrada.setText("");
+                comboEntrada.setValue("");
+                dtpFecha.setValue(null);
+                ventanita.close();
+            }
+            return;
+        }
+
         factoryEnt.getFactory().create_XML(entrada);
         //Cargamos la tabla con el dato nuevo
         entradaData = FXCollections.observableArrayList(cargarTodo());
+    }
+
+    /**
+     * Método que comprueba si una entrada existe antes de crearla
+     *
+     * @param fecha
+     * @param tipoEntrada
+     * @return
+     */
+    private boolean entradaExiste(Date fecha, String tipoEntrada) {
+        // Buscar entradas con la misma fecha y tipo de entrada
+        listaEntrada = factoryEnt.getFactory().find_XML(Entrada.class, entrada.getId_entrada().toString());
+        for (Entrada e : listaEntrada) {
+            if (e.getFecha_entrada().equals(fecha) && e.getTipo_entrada().equals(tipoEntrada)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //Método para relalizar el CRUD de PUT en la tabla
@@ -331,43 +370,45 @@ private void cambioTexto(ObservableValue observable, Object oldValue, Object new
             dtpFecha.setValue(fechaNueva);
         }
     }
+
     //Método de busqueda del botón, sirve para realizar las consultas parametrizadas
     @FXML
-    private void handleSearchButton(ActionEvent actionEvent){
-        switch(cbcFiltro.getValue().toString()){
-            case("Filtrar por dinero"):
+    private void handleSearchButton(ActionEvent actionEvent) {
+        switch (cbcFiltro.getValue().toString()) {
+            case ("Filtrar por dinero"):
                 cargarFiltro1();
-            break;
-            case("Filtrar por fecha"):
+                break;
+            case ("Filtrar por fecha"):
                 cargarFiltro2();
-            break;
+                break;
         }
     }
+
     //Método que se encarga de realizar la búsqueda de entradas por un precio fijado
     @FXML
-    private ObservableList<Entrada> cargarFiltro1(){
+    private ObservableList<Entrada> cargarFiltro1() {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> FiltradoParam;
         FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorPrecio_XML(Entrada.class, txtFiltrar.getText()));
-        
+
         listaEntradas = FXCollections.observableArrayList(FiltradoParam);
         tblEntrada.setItems(listaEntradas);
         tblEntrada.refresh();
         return listaEntradas;
     }
+
     //Método que se encarga de realizar la búsqueda de entradas por una fecha fijada
     @FXML
-    private ObservableList<Entrada> cargarFiltro2(){
+    private ObservableList<Entrada> cargarFiltro2() {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> FiltradoParam;
         FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorFecha_XML(Entrada.class, dtpFiltradoFecha.getValue().toString()));
-        
+
         listaEntradas = FXCollections.observableArrayList(FiltradoParam);
         tblEntrada.setItems(listaEntradas);
         tblEntrada.refresh();
         return listaEntradas;
     }
-    
 
     public void setStage(Stage stage) {
         this.stage = stage;
