@@ -100,10 +100,8 @@ public class RegistroController {
     private PasswordField psw_pin;
     @FXML
     private TextField txt_pinReve;
-    
+
     private Stage stage;
-    
-    
 
     private String email, contraseña, zip, telefono, nombre;
 
@@ -338,7 +336,7 @@ public class RegistroController {
             Integer telefono = Integer.parseInt(telef);
             Integer pinSecreto = Integer.parseInt(pin);
             Long numTarj = Long.parseLong(tarjeta);
-            
+
             clie.setNombre_completo(txt_nombre.getText());
             clie.setLogin(txt_email.getText());
             clie.setContraseña(psw_contra.getText());
@@ -346,11 +344,7 @@ public class RegistroController {
             clie.setTelefono(telefono);
             clie.setN_tarjeta(numTarj);
             clie.setPin(pinSecreto);
-            
-            
-            
-            
-            
+
             //Mostramos al usuario que el registro ha sido satisfactorio
             Alert ventana = new Alert(Alert.AlertType.INFORMATION);
             ventana.setHeaderText(null);
