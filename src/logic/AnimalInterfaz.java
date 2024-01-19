@@ -8,6 +8,7 @@ package logic;
 import java.util.List;
 import javax.ws.rs.WebApplicationException;
 import model.Animal;
+import model.Especies;
 
 /**
  *
@@ -45,7 +46,7 @@ public interface AnimalInterfaz {
 
     public List<Animal> findAnimalsByFeeding_JSON(Class<Animal> responseType, String alimentacion) throws WebApplicationException;
 
-    public List<String> findSpecies_XML(Class<String> responseType) throws WebApplicationException;
+    public List<Especies> findSpecies_XML(Class<Especies> responseType) throws WebApplicationException;
 
-    public List<String> findSpecies_JSON(Class<String> responseType) throws WebApplicationException;
+    public List<Especies> findSpecies_JSON(Class<Especies> responseType) throws WebApplicationException;
 }
