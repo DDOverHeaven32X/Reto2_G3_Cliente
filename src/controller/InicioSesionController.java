@@ -95,7 +95,7 @@ public class InicioSesionController {
         Stage stage = new Stage();
 
         //El boton inicio de sesion esta deshabilitado.
-        btnInicioSesion.setDisable(false);
+        btnInicioSesion.setDisable(true);
         //El campo email estará habilitado.
         textEmail.setDisable(false);
         //El campo contraseña estará habilitado.

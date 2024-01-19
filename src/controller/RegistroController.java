@@ -31,6 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logic.ClienteFactoria;
 import model.Cliente;
 
 /**
@@ -39,6 +40,8 @@ import model.Cliente;
  * @author Diego, Adrian
  */
 public class RegistroController {
+
+    private final ClienteFactoria clieFact = new ClienteFactoria();
 
     @FXML
     private Pane pane;
@@ -111,6 +114,12 @@ public class RegistroController {
     private static final String patronPhone = "^(\\+34|0034|34)?[6|7|9][0-9]{8}$";
     private static final Pattern phoneMatcher = Pattern.compile(patronPhone);
 
+    private static final String patronTarjeta = "^\\d{16}$";
+    private static final Pattern tarjetaMatcher = Pattern.compile(patronTarjeta);
+
+    private static final String patronPin = "^\\d{4}$";
+    private static final Pattern pinMatcher = Pattern.compile(patronPin);
+
     private static final String patronContraseña = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+$";
     private static final Pattern passwordMatcher = Pattern.compile(patronContraseña);
 
@@ -121,7 +130,7 @@ public class RegistroController {
     /**
      * Initializes the controller class.
      *
-     * @author Diego, Adrián
+     * @author Ander, Diego
      * @param root
      */
     public void initStage(Parent root) {
@@ -155,6 +164,9 @@ public class RegistroController {
         txt_direccion.textProperty().addListener(this::estanVacios);
         txt_zip.textProperty().addListener(this::estanVacios);
         txt_tele.textProperty().addListener(this::estanVacios);
+        txt_tarjeta.textProperty().addListener(this::estanVacios);
+        psw_pin.textProperty().addListener(this::estanVacios);
+
         //Evento del botón registrarse
         btn_registro.setOnAction(this::registrarBotón);
         btn_registro.setTooltip(new Tooltip("Pulsa para registrarte"));
@@ -162,8 +174,10 @@ public class RegistroController {
         btn_verContra.setOnMouseClicked(event -> revelarContra(event));
         btn_verContra.setTooltip(new Tooltip("Visualizar/Ocultar contraseña"));
         btn_verContra2.setTooltip(new Tooltip("Visualizar/Ocultar contraseña"));
+        btn_verPin.setTooltip(new Tooltip("Visualizar/Ocultar pin"));
         btn_verContra2.setOnMouseClicked(event -> revelarContraRepe(event));
 
+        btn_verPin.setOnMouseClicked(event -> revelarPin(event));
         stage.setOnCloseRequest(this::cerrarVentana);
         stage.show();
     }
@@ -273,6 +287,39 @@ public class RegistroController {
         }
     }
 
+    private void revelarPin(MouseEvent event) {
+        if (psw_pin.isVisible()) {
+            psw_pin.setDisable(true);
+            psw_pin.setVisible(false);
+            txt_pinReve.setDisable(false);
+            txt_pinReve.setVisible(true);
+
+            if (txt_pinReve.isVisible()) {
+                txt_pinReve.setText(psw_pin.getText());
+
+            } else {
+                psw_pin.setText(txt_pinReve.getText());
+
+            }
+
+            img_ojo3.setImage(new Image(psw_pin.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
+        } else {
+            txt_contraRepeReve.setDisable(true);
+            txt_contraRepeReve.setVisible(false);
+            psw_contraRepe.setDisable(false);
+            psw_contraRepe.setVisible(true);
+
+            if (psw_contraRepe.isVisible()) {
+                psw_contraRepe.setText(txt_contraRepeReve.getText());
+
+            } else {
+                txt_contraRepeReve.setText(psw_contraRepe.getText());
+            }
+
+            img_ojo3.setImage(new Image(psw_contraRepe.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
+        }
+    }
+
     /**
      * Método del botón de la ventana, recoge la información de la ventana para
      * hacer el registro
@@ -323,8 +370,17 @@ public class RegistroController {
                 txt_tele.setText("");
                 throw new IncorrectPatternException("El formato no está permitido, (ej, +34 643 567 453/ 945 564 234).");
             }
+            if (!(tarjetaMatcher.matcher(txt_tarjeta.getText()).matches())) {
+                txt_tarjeta.setText("");
+                throw new IncorrectPatternException("La tarjeta debe contener extactamente 16 caracteres numericos.");
+            }
+
+            if (!(pinMatcher.matcher(psw_pin.getText()).matches())) {
+                txt_pinReve.setText("");
+                throw new IncorrectPatternException("El pin debe contener 4 exactamente caracteres numericos.");
+            }
             /*
-                Las excepciones de IncorrectPasswordException y IncorrectPatternException se mostrarán en el
+                Las excepciones de IncorrectPasswordException e IncorrectPatternException se mostrarán en el
                 lbl_error, las excepciones genericas se mostraran en consola a través de un logger
              */
             //Si los parametros son correctos creamos el nuevo cliente
@@ -333,6 +389,9 @@ public class RegistroController {
             String telef = txt_tele.getText();
             String tarjeta = txt_tarjeta.getText();
             String pin = txt_pinReve.getText();
+            String codigoPost = txt_zip.getText();
+
+            Integer codPostal = Integer.parseInt(codigoPost);
             Integer telefono = Integer.parseInt(telef);
             Integer pinSecreto = Integer.parseInt(pin);
             Long numTarj = Long.parseLong(tarjeta);
@@ -341,9 +400,12 @@ public class RegistroController {
             clie.setLogin(txt_email.getText());
             clie.setContraseña(psw_contra.getText());
             clie.setDireccion(txt_direccion.getText());
+            clie.setCod_postal(codPostal);
             clie.setTelefono(telefono);
             clie.setN_tarjeta(numTarj);
             clie.setPin(pinSecreto);
+            //Creamos el usuario
+            clieFact.getFactory().create_XML(clie);
 
             //Mostramos al usuario que el registro ha sido satisfactorio
             Alert ventana = new Alert(Alert.AlertType.INFORMATION);
@@ -361,6 +423,9 @@ public class RegistroController {
                 txt_direccion.setText("");
                 txt_zip.setText("");
                 txt_tele.setText("");
+                txt_pinReve.setText("");
+                psw_pin.setText("");
+                txt_tarjeta.setText("");
                 lbl_error.setText("");
                 txt_nombre.requestFocus();
                 event.consume();
@@ -375,6 +440,9 @@ public class RegistroController {
                 txt_zip.setText("");
                 txt_tele.setText("");
                 lbl_error.setText("");
+                txt_pinReve.setText("");
+                psw_pin.setText("");
+                txt_tarjeta.setText("");
                 txt_nombre.requestFocus();
                 event.consume();
             }
@@ -407,7 +475,7 @@ public class RegistroController {
                 && !txt_tele.getText().trim().isEmpty()
                 && !txt_zip.getText().trim().isEmpty()
                 && (!psw_contra.getText().trim().isEmpty() || !txt_contraReve.getText().trim().isEmpty())
-                && (!psw_contraRepe.getText().trim().isEmpty() || !txt_contraRepeReve.getText().trim().isEmpty())) {
+                && (!psw_contraRepe.getText().trim().isEmpty() || !txt_contraRepeReve.getText().trim().isEmpty()) && !txt_tarjeta.getText().trim().isEmpty() && (!txt_pinReve.getText().trim().isEmpty() || !psw_pin.getText().trim().isEmpty())) {
             btn_registro.setDisable(false);
         } else {
             /*
