@@ -221,20 +221,25 @@ public class ZonaController {
     //Método para relalizar el CRUD de PUT en la tabla
     @FXML
     private void handleModifyButtonAction(ActionEvent event) {
-        //Conversiones necesarias para hacer la inserción
-        String nombre = txtNombreZona.getText();
-        String descricpion = txtDescripcionZona.getText();
-        String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
 
-        //Escogemos el Id para indicar al programa cual entrada debe modificar
-        zona.setId_zona(tableZona.getSelectionModel().getSelectedItem().getId_zona());
-        zona.setNombre(nombre);
-        zona.setDescripcion(descricpion);
-        zona.setTipo_animal(tipoAnimal);
+        if (!camposZonaInformados()) {
 
-        zonaFact.getFactory().edit_XML(zona);
-        //Cargamos la tabla con el dato nuevo
-        zonaData = FXCollections.observableArrayList(cargarTodo());
+        } else {
+            //Conversiones necesarias para hacer la inserción
+            String nombre = txtNombreZona.getText();
+            String descricpion = txtDescripcionZona.getText();
+            String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
+
+            //Escogemos el Id para indicar al programa cual entrada debe modificar
+            zona.setId_zona(tableZona.getSelectionModel().getSelectedItem().getId_zona());
+            zona.setNombre(nombre);
+            zona.setDescripcion(descricpion);
+            zona.setTipo_animal(tipoAnimal);
+
+            zonaFact.getFactory().edit_XML(zona);
+            //Cargamos la tabla con el dato nuevo
+            zonaData = FXCollections.observableArrayList(cargarTodo());
+        }
     }
 
     @FXML
