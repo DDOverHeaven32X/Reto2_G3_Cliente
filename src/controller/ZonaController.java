@@ -129,6 +129,15 @@ public class ZonaController {
         btnModificarZona.setOnAction(this::handleModifyButtonAction);
         //Metodo para eliminar la zona
         btnEliminarZona.setOnAction(this::handleDeleteButtonAction);
+
+        //Metodo para filtrar por nombre o tipo animal.
+        btnBuscar.setOnAction(this::handleSearchButton);
+
+        // Agregar un listener al cambio de texto en txtFiltrar
+        txtFiltrar.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Llamar al método refreshTableIfFilterEmpty cuando el texto cambie
+            refreshTableIfFilterEmpty();
+        });
         //Metodo para cargar los datos de la zona seleccionada
         tableZona.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
@@ -140,7 +149,7 @@ public class ZonaController {
                     txtFiltrar.setDisable(false);
                     txtFiltrar.setVisible(true);
                     btnBuscar.setDisable(false);
-                     btnBuscar.setVisible(true);
+                    btnBuscar.setVisible(true);
                 }
             }
 
@@ -208,8 +217,8 @@ public class ZonaController {
         }
 
     }
-    //Método para relalizar el CRUD de PUT en la tabla
 
+    //Método para relalizar el CRUD de PUT en la tabla
     @FXML
     private void handleModifyButtonAction(ActionEvent event) {
         //Conversiones necesarias para hacer la inserción
@@ -255,6 +264,54 @@ public class ZonaController {
         }
     }
 
+    //Método de busqueda del botón, sirve para realizar las consultas parametrizadas
+    @FXML
+    private void handleSearchButton(ActionEvent actionEvent) {
+        if (!txtFiltrar.getText().trim().isEmpty()) {
+            switch (comboFiltrar.getValue().toString()) {
+                case ("Filtrar por nombre"):
+                    cargarFiltroNombre();
+                    break;
+                case ("Filtrar por tipo animal"):
+                    cargarFiltroTipoAnimal();
+                    break;
+            }
+        } else {
+            refreshTableIfFilterEmpty();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Campos Vacíos");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor introduce algun texto para filtrar.");
+            alert.showAndWait();
+        }
+    }
+
+    //Tipo de filtro que carga la tabla por el nombre de la zona
+    @FXML
+    private ObservableList<Zona> cargarFiltroNombre() {
+        ObservableList<Zona> listaZonas;
+        List<Zona> FiltradoParam;
+        FiltradoParam = FXCollections.observableArrayList(zonaFact.getFactory().filtrarZonaPorNombre_XML(Zona.class, txtFiltrar.getText()));
+
+        listaZonas = FXCollections.observableArrayList(FiltradoParam);
+        tableZona.setItems(listaZonas);
+        tableZona.refresh();
+        return listaZonas;
+    }
+
+    // //Tipo de filtro que carga la tabla por el tipo de animal de la zona
+    @FXML
+    private ObservableList<Zona> cargarFiltroTipoAnimal() {
+        ObservableList<Zona> listaZonas;
+        List<Zona> FiltradoParam;
+        FiltradoParam = FXCollections.observableArrayList(zonaFact.getFactory().filtrarZonaPorTipoAnimal_XML(Zona.class, txtFiltrar.getText()));
+
+        listaZonas = FXCollections.observableArrayList(FiltradoParam);
+        tableZona.setItems(listaZonas);
+        tableZona.refresh();
+        return listaZonas;
+    }
+
     // Método que vacía los campos si hay alguna alteración en la ventana
     @FXML
     private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
@@ -296,6 +353,17 @@ public class ZonaController {
         }
 
         return true;
+    }
+
+    //Metodo que verifica que no hay nada en el textfield filtrar
+    @FXML
+    private void refreshTableIfFilterEmpty() {
+        if (txtFiltrar.getText().trim().isEmpty()) {
+            // If txtFiltrar is empty, refresh the table with all data
+            zonaData = FXCollections.observableArrayList(cargarTodo());
+            tableZona.setItems(zonaData);
+            tableZona.refresh();
+        }
     }
 
     private void mostrarAlerta(String titulo, String contenido) {
