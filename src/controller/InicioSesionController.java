@@ -47,6 +47,8 @@ import model.Usuario;
 public class InicioSesionController {
 
     private Stage stage;
+    
+    
     @FXML
     private Pane pane;
     @FXML
@@ -198,6 +200,7 @@ public class InicioSesionController {
                         user.setLogin(login);
                     }
                     
+                    //Abre la ventana de Principal y pasa el dato del usuario al controlador compartido del menubar
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                     Parent root = loader.load();
                     PrincipalController princiController = ((PrincipalController) loader.getController());

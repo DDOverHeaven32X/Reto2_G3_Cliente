@@ -44,9 +44,12 @@ public class PrincipalController {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Principal");
+        Usuario userNew = new Usuario();
+        userNew.setLogin(user.getLogin());
+        userNew.setNombre_completo(user.getNombre_completo());
         //Ponemos el nombre y correo del usuario en sus labels
-        lblUsuario.setText("Nombre de usuario: " + user.getNombre_completo());
-        lblEmail.setText("Email: " + user.getLogin());
+        lblUsuario.setText("Nombre de usuario: " + userNew.getNombre_completo());
+        lblEmail.setText("Email: " + userNew.getLogin());
         stage.show();
 
     }

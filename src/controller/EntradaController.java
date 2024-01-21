@@ -5,6 +5,8 @@
  */
 package controller;
 
+import exception.ReadException;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -13,13 +15,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -58,7 +63,7 @@ public class EntradaController {
 
     private Entrada entrada = new Entrada();
 
-    private Usuario user = new Usuario();
+    private Usuario user;
 
     private Admin admin = new Admin();
 
@@ -115,7 +120,7 @@ public class EntradaController {
 
     private Stage stage;
 
-    public void initiStage(Parent root) {
+    public void initiStage(Parent root, Usuario user) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -138,7 +143,7 @@ public class EntradaController {
         btnCrear.setDisable(false);
         btnModificar.setDisable(true);
         btnEliminar.setDisable(true);
-        btnComprar.setDisable(true);
+        btnComprar.setDisable(false);
         txtFiltrar.setDisable(true);
         btnBuscar.setDisable(true);
         dtpFiltradoFecha.setDisable(true);
@@ -152,10 +157,13 @@ public class EntradaController {
         comboEntrada.getItems().addAll(null, "Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
         cbcFiltro.getItems().addAll("Filtrar por dinero", "Filtrar por fecha");
         //Asignacion de botones
+        
         btnCrear.setOnAction(this::handleCreateButtonAction);
         btnModificar.setOnAction(this::handleModifyButtonAction);
         btnEliminar.setOnAction(this::handleDeleteButtonAction);
         btnBuscar.setOnAction(this::handleSearchButton);
+        btnTusEntradas.setOnAction(this::handlerEntradasClient);
+        btnComprar.setOnAction(this::handlerCompraEntrada);
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         cbcFiltro.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -193,7 +201,7 @@ public class EntradaController {
                     }
                 }
             }
-
+            
         });
         //Establecemos las factorias para los valores de celda
         //Formateo de la fecha para formáto estándar
@@ -406,9 +414,80 @@ public class EntradaController {
         tblEntrada.refresh();
         return listaEntradas;
     }
+    
+    //Método que muestra las entradas compradas de un cliente
+    @FXML
+    private ObservableList<Entrada> entradasClient(){
+        ObservableList<Entrada> listaEntradas;
+        List<Entrada> EntradasFiltro;
+        //Para Probar
+        String loginPrueba = "client@gmail.com";
+        EntradasFiltro = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaDeUsuario_XML(Entrada.class, loginPrueba));
+        listaEntradas = FXCollections.observableArrayList(EntradasFiltro);
+        try {
+
+            if (EntradasFiltro.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(null);
+                alert.setTitle("No tienes entradas");
+                //Mostramos una alerta de error.
+                alert.setContentText("No has realizado ningúna compra");
+
+                Optional<ButtonType> answer = alert.showAndWait();
+                if (answer.get() == ButtonType.OK) {
+                    alert.close();
+                }
+            }
+
+            tblEntrada.setItems(listaEntradas);
+            tblEntrada.refresh();
+
+            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+            alert2.setHeaderText(null);
+            alert2.setTitle(null);
+
+            alert2.setContentText("Mostrando tus entradas compradas, pulsa aceptar para dejar de verlas");
+
+            Optional<ButtonType> answer = alert2.showAndWait();
+            if (answer.get() == ButtonType.OK) {
+                alert2.close();
+                cargarTodo();
+            }
+
+        } catch (Exception e) {
+            LOGGER.severe("Ha ocurrido un error");
+        }
+        return listaEntradas;
+    }
+    @FXML
+    public void handlerCompraEntrada(ActionEvent event){
+        String idUserPrueba = "2";
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ConfirmarCompra.fxml"));
+            Parent root = loader.load();
+            ConfirmarCompraController confiController = ((ConfirmarCompraController) loader.getController());
+            confiController.setStage(stage);
+            confiController.setUser(user);
+            confiController.initiStage(root, user);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    @FXML
+    private void handlerEntradasClient(ActionEvent event){
+        entradasClient();
+    }
+    
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
+    
+    
 
 }
