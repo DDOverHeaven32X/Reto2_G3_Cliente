@@ -12,7 +12,7 @@
       <fx:include fx:id="menuBar" source="MenuBar.fxml" />
       <Pane layoutY="614.0" prefHeight="86.0" prefWidth="1000.0" style="-fx-background-color: #8D7656;">
          <children>
-            <Label fx:id="lblUsuario" layoutX="28.0" layoutY="17.0" prefHeight="17.0" prefWidth="160.0" text="Nombre de Usuario " textFill="WHITE">
+            <Label fx:id="lblUsuario" layoutX="28.0" layoutY="17.0" prefHeight="20.0" prefWidth="384.0" text="Nombre de Usuario " textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -21,7 +21,7 @@
                <font>
                   <Font size="16.0" />
                </font></Hyperlink>
-            <Label fx:id="lblEmail" layoutX="28.0" layoutY="50.0" prefHeight="17.0" prefWidth="160.0" text="Email" textFill="WHITE">
+            <Label fx:id="lblEmail" layoutX="28.0" layoutY="50.0" prefHeight="20.0" prefWidth="384.0" text="Email" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

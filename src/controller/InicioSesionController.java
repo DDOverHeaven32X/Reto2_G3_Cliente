@@ -173,31 +173,38 @@ public class InicioSesionController {
                 //Comprobamos si el usuario está registrado en la base de datos
                 List<Usuario> listaUser;
                 listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), pswContraseña.getText() );
+                String nombre = listaUser.get(0).getNombre_completo();
+                String login = listaUser.get(0).getLogin();
+                Privilegio privi = listaUser.get(0).getTipo_usuario();
+                
+                
                 //Si la consulta no devuelve nada se lanza una excepción de UserNotFoundException
                 if(listaUser.isEmpty()){
                     throw new UserNotFoundException();
                 }
                 //Si la consulta devuelve algo se setearan los datos User devueltos a un Cliente o un Admin
-                    Admin admin = new Admin();
-                    Cliente client = new Cliente();
-                    System.out.println(user.getLogin());
-                    System.out.println(user.getContraseña());
+                    
                     if (user.getLogin().equals("admin@gmail.com") && user.getContraseña().equals("Abcd*1234")) {
-                        user.setTipo_usuario(Privilegio.ADMIN);
-                        admin.setId_user(listaUser.get(0).getId_user());
-                        admin.setTipo_usuario(user.getTipo_usuario());
+                        user.setTipo_usuario(privi);
+                        user.setId_user(listaUser.get(0).getId_user());
+                        user.setTipo_usuario(user.getTipo_usuario());
+                        user.setNombre_completo(nombre);
+                        user.setLogin(login);
                     } else {
-                        user.setTipo_usuario(Privilegio.CLIENT);
-                        client.setId_user(listaUser.get(0).getId_user());
-                        client.setTipo_usuario(user.getTipo_usuario());
+                        user.setTipo_usuario(privi);
+                        user.setId_user(listaUser.get(0).getId_user());
+                        user.setTipo_usuario(user.getTipo_usuario());
+                        user.setNombre_completo(nombre);
+                        user.setLogin(login);
                     }
-
+                    
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                     Parent root = loader.load();
                     PrincipalController princiController = ((PrincipalController) loader.getController());
                     princiController.setUser(user);
                     princiController.setStage(stage);
                     princiController.initiStage(root, user);
+                    
                 
             }
 
