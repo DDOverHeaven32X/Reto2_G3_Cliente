@@ -196,6 +196,7 @@ public class RegistroController {
     private void tienesCuenta(MouseEvent event) {
 
         try {
+            stage.close();
             LOGGER.info("Iniciando la ventana de Inicio de sesión");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/InicioSesion.fxml"));
             Parent root = (Parent) loader.load();

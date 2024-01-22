@@ -6,22 +6,31 @@
 package controller;
 
 import static controller.RegistroController.LOGGER;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -36,8 +45,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import logic.ZonaFactoria;
+import model.Animal;
 import model.Entrada;
 import model.Zona;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * FXML Controller class
@@ -86,6 +103,10 @@ public class ZonaController {
     private Button btnBuscar;
     @FXML
     private Button btnInforme;
+    @FXML
+    private MenuItem menuItemBorrar;
+    @FXML
+    private MenuItem menuItemVisualizarAnimales;
 
     private Stage stage;
 
@@ -133,11 +154,15 @@ public class ZonaController {
         //Metodo para filtrar por nombre o tipo animal.
         btnBuscar.setOnAction(this::handleSearchButton);
 
+        btnInforme.setOnAction(this::handleImprimirAction);
         // Agregar un listener al cambio de texto en txtFiltrar
         txtFiltrar.textProperty().addListener((observable, oldValue, newValue) -> {
             // Llamar al método refreshTableIfFilterEmpty cuando el texto cambie
             refreshTableIfFilterEmpty();
         });
+
+        //menuItemVisualizarAnimales.setOnAction(this::handleDeleteButtonAction);
+        menuItemBorrar.setOnAction(this::handleDeleteButtonAction);
         //Metodo para cargar los datos de la zona seleccionada
         tableZona.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
@@ -225,6 +250,7 @@ public class ZonaController {
         if (!camposZonaInformados()) {
 
         } else {
+
             //Conversiones necesarias para hacer la inserción
             String nombre = txtNombreZona.getText();
             String descricpion = txtDescripcionZona.getText();
@@ -239,20 +265,55 @@ public class ZonaController {
             zonaFact.getFactory().edit_XML(zona);
             //Cargamos la tabla con el dato nuevo
             zonaData = FXCollections.observableArrayList(cargarTodo());
+
         }
     }
 
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
-        //Para realizar el borrado lo hacemos mediante el id de la Entrada
+        // Obtener la Zona seleccionada
         Zona selectedZona = tableZona.getSelectionModel().getSelectedItem();
-        zonaFact.getFactory().remove(selectedZona.getId_zona().toString());
 
-        //Cargamos la tabla con el dato nuevo
-        zonaData = FXCollections.observableArrayList(cargarTodo());
+        // Confirmar la eliminación
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmar Eliminación");
+        confirmacion.setHeaderText("¿Estás seguro de que deseas eliminar la Zona?");
+        confirmacion.setContentText("Esta acción no se puede deshacer.");
 
+        Optional<ButtonType> resultado = confirmacion.showAndWait();
+
+        if (resultado.get() == ButtonType.OK) {
+            // Eliminar la Zona si el usuario confirma
+            zonaFact.getFactory().remove(selectedZona.getId_zona().toString());
+
+            // Recargar la tabla con los datos actualizados
+            zonaData = FXCollections.observableArrayList(cargarTodo());
+        }
     }
 
+    /*
+    @FXML
+    private Zona handleVisualizarAnimalesButtonAction(ActionEvent event) {
+        Zona selectedZona = tableZona.getSelectionModel().getSelectedItem();
+        try {
+            // Obtener la Zona seleccionada
+
+            Stage ventanaActual = (Stage) tableZona.getScene().getWindow();
+            ventanaActual.close();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
+            Parent root = loader.load();
+
+            AnimalController animal = (AnimalController) loader.getController();
+            animal.setStage(stage);
+            animal.initStage(root);
+            // Eliminar la Zona si el usuario confirma
+
+        } catch (IOException ex) {
+            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return selectedZona;
+    }
+     */
     //Metodo que introduce los datos en los fields de la zona seleccionada.
     @FXML
     private void handleUsersTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue) {
@@ -383,4 +444,25 @@ public class ZonaController {
         this.stage = stage;
     }
 
+    @FXML
+    private void handleImprimirAction(ActionEvent event) {
+        try {
+            LOGGER.info("Comenzando la impresion...");
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/report/ZonaReport.jrxml"));
+            //Data for the report: a collection of UserBean passed as a JRDataSource 
+            //implementation 
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Zona>) this.tableZona.getItems());
+            //Map of parameter to be passed to the report
+            Map<String, Object> parameters = new HashMap<>();
+            //Fill report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        } catch (JRException ex) {
+
+        }
+    }
 }
