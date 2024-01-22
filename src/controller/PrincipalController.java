@@ -15,6 +15,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import model.Cliente;
 import model.Usuario;
 
 /**
@@ -39,7 +40,9 @@ public class PrincipalController {
 
     private Usuario user;
 
-    public void initiStage(Parent root, Usuario user) {
+    private Cliente clien;
+
+    public void initiStage(Parent root, Usuario user, Cliente cliente) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -60,6 +63,10 @@ public class PrincipalController {
 
     public void setUser(Usuario user) {
         this.user = user;
+    }
+
+    public void setClien(Cliente clien) {
+        this.clien = clien;
     }
 
 }

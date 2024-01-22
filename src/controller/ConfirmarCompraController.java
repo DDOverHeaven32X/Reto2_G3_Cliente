@@ -8,6 +8,9 @@ package controller;
 import exception.UserNotFoundException;
 import java.math.BigInteger;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -27,8 +30,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.ClienteFactoria;
+import logic.CompraFactoria;
 import logic.EntradaFactoria;
 import model.Cliente;
+import model.Compra;
 import model.Entrada;
 import model.Usuario;
 
@@ -49,18 +54,25 @@ public class ConfirmarCompraController {
     private TextField txt_contraReve2;
     @FXML
     private PasswordField pswPin;
-    
+
     private Stage stage;
 
     private Usuario user;
-    
-    private ClienteFactoria clieFac;
-    
+
+    private Cliente client;
+
+    private Entrada entr;
+
+    private Compra comp = new Compra();
+
+    private ClienteFactoria clieFac = new ClienteFactoria();
+
+    private CompraFactoria comFac = new CompraFactoria();
+
     private List<Cliente> listaClient;
-    
+
     private static final Logger LOGGER = Logger.getLogger("/controller/ConfirmarCompraController");
-    
-    
+
     public void initiStage(Parent root, Usuario user) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -78,13 +90,14 @@ public class ConfirmarCompraController {
         //Métodos de los botones
         btn_cancelar.setOnAction(this::exitHandler);
         btn_confirmar.setOnAction(this::comprarEntradaHandler);
-        
+
         stage.show();
         //
-    }    
+    }
+
     //Método para cerrar la ventana si no se desea comprar
     @FXML
-    public void exitHandler(ActionEvent event){
+    public void exitHandler(ActionEvent event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -97,32 +110,41 @@ public class ConfirmarCompraController {
             stage.close();
         }
     }
+
     //Método que realiza la compra de una entrada mediante el id de la entrada y del cliente
     @FXML
-    public void comprarEntradaHandler(ActionEvent event){
+    public void comprarEntradaHandler(ActionEvent event) {
         //Datos de prueba: "5432123146788766", "7654"
-        
+
         String n_tarjeta = txt_contraReve1.getText();
         String pin = pswPin.getText();
-        try{
+        try {
             List<Cliente> clienteCheck = clieFac.getFactory().filtrarPorTarjeta_XML(Cliente.class, n_tarjeta, pin);
-            
+
             if (clienteCheck != null) {
                 listaClient = FXCollections.observableArrayList(clienteCheck);
                 if (listaClient.isEmpty()) {
                     throw new UserNotFoundException();
                 } else {
-                    System.out.println("Puedes comprar");
+                    //Datos de prueba
+
+                    //Fecha actual del sistema cuando compra
+                    LocalDate localDate = LocalDate.now();
+                    Date fecha = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    comp.setFecha_compra(fecha);
+                    //comp.setCliente(cliente);
+                    //comp.setCompraId(compraId);
+                    //comp.setEntrada(entrada);
+                    comFac.getFactory().create_XML(comp);
+
                 }
             } else {
-                LOGGER.severe("El método filtrarPorTarjeta_XML ha devuelto un valor nulo");
+                LOGGER.severe("Ha introducido algún dato erróneo");
             }
-        }catch(UserNotFoundException e){
-            LOGGER.severe("Los datos proporcionados son erroneos o no existen, reviselos de nuevo");
-        }catch(Exception e){
+        } catch (Exception e) {
             LOGGER.severe("Ha ocurrido un error inesperado");
         }
-        
+
     }
 
     public void setStage(Stage stage) {
@@ -132,7 +154,5 @@ public class ConfirmarCompraController {
     public void setUser(Usuario user) {
         this.user = user;
     }
-    
-    
-    
+
 }
