@@ -47,6 +47,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.EntradaFactoria;
 import model.Admin;
+import model.Cliente;
 import model.Entrada;
 import model.Usuario;
 
@@ -64,6 +65,8 @@ public class EntradaController {
     private Entrada entrada = new Entrada();
 
     private Usuario user;
+    
+    private Cliente clien;
 
     private Admin admin = new Admin();
 
@@ -120,7 +123,7 @@ public class EntradaController {
 
     private Stage stage;
 
-    public void initiStage(Parent root, Usuario user) {
+    public void initiStage(Parent root, Usuario user, Cliente cliente) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -164,6 +167,10 @@ public class EntradaController {
         btnBuscar.setOnAction(this::handleSearchButton);
         btnTusEntradas.setOnAction(this::handlerEntradasClient);
         btnComprar.setOnAction(this::handlerCompraEntrada);
+        
+        
+        //Codigo que guarda el valor selecionado 
+        
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         cbcFiltro.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -259,6 +266,8 @@ public class EntradaController {
         tblEntrada.refresh();
         return listEntrada;
     }
+    
+    
 
     //Método que vacia los campos si hay algúna alteracion en la ventana
     @FXML
@@ -347,7 +356,7 @@ public class EntradaController {
         entradaData = FXCollections.observableArrayList(cargarTodo());
     }
 
-    //Método para relalizar el CRUD de PUT en la tabla
+    //Método para relalizar el CRUD de DELETE en la tabla
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
         //Para realizar el borrado lo hacemos mediante el id de la Entrada
@@ -461,16 +470,28 @@ public class EntradaController {
     }
     @FXML
     public void handlerCompraEntrada(ActionEvent event){
-        String idUserPrueba = "2";
+     
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ConfirmarCompra.fxml"));
-            Parent root = loader.load();
-            ConfirmarCompraController confiController = ((ConfirmarCompraController) loader.getController());
-            confiController.setStage(stage);
-            confiController.setUser(user);
-            confiController.initiStage(root, user);
-            
+            Entrada data = tblEntrada.getSelectionModel().getSelectedItem();
+            if (data != null) {
+                entrada = new Entrada();
+                entrada.setId_entrada(data.getId_entrada());
+                
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ConfirmarCompra.fxml"));
+                Parent root = loader.load();
+                ConfirmarCompraController confiController = ((ConfirmarCompraController) loader.getController());
+                confiController.setStage(stage);
+                confiController.setUser(user);
+                confiController.setClient(clien);
+                confiController.setEntr(entrada);
+                confiController.initiStage(root, user, clien);
+
+            } else {
+                throw new Exception("No has seleccionado una entrada para comprar");
+            }
         } catch (IOException ex) {
+            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -487,6 +508,11 @@ public class EntradaController {
     public void setUser(Usuario user) {
         this.user = user;
     }
+
+    public void setClien(Cliente clien) {
+        this.clien = clien;
+    }
+    
     
     
 

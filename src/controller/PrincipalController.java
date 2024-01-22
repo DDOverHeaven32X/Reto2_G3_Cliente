@@ -19,9 +19,9 @@ import model.Cliente;
 import model.Usuario;
 
 /**
- * FXML Controller class
+ * Controlador de la ventana principal
  *
- * @author 2dam
+ * @author Ander, Diego, Adrían
  */
 public class PrincipalController {
 
@@ -35,6 +35,8 @@ public class PrincipalController {
     private Label lblUsuario;
     @FXML
     private Label lblEmail;
+    @FXML
+    private MenuBarController menubar = new MenuBarController();
 
     private Stage stage;
 
@@ -47,12 +49,11 @@ public class PrincipalController {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Principal");
-        Usuario userNew = new Usuario();
-        userNew.setLogin(user.getLogin());
-        userNew.setNombre_completo(user.getNombre_completo());
+        menubar.setUser(user);
+        menubar.setClien(cliente);
         //Ponemos el nombre y correo del usuario en sus labels
-        lblUsuario.setText("Nombre de usuario: " + userNew.getNombre_completo());
-        lblEmail.setText("Email: " + userNew.getLogin());
+        lblUsuario.setText("Nombre de usuario: " + user.getNombre_completo());
+        lblEmail.setText("Email: " + user.getLogin());
         stage.show();
 
     }

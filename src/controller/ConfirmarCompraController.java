@@ -73,7 +73,7 @@ public class ConfirmarCompraController {
 
     private static final Logger LOGGER = Logger.getLogger("/controller/ConfirmarCompraController");
 
-    public void initiStage(Parent root, Usuario user) {
+    public void initiStage(Parent root, Usuario user, Cliente cliente) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -115,7 +115,8 @@ public class ConfirmarCompraController {
     @FXML
     public void comprarEntradaHandler(ActionEvent event) {
         //Datos de prueba: "5432123146788766", "7654"
-
+        
+        System.out.println("controller.ConfirmarCompraController.comprarEntradaHandler()");
         String n_tarjeta = txt_contraReve1.getText();
         String pin = pswPin.getText();
         try {
@@ -132,10 +133,23 @@ public class ConfirmarCompraController {
                     LocalDate localDate = LocalDate.now();
                     Date fecha = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                     comp.setFecha_compra(fecha);
-                    //comp.setCliente(cliente);
-                    //comp.setCompraId(compraId);
-                    //comp.setEntrada(entrada);
-                    comFac.getFactory().create_XML(comp);
+                    comp.setCliente(client);
+                    comp.setEntrada(entr);
+                    System.out.println(comp.getFecha_compra() + ", " + comp.getEntrada() + ", " + comp.getCliente());
+                    //comFac.getFactory().create_XML(comp);
+                    if(comp == null){
+                        LOGGER.severe("Ha ocurrido un fallo en la compra");
+                    }else{
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setHeaderText(null);
+                        alert.setTitle(null);
+                        alert.setContentText("Compra realizada con éxito");
+
+                        Optional<ButtonType> answer = alert.showAndWait();
+                        if (answer.get() == ButtonType.OK) {
+                            stage.close();
+                        }
+                    }
 
                 }
             } else {
@@ -154,5 +168,15 @@ public class ConfirmarCompraController {
     public void setUser(Usuario user) {
         this.user = user;
     }
+
+    public void setClient(Cliente client) {
+        this.client = client;
+    }
+
+    public void setEntr(Entrada entr) {
+        this.entr = entr;
+    }
+    
+    
 
 }

@@ -86,8 +86,10 @@ public class MenuBarController {
             Parent root = (Parent) loader.load();
             EntradaController entController = ((EntradaController) loader.getController());
             entController.setStage(stage);
+            entController.setClien(clien);
             entController.setUser(user);
-            entController.initiStage(root, user);
+            
+            entController.initiStage(root, user, clien);
         } catch (IOException e) {
 
         }
@@ -126,5 +128,10 @@ public class MenuBarController {
     public void setUser(Usuario user) {
         this.user = user;
     }
+
+    public void setClien(Cliente clien) {
+        this.clien = clien;
+    }
+    
 
 }

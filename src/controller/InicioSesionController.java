@@ -51,7 +51,7 @@ public class InicioSesionController {
 
     private Admin admin;
 
-    private Cliente client;
+    
 
     @FXML
     private Pane pane;
@@ -170,6 +170,7 @@ public class InicioSesionController {
             error.setText("");
             if (camposInformados() && maxCarecteres()) {
                 Usuario user = new Usuario();
+                Cliente client = new Cliente();
                 user.setLogin(textEmail.getText());
                 user.setContraseña(pswContraseña.getText());
                 if (pswContraseña.isVisible()) {
@@ -201,7 +202,7 @@ public class InicioSesionController {
                     user.setTelefono(listaUser.get(0).getTelefono());
 
                 } else {
-                    String userID;
+                    
                     user.setTipo_usuario(privi);
                     user.setId_user(listaUser.get(0).getId_user());
                     user.setTipo_usuario(user.getTipo_usuario());
@@ -211,13 +212,13 @@ public class InicioSesionController {
                     user.setCod_postal(listaUser.get(0).getCod_postal());
                     user.setTelefono(listaUser.get(0).getTelefono());
                     //Establecemos los atributos exclusivos de cliente
-
                     Cliente cliente = clieFact.getFactory().find_XML(Cliente.class, user.getId_user().toString());
                     client.setN_tarjeta(cliente.getN_tarjeta());
                     client.setPin(cliente.getPin());
+                    System.out.println(client.getN_tarjeta() + ", " + client.getPin());
                 }
 
-                //Abre la ventana de Principal y pasa el dato del usuario al controlador compartido del menubar
+                //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                 Parent root = loader.load();
                 PrincipalController princiController = ((PrincipalController) loader.getController());
