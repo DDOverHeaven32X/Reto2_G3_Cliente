@@ -3,6 +3,15 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="especie" class="java.lang.String"/>
+	<field name="genero" class="java.lang.String"/>
+	<field name="salud" class="java.lang.Enum"/>
+	<field name="edad" class="java.lang.Integer"/>
+	<field name="peso" class="java.lang.Float"/>
+	<field name="altura" class="java.lang.Float"/>
+	<field name="alimentacion" class="java.lang.Enum"/>
+	<field name="zona" class="java.lang.Object"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -24,7 +33,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[Aqui se muestra toda la informacion de la tabla animaes:]]></text>
+				<text><![CDATA[Aqui se muestra toda la informacion de la tabla animales:]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -38,7 +47,7 @@
 			<staticText>
 				<reportElement x="100" y="0" width="76" height="20" uuid="5657edf1-c514-47c2-a365-543efa24165d"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
-				<text><![CDATA[Epecie]]></text>
+				<text><![CDATA[Especie]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="172" y="0" width="61" height="20" uuid="3f552b93-c188-425f-beca-b9f03893c839"/>
@@ -78,51 +87,51 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="46" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="cb69a9bd-8fe2-4817-bbeb-6061fe153334"/>
+				<reportElement x="2" y="14" width="100" height="20" uuid="cb69a9bd-8fe2-4817-bbeb-6061fe153334"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="0" width="76" height="20" uuid="78e6ca15-f930-499b-a11b-575aa2043b4c"/>
+				<reportElement x="102" y="14" width="76" height="20" uuid="78e6ca15-f930-499b-a11b-575aa2043b4c"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{especie}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="173" y="0" width="60" height="20" uuid="c56a417f-914a-4470-a3da-141b84434fdd"/>
+				<reportElement x="175" y="14" width="60" height="20" uuid="c56a417f-914a-4470-a3da-141b84434fdd"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{genero}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="233" y="0" width="40" height="20" uuid="47b262c3-33ea-44fd-94d9-b804f6e8c70e"/>
+				<reportElement x="235" y="14" width="40" height="20" uuid="47b262c3-33ea-44fd-94d9-b804f6e8c70e"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{edad}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="273" y="0" width="44" height="20" uuid="3d8f6ac6-fd9b-4705-8bb7-e9c4e8e41adf"/>
+				<reportElement x="275" y="14" width="44" height="20" uuid="3d8f6ac6-fd9b-4705-8bb7-e9c4e8e41adf"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{peso}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="317" y="0" width="43" height="20" uuid="180d65e4-03ce-4dd9-98e8-161d57de0b68"/>
+				<reportElement x="319" y="14" width="43" height="20" uuid="180d65e4-03ce-4dd9-98e8-161d57de0b68"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{altura}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="360" y="0" width="73" height="20" uuid="a72f28db-5501-4426-89db-5207ae371ab9"/>
+				<reportElement x="362" y="14" width="73" height="20" uuid="a72f28db-5501-4426-89db-5207ae371ab9"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{alimentacion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="494" y="0" width="61" height="20" uuid="64f74715-af3e-462d-aad7-fbbe08ad476a"/>
+				<reportElement x="496" y="14" width="61" height="20" uuid="64f74715-af3e-462d-aad7-fbbe08ad476a"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{zona}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="433" y="0" width="61" height="20" uuid="c46e9015-6473-450d-9b14-ebc149ed582c"/>
+				<reportElement x="435" y="14" width="61" height="20" uuid="c46e9015-6473-450d-9b14-ebc149ed582c"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{salud}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -8,8 +8,11 @@ package controller;
 import exception.CreateException;
 import exception.DeleteException;
 import exception.UpdateException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
@@ -45,6 +48,13 @@ import model.Animal;
 import model.Salud;
 import model.Usuario;
 import model.Zona;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * FXML Controller class
@@ -192,6 +202,7 @@ public class AnimalController {
         btnModificarAnimal.setOnAction(this::handleModifyButtonAction);
         btnEliminarAnimal.setOnAction(this::handleDeleteButtonAction);
         btnBuscar.setOnAction(this::handleSearchButton);
+        btnInforme.setOnAction(this::handleImprimirAction);
 
         //Menu de contexto
         mItemBorrar.setOnAction(this::handleDeleteButtonAction);
@@ -448,6 +459,23 @@ public class AnimalController {
 
     }
 
+    @FXML
+    private void handleImprimirAction(ActionEvent event) {
+        try {
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/report/AnimalReport.jrxml"));
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Animal>) this.tableAnimal.getItems());
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Error al imprimir");
+            alert.showAndWait();
+        }
+    }
+
     //Método de busqueda del botón, sirve para realizar los filtros
     @FXML
     private void handleSearchButton(ActionEvent actionEvent) {
@@ -486,6 +514,9 @@ public class AnimalController {
             return listAnimales;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar la tabla.");
         }
         return null;
     }
@@ -545,6 +576,9 @@ public class AnimalController {
             comboFiltrarEspecie.getItems().addAll(especiesUnicas);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setContentText("Error al cargar el filtro de especies.");
         }
     }
 
@@ -556,6 +590,9 @@ public class AnimalController {
             comboZona.getItems().addAll(zonas);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setContentText("Error al cargar el filtro de zonas.");
         }
 
     }
@@ -724,5 +761,9 @@ public class AnimalController {
             }
         }
         return false;
+    }
+
+    private void showErrorAlert(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
