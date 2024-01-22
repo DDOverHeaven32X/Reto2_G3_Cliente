@@ -16,7 +16,7 @@
 <Pane fx:id="paneAnimal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnimalController">
    <children>
       <fx:include fx:id="menuBar" source="MenuBar.fxml" />
-      <ImageView fitHeight="656.0" fitWidth="1000.0" layoutY="44.0">
+      <ImageView fitHeight="700.0" fitWidth="1000.0" layoutY="44.0">
          <image>
             <Image url="@../imagenes/leon.jpg" />
          </image>

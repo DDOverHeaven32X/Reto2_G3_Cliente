@@ -11,7 +11,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import model.Animal;
-import model.Especies;
 
 /**
  * Jersey REST client generated for REST resource:AnimalFacadeREST
@@ -141,18 +140,18 @@ public class AnimalRESTClient implements AnimalInterfaz {
     }
 
     @Override
-    public List<Especies> findSpecies_XML(Class<Especies> responseType) throws WebApplicationException {
+    public List<String> findSpecies_XML(Class<String> responseType) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path("listarEspecies");
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(new GenericType<List<Especies>>() {
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(new GenericType<List<String>>() {
         });
     }
 
     @Override
-    public List<Especies> findSpecies_JSON(Class<Especies> responseType) throws WebApplicationException {
+    public List<String> findSpecies_JSON(Class<String> responseType) throws WebApplicationException {
         WebTarget resource = webTarget;
         resource = resource.path("listarEspecies");
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Especies>>() {
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<String>>() {
         });
     }
 

@@ -5,8 +5,13 @@
  */
 package controller;
 
+import exception.CreateException;
+import exception.DeleteException;
+import exception.UpdateException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -37,7 +42,6 @@ import logic.ZonaFactoria;
 import model.Admin;
 import model.Alimentacion;
 import model.Animal;
-import model.Especies;
 import model.Salud;
 import model.Usuario;
 import model.Zona;
@@ -129,6 +133,9 @@ public class AnimalController {
         //La ventana no es modal
         stage.initModality(Modality.NONE);
         stage.setTitle("Animal");
+
+        //la ventana no se puede redimensionar
+        stage.setResizable(false);
 
         //Campos visibles
         txtNombreAnimal.setVisible(true);
@@ -300,20 +307,16 @@ public class AnimalController {
                         break;
                 }
                 animal.setZona((Zona) comboZona.getValue());
-
                 //animal.setAdmin(admin);
-                // Comprobar si la entrada ya existe
-                if (animalExiste(txtNombreAnimal.getText(), txtGenero.getValue().toString(), txtEspecie.getText(), comboSalud.getValue().toString(), Integer.parseInt(txtEdad.getText()), Float.parseFloat(txtPeso.getText()), Float.parseFloat(txtAltura.getText()), comboAlimentacion.getValue().toString(), (Zona) comboZona.getValue())) {
+
+                // Comprobar si el animal ya existe
+                if (animalExiste()) {
                     Alert ventanita = new Alert(Alert.AlertType.ERROR);
                     ventanita.setHeaderText(null);
                     ventanita.setTitle("Error");
                     ventanita.setContentText("El animal que intentas crear ya existe");
-                    Optional<ButtonType> action3 = ventanita.showAndWait();
-                    if (action3.get() == ButtonType.OK) {
-                        ObservableList<Animal> listAnimales;
-                        List<Animal> todosAnimales;
-                        todosAnimales = FXCollections.observableArrayList(fAnimal.getFactory().findAll_XML(Animal.class));
-                        listAnimales = FXCollections.observableArrayList(todosAnimales);
+                    Optional<ButtonType> action = ventanita.showAndWait();
+                    if (action.get() == ButtonType.OK) {
                         txtNombreAnimal.setText("");
                         txtGenero.setValue(null);
                         txtEspecie.setText("");
@@ -323,20 +326,26 @@ public class AnimalController {
                         txtAltura.setText("");
                         comboAlimentacion.setValue(null);
                         comboZona.setValue(null);
-                        tableAnimal.setItems(listAnimales);
-                        tableAnimal.refresh();
                         ventanita.close();
                     }
                     return;
                 }
                 fAnimal.getFactory().create_XML(animal);
-                //Cargamos la tabla con el dato nuevo
+                //Cargamos la tabla con el animal nuevo
                 animalData = FXCollections.observableArrayList(cargarTodo());
 
             }
 
         } catch (WebApplicationException e) {
-            LOGGER.log(Level.SEVERE, null, e);
+            try {
+                LOGGER.log(Level.SEVERE, null, e);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setContentText("Error al crear el animal.");
+                throw new CreateException();
+            } catch (CreateException ex) {
+                Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
@@ -389,7 +398,15 @@ public class AnimalController {
             }
 
         } catch (WebApplicationException e) {
-            LOGGER.log(Level.SEVERE, null, e);
+            try {
+                LOGGER.log(Level.SEVERE, null, e);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setContentText("Error al modificar el animal.");
+                throw new UpdateException();
+            } catch (UpdateException ex) {
+                Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
@@ -398,14 +415,35 @@ public class AnimalController {
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
         try {
-            //Para realizar el borrado lo hacemos mediante el id de la Entrada
-            Animal animalElegido = tableAnimal.getSelectionModel().getSelectedItem();
-            fAnimal.getFactory().remove(animalElegido.getId_animal().toString());
+            //Creamos un nuevo objeto Alerta
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText(null);
+            alert.setTitle("Borrar Animal");
+            //Mostramos una alerta de confirmacion.
+            alert.setContentText("¿Estas seguro que deseas eliminar el animal?");
 
-            //Cargamos la tabla con el dato nuevo
-            animalData = FXCollections.observableArrayList(cargarTodo());
-        } catch (WebApplicationException e) {
-            LOGGER.log(Level.SEVERE, null, e);
+            Optional<ButtonType> answer = alert.showAndWait();
+            if (answer.get() == ButtonType.OK) {
+                //Para realizar el borrado lo hacemos mediante el id de la Entrada
+                Animal animalElegido = tableAnimal.getSelectionModel().getSelectedItem();
+                fAnimal.getFactory().remove(animalElegido.getId_animal().toString());
+
+                //Cargamos la tabla con el dato nuevo
+                animalData = FXCollections.observableArrayList(cargarTodo());
+            } else {
+                event.consume();
+            }
+
+        } catch (Exception e) {
+            try {
+                LOGGER.log(Level.SEVERE, null, e);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setContentText("Error al eliminar el animal.");
+                throw new DeleteException();
+            } catch (DeleteException ex) {
+                Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
@@ -497,9 +535,14 @@ public class AnimalController {
     @FXML
     private void cargarFiltroComboEspecie() {
         try {
-            List<Especies> especiesList = fAnimal.getFactory().findSpecies_XML(Especies.class);
-            ObservableList<Especies> especies = FXCollections.observableArrayList(especiesList);
-            comboFiltrarEspecie.getItems().addAll(especies);
+            List<Animal> animales = fAnimal.getFactory().findAll_XML(Animal.class);
+            Set<String> especiesUnicas = new HashSet<>();
+
+            for (Animal a : animales) {
+                especiesUnicas.add(a.getEspecie());
+            }
+
+            comboFiltrarEspecie.getItems().addAll(especiesUnicas);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
@@ -646,11 +689,37 @@ public class AnimalController {
         alert.showAndWait();
     }
 
-    private boolean animalExiste(String nombre, String genero, String especie, String salud, int edad, Float peso, Float altura, String alimentacion, Zona zona) {
-        // Buscar entradas con la misma fecha y tipo de entrada
+    private boolean animalExiste() {
+        // Buscar animal que sea igual a los ya introducidos
         List<Animal> listaAnimal = fAnimal.getFactory().findAll_XML(Animal.class);
+        Animal animalACorregir = new Animal();
+        animalACorregir.setNombre(txtNombreAnimal.getText());
+        animalACorregir.setGenero(txtGenero.getValue().toString());
+        animalACorregir.setEspecie(txtEspecie.getText());
+        if (comboSalud.getValue().toString().equals("SANO")) {
+            animalACorregir.setSalud(Salud.SANO);
+        } else if (comboSalud.getValue().toString().equals("ENFERMO")) {
+            animalACorregir.setSalud(Salud.ENFERMO);
+        }
+        animalACorregir.setEdad(Integer.parseInt(txtEdad.getText()));
+        animalACorregir.setPeso(Float.parseFloat(txtPeso.getText()));
+        animalACorregir.setAltura(Float.parseFloat(txtAltura.getText()));
+        switch (comboAlimentacion.getValue().toString()) {
+            case "HERBIVORO":
+                animalACorregir.setAlimentacion(Alimentacion.HERBIVORO);
+                break;
+            case "CARNIVORO":
+                animalACorregir.setAlimentacion(Alimentacion.CARNIVORO);
+                break;
+            case "OMNIVORO":
+                animalACorregir.setAlimentacion(Alimentacion.OMNIVORO);
+                break;
+            default:
+                break;
+        }
+
         for (Animal a : listaAnimal) {
-            if (a.getNombre().equals(nombre) && a.getGenero().equals(genero) && a.getEspecie().equals(especie) && a.getSalud().equals(salud) && a.getEdad().equals(edad) && a.getPeso().equals(peso) && a.getAltura().equals(altura) && a.getAlimentacion().equals(alimentacion) && a.getZona().equals(zona)) {
+            if (a.getNombre().equals(animalACorregir.getNombre()) && a.getGenero().equals(animalACorregir.getGenero()) && a.getEspecie().equals(animalACorregir.getEspecie()) && a.getSalud().equals(animalACorregir.getSalud()) && a.getEdad().equals(animalACorregir.getEdad()) && a.getPeso().equals(animalACorregir.getPeso()) && a.getAltura().equals(animalACorregir.getAltura()) && a.getAlimentacion().equals(animalACorregir.getAlimentacion())) {
                 return true;
             }
         }
