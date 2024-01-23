@@ -5,9 +5,13 @@
  */
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,12 +47,20 @@ public class PrincipalController {
     private Usuario user;
 
     private Cliente clien;
+    
+    private static final Logger LOGGER = Logger.getLogger("/controlador/CambiarContrasenaController");
 
     public void initiStage(Parent root, Usuario user, Cliente cliente) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Principal");
+        //habilitamos y llamamos al metodo para llamar a la ventana de cambiar contraseña
+        hyp_cambiarContrasena.setDisable(false);
+        hyp_cambiarContrasena.setOnMouseClicked(event -> {
+            handleLblContraClick();
+        });
+        
         menubar.setUser(user);
         menubar.setClien(cliente);
         //Ponemos el nombre y correo del usuario en sus labels
@@ -68,6 +80,20 @@ public class PrincipalController {
 
     public void setClien(Cliente clien) {
         this.clien = clien;
+    }
+
+    private void handleLblContraClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CambiarContrasena.fxml"));
+            Parent root = (Parent) loader.load();
+
+            CambiarContrasenaController cambiarContra = (CambiarContrasenaController) loader.getController();
+            cambiarContra.setStage(stage, clien);
+            cambiarContra.initStage(root);
+            
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
+        }
     }
 
 }
