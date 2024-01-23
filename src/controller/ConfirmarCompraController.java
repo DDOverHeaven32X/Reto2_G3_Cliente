@@ -34,6 +34,7 @@ import logic.CompraFactoria;
 import logic.EntradaFactoria;
 import model.Cliente;
 import model.Compra;
+import model.CompraId;
 import model.Entrada;
 import model.Usuario;
 
@@ -63,8 +64,6 @@ public class ConfirmarCompraController {
 
     private Entrada entr;
 
-    private Compra comp = new Compra();
-
     private ClienteFactoria clieFac = new ClienteFactoria();
 
     private CompraFactoria comFac = new CompraFactoria();
@@ -73,7 +72,7 @@ public class ConfirmarCompraController {
 
     private static final Logger LOGGER = Logger.getLogger("/controller/ConfirmarCompraController");
 
-    public void initiStage(Parent root, Usuario user, Cliente cliente) {
+    public void initiStage(Parent root, Usuario user) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -115,8 +114,7 @@ public class ConfirmarCompraController {
     @FXML
     public void comprarEntradaHandler(ActionEvent event) {
         //Datos de prueba: "5432123146788766", "7654"
-        
-        System.out.println("controller.ConfirmarCompraController.comprarEntradaHandler()");
+
         String n_tarjeta = txt_contraReve1.getText();
         String pin = pswPin.getText();
         try {
@@ -128,18 +126,43 @@ public class ConfirmarCompraController {
                     throw new UserNotFoundException();
                 } else {
                     //Datos de prueba
-
+                    Cliente clie = new Cliente();
+                    clie.setId_user(clienteCheck.get(0).getId_user());
+                    System.out.println(clie.getId_user());
+                    clie.setCod_postal(clienteCheck.get(0).getCod_postal());
+                    clie.setContraseña(clienteCheck.get(0).getContraseña());
+                    clie.setDireccion(clienteCheck.get(0).getDireccion());
+                    clie.setLogin(clienteCheck.get(0).getLogin());
+                    clie.setTipo_usuario(clienteCheck.get(0).getTipo_usuario());
+                    clie.setNombre_completo(clienteCheck.get(0).getNombre_completo());
+                    clie.setN_tarjeta(clienteCheck.get(0).getN_tarjeta());
+                    clie.setPin(clienteCheck.get(0).getPin());
+                    clie.setTelefono(clienteCheck.get(0).getTelefono());
                     //Fecha actual del sistema cuando compra
                     LocalDate localDate = LocalDate.now();
                     Date fecha = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    comp.setFecha_compra(fecha);
-                    comp.setCliente(client);
-                    comp.setEntrada(entr);
-                    System.out.println(comp.getFecha_compra() + ", " + comp.getEntrada() + ", " + comp.getCliente());
-                    //comFac.getFactory().create_XML(comp);
-                    if(comp == null){
+                    Compra buy = new Compra();
+                    CompraId buyId = new CompraId();
+                    buy.setFecha_compra(fecha);
+                    buyId.setId_entrada(entr.getId_entrada());
+                    buyId.setId_user(clie.getId_user());
+
+                    /*System.out.println(buy.getCliente().getCod_postal() + " ,"
+                            + buy.getCliente().getId_user() + ", "
+                            + buy.getCliente().getN_tarjeta() + ", "
+                            + buy.getCliente().getPin() + ", "
+                            + buy.getCliente().getNombre_completo() + ", "
+                            + buy.getCliente().getTipo_usuario() + ", "
+                            + buy.getCliente().getTelefono() + ", "
+                            + buy.getCliente().getLogin() + ", "
+                            + buy.getCliente().getDireccion() + ", "
+                            + buy.getCliente().getLogin() + ", ");
+                    System.out.println(buy.getFecha_compra() + ", " + buy.getEntrada() + ", " + buy.getCliente().getId_user());*/
+                    comFac.getFactory().create_XML(buy);
+                    comFac.getFactory().create_XML(buyId);
+                    if (buy == null) {
                         LOGGER.severe("Ha ocurrido un fallo en la compra");
-                    }else{
+                    } else {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                         alert.setHeaderText(null);
                         alert.setTitle(null);
@@ -176,7 +199,5 @@ public class ConfirmarCompraController {
     public void setEntr(Entrada entr) {
         this.entr = entr;
     }
-    
-    
 
 }

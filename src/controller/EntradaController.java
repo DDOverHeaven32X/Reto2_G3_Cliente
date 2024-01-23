@@ -65,7 +65,7 @@ public class EntradaController {
     private Entrada entrada = new Entrada();
 
     private Usuario user;
-    
+
     private Cliente clien;
 
     private Admin admin = new Admin();
@@ -160,17 +160,15 @@ public class EntradaController {
         comboEntrada.getItems().addAll(null, "Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
         cbcFiltro.getItems().addAll("Filtrar por dinero", "Filtrar por fecha");
         //Asignacion de botones
-        
+        //System.out.println(cliente.toString());
         btnCrear.setOnAction(this::handleCreateButtonAction);
         btnModificar.setOnAction(this::handleModifyButtonAction);
         btnEliminar.setOnAction(this::handleDeleteButtonAction);
         btnBuscar.setOnAction(this::handleSearchButton);
         btnTusEntradas.setOnAction(this::handlerEntradasClient);
         btnComprar.setOnAction(this::handlerCompraEntrada);
-        
-        
-        //Codigo que guarda el valor selecionado 
-        
+
+        //Codigo que guarda el valor selecionado
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         cbcFiltro.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -208,7 +206,7 @@ public class EntradaController {
                     }
                 }
             }
-            
+
         });
         //Establecemos las factorias para los valores de celda
         //Formateo de la fecha para formáto estándar
@@ -266,8 +264,6 @@ public class EntradaController {
         tblEntrada.refresh();
         return listEntrada;
     }
-    
-    
 
     //Método que vacia los campos si hay algúna alteracion en la ventana
     @FXML
@@ -423,10 +419,10 @@ public class EntradaController {
         tblEntrada.refresh();
         return listaEntradas;
     }
-    
+
     //Método que muestra las entradas compradas de un cliente
     @FXML
-    private ObservableList<Entrada> entradasClient(){
+    private ObservableList<Entrada> entradasClient() {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> EntradasFiltro;
         //Para Probar
@@ -468,23 +464,28 @@ public class EntradaController {
         }
         return listaEntradas;
     }
+
     @FXML
-    public void handlerCompraEntrada(ActionEvent event){
-     
+    public void handlerCompraEntrada(ActionEvent event) {
+
         try {
             Entrada data = tblEntrada.getSelectionModel().getSelectedItem();
             if (data != null) {
                 entrada = new Entrada();
                 entrada.setId_entrada(data.getId_entrada());
-                
+                entrada.setFecha_entrada(data.getFecha_entrada());
+                entrada.setPrecio(data.getPrecio());
+                entrada.setTipo_entrada(data.getTipo_entrada());
+                entrada.setAdmin(data.getAdmin());
+
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ConfirmarCompra.fxml"));
                 Parent root = loader.load();
                 ConfirmarCompraController confiController = ((ConfirmarCompraController) loader.getController());
                 confiController.setStage(stage);
                 confiController.setUser(user);
-                confiController.setClient(clien);
+
                 confiController.setEntr(entrada);
-                confiController.initiStage(root, user, clien);
+                confiController.initiStage(root, user);
 
             } else {
                 throw new Exception("No has seleccionado una entrada para comprar");
@@ -495,11 +496,11 @@ public class EntradaController {
             Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     @FXML
-    private void handlerEntradasClient(ActionEvent event){
+    private void handlerEntradasClient(ActionEvent event) {
         entradasClient();
     }
-    
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -512,8 +513,5 @@ public class EntradaController {
     public void setClien(Cliente clien) {
         this.clien = clien;
     }
-    
-    
-    
 
 }
