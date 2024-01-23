@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
@@ -31,6 +32,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logic.ClienteFactoria;
+import model.Cliente;
 
 /**
  * Esta clase funciona como el controlador de la ventana de Registro.
@@ -38,6 +41,8 @@ import javafx.stage.Stage;
  * @author Diego, Adrian
  */
 public class RegistroController {
+
+    private final ClienteFactoria clieFact = new ClienteFactoria();
 
     @FXML
     private Pane pane;
@@ -99,7 +104,7 @@ public class RegistroController {
     private PasswordField psw_pin;
     @FXML
     private TextField txt_pinReve;
-    
+
     private Stage stage;
 
     private String email, contraseña, zip, telefono, nombre;
@@ -109,6 +114,12 @@ public class RegistroController {
 
     private static final String patronPhone = "^(\\+34|0034|34)?[6|7|9][0-9]{8}$";
     private static final Pattern phoneMatcher = Pattern.compile(patronPhone);
+
+    private static final String patronTarjeta = "^\\d{16}$";
+    private static final Pattern tarjetaMatcher = Pattern.compile(patronTarjeta);
+
+    private static final String patronPin = "^\\d{4}$";
+    private static final Pattern pinMatcher = Pattern.compile(patronPin);
 
     private static final String patronContraseña = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+$";
     private static final Pattern passwordMatcher = Pattern.compile(patronContraseña);
@@ -120,7 +131,7 @@ public class RegistroController {
     /**
      * Initializes the controller class.
      *
-     * @author Diego, Adrián
+     * @author Ander, Diego
      * @param root
      */
     public void initStage(Parent root) {
@@ -154,6 +165,9 @@ public class RegistroController {
         txt_direccion.textProperty().addListener(this::estanVacios);
         txt_zip.textProperty().addListener(this::estanVacios);
         txt_tele.textProperty().addListener(this::estanVacios);
+        txt_tarjeta.textProperty().addListener(this::estanVacios);
+        psw_pin.textProperty().addListener(this::estanVacios);
+
         //Evento del botón registrarse
         btn_registro.setOnAction(this::registrarBotón);
         btn_registro.setTooltip(new Tooltip("Pulsa para registrarte"));
@@ -161,8 +175,10 @@ public class RegistroController {
         btn_verContra.setOnMouseClicked(event -> revelarContra(event));
         btn_verContra.setTooltip(new Tooltip("Visualizar/Ocultar contraseña"));
         btn_verContra2.setTooltip(new Tooltip("Visualizar/Ocultar contraseña"));
+        btn_verPin.setTooltip(new Tooltip("Visualizar/Ocultar pin"));
         btn_verContra2.setOnMouseClicked(event -> revelarContraRepe(event));
 
+        btn_verPin.setOnMouseClicked(event -> revelarPin(event));
         stage.setOnCloseRequest(this::cerrarVentana);
         stage.show();
     }
@@ -181,6 +197,7 @@ public class RegistroController {
     private void tienesCuenta(MouseEvent event) {
 
         try {
+            stage.close();
             LOGGER.info("Iniciando la ventana de Inicio de sesión");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/InicioSesion.fxml"));
             Parent root = (Parent) loader.load();
@@ -272,6 +289,39 @@ public class RegistroController {
         }
     }
 
+    private void revelarPin(MouseEvent event) {
+        if (psw_pin.isVisible()) {
+            psw_pin.setDisable(true);
+            psw_pin.setVisible(false);
+            txt_pinReve.setDisable(false);
+            txt_pinReve.setVisible(true);
+
+            if (txt_pinReve.isVisible()) {
+                txt_pinReve.setText(psw_pin.getText());
+
+            } else {
+                psw_pin.setText(txt_pinReve.getText());
+
+            }
+
+            img_ojo3.setImage(new Image(psw_pin.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
+        } else {
+            txt_pinReve.setDisable(true);
+            txt_pinReve.setVisible(false);
+            psw_pin.setDisable(false);
+            psw_pin.setVisible(true);
+
+            if (psw_pin.isVisible()) {
+                psw_pin.setText(txt_pinReve.getText());
+
+            } else {
+                txt_pinReve.setText(psw_pin.getText());
+            }
+
+            img_ojo3.setImage(new Image(psw_pin.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
+        }
+    }
+
     /**
      * Método del botón de la ventana, recoge la información de la ventana para
      * hacer el registro
@@ -322,30 +372,59 @@ public class RegistroController {
                 txt_tele.setText("");
                 throw new IncorrectPatternException("El formato no está permitido, (ej, +34 643 567 453/ 945 564 234).");
             }
+            if (!(tarjetaMatcher.matcher(txt_tarjeta.getText()).matches())) {
+                txt_tarjeta.setText("");
+                throw new IncorrectPatternException("La tarjeta debe contener extactamente 16 caracteres numericos.");
+            }
+
+            if (!(pinMatcher.matcher(psw_pin.getText()).matches())) {
+                txt_pinReve.setText("");
+                psw_pin.setText("");
+                throw new IncorrectPatternException("El pin debe contener 4 exactamente caracteres numericos.");
+            }
             /*
-                Las excepciones de IncorrectPasswordException y IncorrectPatternException se mostrarán en el
+                Las excepciones de IncorrectPasswordException e IncorrectPatternException se mostrarán en el
                 lbl_error, las excepciones genericas se mostraran en consola a través de un logger
              */
+            //Si los parametros son correctos creamos el nuevo cliente
+            Cliente clie = new Cliente();
+            //Medida para pasar datos String a integers si hace falta
+            String telef = txt_tele.getText();
+            String tarjeta = txt_tarjeta.getText();
+            String pin = psw_pin.getText();
+
+            String codigoPost = txt_zip.getText();
+
+            Integer codPostal = Integer.parseInt(codigoPost);
+            Integer telefono = Integer.parseInt(telef);
+            Integer pinSecreto = Integer.parseInt(pin);
+            Long numTarj = Long.parseLong(tarjeta);
+
+            clie.setNombre_completo(txt_nombre.getText());
+            clie.setLogin(txt_email.getText());
+            clie.setContraseña(psw_contra.getText());
+            clie.setDireccion(txt_direccion.getText());
+            clie.setCod_postal(codPostal);
+            clie.setTelefono(telefono);
+            clie.setN_tarjeta(numTarj);
+            clie.setPin(pinSecreto);
+            //Creamos el usuario
+            clieFact.getFactory().create_XML(clie);
 
             //Mostramos al usuario que el registro ha sido satisfactorio
             Alert ventana = new Alert(Alert.AlertType.INFORMATION);
             ventana.setHeaderText(null);
             ventana.setTitle("Enhorabuena");
             ventana.setContentText("Has logrado registrarte");
+
             Optional<ButtonType> accion = ventana.showAndWait();
             if (accion.get() == ButtonType.OK) {
-                txt_nombre.setText("");
-                txt_email.setText("");
-                psw_contra.setText("");
-                psw_contraRepe.setText("");
-                txt_contraReve.setText("");
-                txt_contraRepeReve.setText("");
-                txt_direccion.setText("");
-                txt_zip.setText("");
-                txt_tele.setText("");
-                lbl_error.setText("");
-                txt_nombre.requestFocus();
-                event.consume();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/InicioSesion.fxml"));
+                Parent root = (Parent) loader.load();
+                InicioSesionController signIn = ((InicioSesionController) loader.getController());
+                signIn.setStage(stage);
+                signIn.initStage(root);
+                stage.close();
             } else {
                 txt_nombre.setText("");
                 txt_email.setText("");
@@ -357,6 +436,9 @@ public class RegistroController {
                 txt_zip.setText("");
                 txt_tele.setText("");
                 lbl_error.setText("");
+                txt_pinReve.setText("");
+                psw_pin.setText("");
+                txt_tarjeta.setText("");
                 txt_nombre.requestFocus();
                 event.consume();
             }
@@ -366,6 +448,8 @@ public class RegistroController {
             lbl_error.setVisible(true);
             lbl_error.setText(e.getMessage());
             LOGGER.severe(e.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -389,7 +473,7 @@ public class RegistroController {
                 && !txt_tele.getText().trim().isEmpty()
                 && !txt_zip.getText().trim().isEmpty()
                 && (!psw_contra.getText().trim().isEmpty() || !txt_contraReve.getText().trim().isEmpty())
-                && (!psw_contraRepe.getText().trim().isEmpty() || !txt_contraRepeReve.getText().trim().isEmpty())) {
+                && (!psw_contraRepe.getText().trim().isEmpty() || !txt_contraRepeReve.getText().trim().isEmpty()) && !txt_tarjeta.getText().trim().isEmpty() && (!txt_pinReve.getText().trim().isEmpty() || !psw_pin.getText().trim().isEmpty())) {
             btn_registro.setDisable(false);
         } else {
             /*

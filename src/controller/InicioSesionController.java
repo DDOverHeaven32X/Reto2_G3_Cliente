@@ -9,6 +9,7 @@ import exception.UserNotFoundException;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import logic.ClienteFactoria;
+import logic.UsuarioFactoria;
+import model.Admin;
+import model.Cliente;
+import model.Privilegio;
 import model.Usuario;
 
 /**
@@ -42,6 +48,11 @@ import model.Usuario;
 public class InicioSesionController {
 
     private Stage stage;
+
+    private Admin admin;
+
+    
+
     @FXML
     private Pane pane;
     @FXML
@@ -73,6 +84,11 @@ public class InicioSesionController {
 
     private static final Logger LOGGER = Logger.getLogger("/controlador/InicioSesionController");
 
+    private UsuarioFactoria userFact = new UsuarioFactoria();
+
+    private ClienteFactoria clieFact = new ClienteFactoria();
+
+    //private Usuario user = new Usuario();
     /**
      * Initializes the controller class.
      *
@@ -86,7 +102,7 @@ public class InicioSesionController {
         Stage stage = new Stage();
 
         //El boton inicio de sesion esta deshabilitado.
-        btnInicioSesion.setDisable(false);
+        btnInicioSesion.setDisable(true);
         //El campo email estará habilitado.
         textEmail.setDisable(false);
         //El campo contraseña estará habilitado.
@@ -151,26 +167,75 @@ public class InicioSesionController {
     private void handleSignInAction(ActionEvent event) {
 
         try {
-            /*error.setText("");
+            error.setText("");
             if (camposInformados() && maxCarecteres()) {
                 Usuario user = new Usuario();
+                Cliente client = new Cliente();
                 user.setLogin(textEmail.getText());
+                user.setContraseña(pswContraseña.getText());
                 if (pswContraseña.isVisible()) {
                     user.setContraseña(pswContraseña.getText());
                 } else {
                     user.setContraseña(txt_contraReve.getText());
-                }*/
+                }
+                //Comprobamos si el usuario está registrado en la base de datos
+                List<Usuario> listaUser;
+                listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), pswContraseña.getText());
+                String nombre = listaUser.get(0).getNombre_completo();
+                String login = listaUser.get(0).getLogin();
+                Privilegio privi = listaUser.get(0).getTipo_usuario();
+
+                //Si la consulta no devuelve nada se lanza una excepción de UserNotFoundException
+                if (listaUser.isEmpty()) {
+                    throw new UserNotFoundException();
+                }
+                //Si la consulta devuelve algo se setearan los datos User devueltos a un Cliente o un Admin
+
+                if (user.getLogin().equals("admin@gmail.com") && user.getContraseña().equals("Abcd*1234")) {
+                    user.setTipo_usuario(privi);
+                    user.setId_user(listaUser.get(0).getId_user());
+                    user.setTipo_usuario(user.getTipo_usuario());
+                    user.setNombre_completo(nombre);
+                    user.setLogin(login);
+                    user.setDireccion(listaUser.get(0).getDireccion());
+                    user.setCod_postal(listaUser.get(0).getCod_postal());
+                    user.setTelefono(listaUser.get(0).getTelefono());
+
+                } else {
+                    
+                    user.setTipo_usuario(privi);
+                    user.setId_user(listaUser.get(0).getId_user());
+                    user.setTipo_usuario(user.getTipo_usuario());
+                    user.setNombre_completo(nombre);
+                    user.setLogin(login);
+                    user.setDireccion(listaUser.get(0).getDireccion());
+                    user.setCod_postal(listaUser.get(0).getCod_postal());
+                    user.setTelefono(listaUser.get(0).getTelefono());
+                    //Establecemos los atributos exclusivos de cliente
+                    Cliente cliente = clieFact.getFactory().find_XML(Cliente.class, user.getId_user().toString());
+                    client.setN_tarjeta(cliente.getN_tarjeta());
+                    client.setPin(cliente.getPin());
+                    System.out.println(client.getN_tarjeta() + ", " + client.getPin());
+                }
+
+                //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                 Parent root = loader.load();
                 PrincipalController princiController = ((PrincipalController) loader.getController());
+                princiController.setUser(user);
+                princiController.setClien(client);
                 princiController.setStage(stage);
-                princiController.initiStage(root);
-                
+                princiController.initiStage(root, user, client);
+
+            }
+
         } catch (IOException ex) {
             error.setVisible(true);
             error.setText("Ha habido algun error durante el inicio de sesion.");
+        } catch (UserNotFoundException e) {
+            error.setVisible(true);
+            error.setText("Usuario no encontrado.");
         }
-        
 
     }
 
@@ -306,7 +371,7 @@ public class InicioSesionController {
 
             }
 
-            img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/utilidades/abierto.png" : "/utilidades/cerrado.png"));
+            img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         } else {
             txt_contraReve.setDisable(true);
             txt_contraReve.setVisible(false);
@@ -321,7 +386,7 @@ public class InicioSesionController {
 
             }
 
-            img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/utilidades/abierto.png" : "/utilidades/cerrado.png"));
+            img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         }
     }
 
