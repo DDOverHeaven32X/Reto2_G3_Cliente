@@ -5,14 +5,18 @@
  */
 package controller;
 
+import exception.IncorrectCredentialException;
 import exception.ReadException;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -50,6 +54,13 @@ import model.Admin;
 import model.Cliente;
 import model.Entrada;
 import model.Usuario;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * Controlador de la ventana de Entrada y sus distintas acciones
@@ -158,7 +169,7 @@ public class EntradaController {
         tblEntrada.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         //Combo con sus datos ya introducidos
         comboEntrada.getItems().addAll(null, "Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
-        cbcFiltro.getItems().addAll("Filtrar por dinero", "Filtrar por fecha");
+        cbcFiltro.getItems().addAll(null, "Filtrar por dinero", "Filtrar por fecha");
         //Asignacion de botones
         //System.out.println(cliente.toString());
         btnCrear.setOnAction(this::handleCreateButtonAction);
@@ -167,17 +178,22 @@ public class EntradaController {
         btnBuscar.setOnAction(this::handleSearchButton);
         btnTusEntradas.setOnAction(this::handlerEntradasClient);
         btnComprar.setOnAction(this::handlerCompraEntrada);
+        btnInforme.setOnAction(this::handleImprimirAction);
 
         //Codigo que guarda el valor selecionado
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         cbcFiltro.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                if (null == cbcFiltro.getValue().toString()) {
+                if (cbcFiltro.getValue() == null) {
                     txtFiltrar.setDisable(true);
                     dtpFiltradoFecha.setDisable(true);
                     btnBuscar.setVisible(false);
+                    txtFiltrar.setVisible(false);
+                    dtpFiltradoFecha.setVisible(false);
+                    cargarTodo();
                 } else {
-                    switch (cbcFiltro.getValue().toString()) {
+                    String filtro = cbcFiltro.getValue().toString(); 
+                    switch (filtro) {
                         case "Filtrar por dinero":
                             txtFiltrar.setDisable(false);
                             txtFiltrar.setVisible(true);
@@ -194,20 +210,11 @@ public class EntradaController {
                             btnBuscar.setVisible(true);
                             btnBuscar.setDisable(false);
                             break;
-                        default:
-                            txtFiltrar.setDisable(true);
-                            txtFiltrar.setVisible(false);
-                            dtpFiltradoFecha.setDisable(true);
-                            dtpFiltradoFecha.setVisible(false);
-                            btnBuscar.setVisible(true);
-                            btnBuscar.setDisable(false);
-                            cargarTodo();
-                            break;
                     }
                 }
             }
-
         });
+
         //Establecemos las factorias para los valores de celda
         //Formateo de la fecha para formáto estándar
         try {
@@ -280,38 +287,59 @@ public class EntradaController {
     //Método para relalizar el CRUD de POST en la tabla
     @FXML
     private void handleCreateButtonAction(ActionEvent event) {
-        //Conversiones necesarias para hacer la inserción
-        String precio;
-        precio = txtPrecioEntrada.getText();
-        float precioReal = Float.parseFloat(precio);
-
-        LocalDate fecha = dtpFecha.getValue();
-        Date fechaBuena = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-        entrada.setPrecio(precioReal);
-        entrada.setTipo_entrada(comboEntrada.getValue().toString());
-        entrada.setFecha_entrada(fechaBuena);
-
-        // Comprobar si la entrada ya existe
-        if (entradaExiste(fechaBuena, entrada.getTipo_entrada())) {
-            Alert ventanita = new Alert(Alert.AlertType.ERROR);
-            ventanita.setHeaderText(null);
-            ventanita.setTitle("Error");
-            ventanita.setContentText("La entrada que intentas crear ya existe");
-            Optional<ButtonType> action3 = ventanita.showAndWait();
-            if (action3.get() == ButtonType.OK) {
-                txtPrecioEntrada.setText("");
-                comboEntrada.setValue("");
-                dtpFecha.setValue(null);
-                ventanita.close();
+        try {
+            //Conversiones necesarias para hacer la inserción
+            if (!validacionesCampos()) {
+                Alert ventan = new Alert(Alert.AlertType.ERROR);
+                ventan.setHeaderText(null);
+                ventan.setTitle("Error");
+                ventan.setContentText("Has introducido valores erroneos");
+                Optional<ButtonType> action3 = ventan.showAndWait();
+                if (action3.get() == ButtonType.OK) {
+                    txtPrecioEntrada.setText("");
+                    comboEntrada.setValue("");
+                    dtpFecha.setValue(null);
+                    ventan.close();
+                }
+                throw new Exception("Datos Erroneos");
             }
-            return;
-        }
 
-        factoryEnt.getFactory().create_XML(entrada);
-        //Cargamos la tabla con el dato nuevo
-        entradaData = FXCollections.observableArrayList(cargarTodo());
-    }
+            String precio;
+            precio = txtPrecioEntrada.getText();
+            float precioReal = Float.parseFloat(precio);
+
+            LocalDate fecha = dtpFecha.getValue();
+            Date fechaBuena = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            entrada.setPrecio(precioReal);
+            entrada.setTipo_entrada(comboEntrada.getValue().toString());
+            entrada.setFecha_entrada(fechaBuena);
+
+            // Comprobar si la entrada ya existe
+            if (entradaExiste(fechaBuena, entrada.getTipo_entrada())) {
+                Alert ventanita = new Alert(Alert.AlertType.ERROR);
+                ventanita.setHeaderText(null);
+                ventanita.setTitle("Error");
+                ventanita.setContentText("La entrada que intentas crear ya existe");
+                Optional<ButtonType> action3 = ventanita.showAndWait();
+                if (action3.get() == ButtonType.OK) {
+                    txtPrecioEntrada.setText("");
+                    comboEntrada.setValue("");
+                    dtpFecha.setValue(null);
+                    ventanita.close();
+                }
+                return;
+            }
+
+            factoryEnt.getFactory().create_XML(entrada);
+            //Cargamos la tabla con el dato nuevo
+            entradaData = FXCollections.observableArrayList(cargarTodo());
+        } catch (Exception ex) {
+            LOGGER.severe(ex.getMessage());
+
+        }
+}
+
 
     /**
      * Método que comprueba si una entrada existe antes de crearla
@@ -330,11 +358,85 @@ public class EntradaController {
         }
         return false;
     }
+    /**
+     * Método que valida si los campos no están vacios o contienen datos erronos
+     */
+    public boolean validacionesCampos() {
+        
+        boolean validacionesExitosas = true;
+
+        if (txtPrecioEntrada.getText().isEmpty() || comboEntrada.getValue() == null || dtpFecha.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle(null);
+
+            alert.setContentText("Antes de realizar una acción, asegúrate de no dejar ningún campo vacío.");
+
+            Optional<ButtonType> answer = alert.showAndWait();
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
+                txtPrecioEntrada.setText("");
+                comboEntrada.setValue("");
+                dtpFecha.setValue(null);
+                alert.close();
+                validacionesExitosas = false;
+            }
+        }
+        try {
+            Double.parseDouble(txtPrecioEntrada.getText());
+        } catch (NumberFormatException e) {
+            Alert alert2 = new Alert(Alert.AlertType.ERROR);
+            alert2.setHeaderText(null);
+            alert2.setTitle(null);
+
+            alert2.setContentText("Has introducido caracteres no validos");
+
+            Optional<ButtonType> answer = alert2.showAndWait();
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
+                txtPrecioEntrada.setText("");                
+                alert2.close();
+                validacionesExitosas = false;
+            }
+        }
+
+        if (dtpFecha.getValue() != null && dtpFecha.getValue().isAfter(java.time.LocalDate.now())) {
+            Alert alert3 = new Alert(Alert.AlertType.ERROR);
+            alert3.setHeaderText(null);
+            alert3.setTitle(null);
+
+            alert3.setContentText("No puedes meter fechas futuras a la actual para las entradas.");
+
+            Optional<ButtonType> answer = alert3.showAndWait();
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
+                dtpFecha.setValue(null);
+                alert3.close();
+                validacionesExitosas = false;
+            }
+        }
+
+        return validacionesExitosas;
+    }
+
+    
 
     //Método para relalizar el CRUD de PUT en la tabla
     @FXML
     private void handleModifyButtonAction(ActionEvent event) {
-        //Conversiones necesarias para hacer la inserción
+        
+        try{
+            if (!validacionesCampos()) {
+                Alert ventan = new Alert(Alert.AlertType.ERROR);
+                ventan.setHeaderText(null);
+                ventan.setTitle("Error");
+                ventan.setContentText("Has introducido valores erroneos");
+                Optional<ButtonType> action3 = ventan.showAndWait();
+                if (action3.get() == ButtonType.OK) {
+                    txtPrecioEntrada.setText("");
+                    comboEntrada.setValue("");
+                    dtpFecha.setValue(null);
+                    ventan.close();
+                }
+                throw new Exception("Datos Erroneos");
+            }
         String precio;
         precio = txtPrecioEntrada.getText();
         float precioReal = Float.parseFloat(precio);
@@ -342,25 +444,48 @@ public class EntradaController {
         LocalDate fecha = dtpFecha.getValue();
         Date fechaBuena = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
         //Escogemos el Id para indicar al programa cual entrada debe modificar
+        
         entrada.setId_entrada(tblEntrada.getSelectionModel().getSelectedItem().getId_entrada());
         entrada.setPrecio(precioReal);
         entrada.setTipo_entrada(comboEntrada.getValue().toString());
         entrada.setFecha_entrada(fechaBuena);
+        
 
         factoryEnt.getFactory().edit_XML(entrada);
         //Cargamos la tabla con el dato nuevo
         entradaData = FXCollections.observableArrayList(cargarTodo());
+        }catch(Exception e){
+            LOGGER.severe(e.getMessage());
+        }
     }
 
     //Método para relalizar el CRUD de DELETE en la tabla
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
+        /*try{
+        if (!validacionesCampos()) {
+                Alert ventan = new Alert(Alert.AlertType.ERROR);
+                ventan.setHeaderText(null);
+                ventan.setTitle("Error");
+                ventan.setContentText("Has introducido valores erroneos");
+                Optional<ButtonType> action3 = ventan.showAndWait();
+                if (action3.get() == ButtonType.OK) {
+                    txtPrecioEntrada.setText("");
+                    comboEntrada.setValue("");
+                    dtpFecha.setValue(null);
+                    ventan.close();
+                }
+                throw new Exception("Datos Erroneos");
+            }*/
         //Para realizar el borrado lo hacemos mediante el id de la Entrada
         Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
         factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
 
         //Cargamos la tabla con el dato nuevo
         entradaData = FXCollections.observableArrayList(cargarTodo());
+        /*}catch(Exception e){
+            LOGGER.severe("Datos erroneos");
+        }*/
     }
 
     //Método que incrusta los datos de la tabla a los campos de parametrización
@@ -473,11 +598,6 @@ public class EntradaController {
             if (data != null) {
                 entrada = new Entrada();
                 entrada.setId_entrada(data.getId_entrada());
-                entrada.setFecha_entrada(data.getFecha_entrada());
-                entrada.setPrecio(data.getPrecio());
-                entrada.setTipo_entrada(data.getTipo_entrada());
-                entrada.setAdmin(data.getAdmin());
-
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ConfirmarCompra.fxml"));
                 Parent root = loader.load();
                 ConfirmarCompraController confiController = ((ConfirmarCompraController) loader.getController());
@@ -488,12 +608,37 @@ public class EntradaController {
                 confiController.initiStage(root, user);
 
             } else {
-                throw new Exception("No has seleccionado una entrada para comprar");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText(null);
+                alert.setTitle(null);
+
+                alert.setContentText("No has seleccionado ninguna entrada para comprar");
+
+                Optional<ButtonType> answer = alert.showAndWait();
+                if (answer.get() == ButtonType.OK) {
+                    alert.close();
+                    
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    //Método que imprime los datos de la tabla a un informe JasperReport
+    @FXML
+    private void handleImprimirAction(ActionEvent event) {
+        try {
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/report/EntradaReport.jrxml"));
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Entrada>) this.tblEntrada.getItems());
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Error al imprimir");
+            alert.showAndWait();
         }
     }
 

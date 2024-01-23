@@ -128,16 +128,7 @@ public class ConfirmarCompraController {
                     //Datos de prueba
                     Cliente clie = new Cliente();
                     clie.setId_user(clienteCheck.get(0).getId_user());
-                    System.out.println(clie.getId_user());
-                    clie.setCod_postal(clienteCheck.get(0).getCod_postal());
-                    clie.setContraseña(clienteCheck.get(0).getContraseña());
-                    clie.setDireccion(clienteCheck.get(0).getDireccion());
-                    clie.setLogin(clienteCheck.get(0).getLogin());
-                    clie.setTipo_usuario(clienteCheck.get(0).getTipo_usuario());
-                    clie.setNombre_completo(clienteCheck.get(0).getNombre_completo());
-                    clie.setN_tarjeta(clienteCheck.get(0).getN_tarjeta());
-                    clie.setPin(clienteCheck.get(0).getPin());
-                    clie.setTelefono(clienteCheck.get(0).getTelefono());
+                    
                     //Fecha actual del sistema cuando compra
                     LocalDate localDate = LocalDate.now();
                     Date fecha = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -146,20 +137,10 @@ public class ConfirmarCompraController {
                     buy.setFecha_compra(fecha);
                     buyId.setId_entrada(entr.getId_entrada());
                     buyId.setId_user(clie.getId_user());
+                    buy.setCompraId(buyId);
 
-                    /*System.out.println(buy.getCliente().getCod_postal() + " ,"
-                            + buy.getCliente().getId_user() + ", "
-                            + buy.getCliente().getN_tarjeta() + ", "
-                            + buy.getCliente().getPin() + ", "
-                            + buy.getCliente().getNombre_completo() + ", "
-                            + buy.getCliente().getTipo_usuario() + ", "
-                            + buy.getCliente().getTelefono() + ", "
-                            + buy.getCliente().getLogin() + ", "
-                            + buy.getCliente().getDireccion() + ", "
-                            + buy.getCliente().getLogin() + ", ");
-                    System.out.println(buy.getFecha_compra() + ", " + buy.getEntrada() + ", " + buy.getCliente().getId_user());*/
                     comFac.getFactory().create_XML(buy);
-                    comFac.getFactory().create_XML(buyId);
+                    
                     if (buy == null) {
                         LOGGER.severe("Ha ocurrido un fallo en la compra");
                     } else {
