@@ -36,7 +36,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import logic.AnimalFactoria;
 import logic.ZonaFactoria;
+import model.Animal;
 import model.Entrada;
 import model.Zona;
 import net.sf.jasperreports.engine.JRException;
@@ -103,6 +105,8 @@ public class ZonaController {
     private MenuItem menuItemBorrar;
     @FXML
     private MenuItem menuItemVisualizarAnimales;
+
+    private AnimalFactoria fAnimal;
 
     private Stage stage;
 
@@ -338,7 +342,8 @@ public class ZonaController {
                 mostrarAlerta("Error de selección", "Por favor, seleccione una zona para visualizar los animales.");
                 return;
             }
-
+            // Verificar si hay animales en la zona
+            
             // Cerrar la ventana actual
             Stage ventanaActual = (Stage) tableZona.getScene().getWindow();
             ventanaActual.close();
@@ -352,6 +357,7 @@ public class ZonaController {
             animalController.setStage(stage);
             animalController.initiStage(root);
             animalController.cargarFiltroAnimales();
+
         } catch (IOException ex) {
             // Manejo de excepciones de E/S
             mostrarAlerta("Error de E/S", "Error al cargar la vista de animales.");

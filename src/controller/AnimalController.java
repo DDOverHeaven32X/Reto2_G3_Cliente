@@ -8,12 +8,16 @@ package controller;
 import exception.CreateException;
 import exception.DeleteException;
 import exception.UpdateException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,6 +40,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.ws.rs.WebApplicationException;
 import logic.AnimalFactoria;
 import logic.ZonaFactoria;
@@ -45,6 +50,13 @@ import model.Animal;
 import model.Salud;
 import model.Usuario;
 import model.Zona;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * FXML Controller class
@@ -194,6 +206,7 @@ public class AnimalController {
         btnModificarAnimal.setOnAction(this::handleModifyButtonAction);
         btnEliminarAnimal.setOnAction(this::handleDeleteButtonAction);
         btnBuscar.setOnAction(this::handleSearchButton);
+        btnInforme.setOnAction(this::handleImprimirAction);
 
         //Menu de contexto
         mItemBorrar.setOnAction(this::handleDeleteButtonAction);
@@ -268,6 +281,8 @@ public class AnimalController {
             LOGGER.log(Level.SEVERE, null, e);
         }
 
+        //Mediante este evento llamamos al metodo handeCloseRequest cuando hacemos click sobre el boton X (Boton de cerrar la ventana).
+        stage.setOnCloseRequest(this::handleCloseRequest);
         stage.show();
     }
 
@@ -450,6 +465,23 @@ public class AnimalController {
 
     }
 
+    @FXML
+    private void handleImprimirAction(ActionEvent event) {
+        try {
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/report/AnimalReport.jrxml"));
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Animal>) this.tableAnimal.getItems());
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Error al imprimir");
+            alert.showAndWait();
+        }
+    }
+
     //Método de busqueda del botón, sirve para realizar los filtros
     @FXML
     private void handleSearchButton(ActionEvent actionEvent) {
@@ -488,6 +520,9 @@ public class AnimalController {
             return listAnimales;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar la tabla.");
         }
         return null;
     }
@@ -547,6 +582,9 @@ public class AnimalController {
             comboFiltrarEspecie.getItems().addAll(especiesUnicas);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar el filtro de especies.");
         }
     }
 
@@ -558,6 +596,9 @@ public class AnimalController {
             comboZona.getItems().addAll(zonas);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar el filtro de zonas.");
         }
 
     }
@@ -590,31 +631,23 @@ public class AnimalController {
         return listaAnimales;
     }
 
-    @FXML
     public ObservableList<Animal> cargarFiltroAnimales() {
         ObservableList<Animal> listaAnimales;
         List<Animal> filtradoParam;
         filtradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsInAnArea_XML(Animal.class, zona.getId_zona().toString()));
-
         listaAnimales = FXCollections.observableArrayList(filtradoParam);
         tableAnimal.setItems(listaAnimales);
         tableAnimal.refresh();
+        if (tableAnimal.getItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("TABLA VACIA");
+            alert.setHeaderText(null);
+            alert.setContentText("No hay ningun animal en esa zona.");
+            alert.showAndWait();
+        }
         return listaAnimales;
     }
 
-    /*
-    private boolean camposAnimalInformados() {
-        if (txtNombreAnimal.getText().trim().isEmpty() || txtGenero.getValue() == null || txtEspecie.getText().trim().isEmpty() || comboSalud.getValue() == null || txtEdad.getText().trim().isEmpty() || txtPeso.getText().trim().isEmpty() || txtAltura.getText().trim().isEmpty() || comboAlimentacion.getValue() == null || comboZona.getValue() == null) {
-            // Si alguno de los campos está vacío, muestra un mensaje de alerta
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Campos Vacíos");
-            alert.setHeaderText(null);
-            alert.setContentText("Por favor, rellena todos los campos.");
-            alert.showAndWait();
-            return false;
-        }
-        return true;
-    }*/
     private boolean validarCamposAnimal() {
         String nombre = txtNombreAnimal.getText();
         String genero = txtGenero.getValue().toString();
@@ -744,4 +777,31 @@ public class AnimalController {
         this.zona = zona;
     }
 
+    /**
+     * Este metodo es una verificacion cuando el usuario le da al boton de
+     * salir.
+     *
+     * @author Adrian
+     * @param event
+     */
+    private void handleCloseRequest(WindowEvent event) {
+        //Creamos un nuevo objeto Alerta
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("EXIT");
+        //Mostramos una alerta de confirmacion.
+        alert.setContentText("¿Estas seguro que deseas salir de la aplicacion?");
+
+        Optional<ButtonType> answer = alert.showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+
+    }
+
+    private void showErrorAlert(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
