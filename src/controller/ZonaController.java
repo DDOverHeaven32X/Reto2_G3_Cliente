@@ -163,10 +163,9 @@ public class ZonaController {
             refreshTableIfFilterEmpty();
         });
 
-        //menuItemVisualizarAnimales.setOnAction(this::handleDeleteButtonAction);
         menuItemBorrar.setOnAction(this::handleDeleteButtonAction);
 
-        //menuItemVisualizarAnimales.setOnAction(this::handleVisualizarAnimalesButtonAction);
+        menuItemVisualizarAnimales.setOnAction(this::handleVisualizarAnimalesButtonAction);
         //Metodo para cargar los datos de la zona seleccionada
         tableZona.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
@@ -330,9 +329,16 @@ public class ZonaController {
      * @param event El ActionEvent desencadenado por el clic en el botón.
      */
     @FXML
-    private void handleVisualizarAnimalesButtonAction(ActionEvent event) {
+    public void handleVisualizarAnimalesButtonAction(ActionEvent event) {
         Zona selectedZona = tableZona.getSelectionModel().getSelectedItem();
+
         try {
+            if (selectedZona == null) {
+                // Mostrar un mensaje al usuario indicando que debe seleccionar una zona.
+                mostrarAlerta("Error de selección", "Por favor, seleccione una zona para visualizar los animales.");
+                return;
+            }
+
             // Cerrar la ventana actual
             Stage ventanaActual = (Stage) tableZona.getScene().getWindow();
             ventanaActual.close();
@@ -345,7 +351,14 @@ public class ZonaController {
             animalController.setZona(selectedZona);
             animalController.setStage(stage);
             animalController.initiStage(root);
+            animalController.cargarFiltroAnimales();
         } catch (IOException ex) {
+            // Manejo de excepciones de E/S
+            mostrarAlerta("Error de E/S", "Error al cargar la vista de animales.");
+            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            // Manejo de excepciones generales
+            mostrarAlerta("Error", "Ocurrió un error inesperado.");
             Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

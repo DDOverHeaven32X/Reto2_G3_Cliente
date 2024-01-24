@@ -28,6 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.ClienteFactoria;
 import logic.CompraFactoria;
@@ -55,6 +56,8 @@ public class ConfirmarCompraController {
     private TextField txt_contraReve2;
     @FXML
     private PasswordField pswPin;
+    @FXML
+    private Pane pane;
 
     private Stage stage;
 
@@ -99,7 +102,7 @@ public class ConfirmarCompraController {
     public void exitHandler(ActionEvent event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("¿Deseas salir?");
@@ -118,6 +121,11 @@ public class ConfirmarCompraController {
         String n_tarjeta = txt_contraReve1.getText();
         String pin = pswPin.getText();
         try {
+
+            if (n_tarjeta.isEmpty() || pin.isEmpty()) {
+                mostrarAlerta("Campos Vacíos", "Por favor, rellena todos los campos.");
+                return;
+            }
             List<Cliente> clienteCheck = clieFac.getFactory().filtrarPorTarjeta_XML(Cliente.class, n_tarjeta, pin);
 
             if (clienteCheck != null) {
@@ -128,7 +136,7 @@ public class ConfirmarCompraController {
                     //Datos de prueba
                     Cliente clie = new Cliente();
                     clie.setId_user(clienteCheck.get(0).getId_user());
-                    
+
                     //Fecha actual del sistema cuando compra
                     LocalDate localDate = LocalDate.now();
                     Date fecha = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -140,19 +148,22 @@ public class ConfirmarCompraController {
                     buy.setCompraId(buyId);
 
                     comFac.getFactory().create_XML(buy);
-                    
+
                     if (buy == null) {
                         LOGGER.severe("Ha ocurrido un fallo en la compra");
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setHeaderText(null);
-                        alert.setTitle(null);
+                        alert.setTitle("FALLO DE COMPRA");
+                        alert.setContentText("Ha ocurrido una fallo al intentar comprar. Por favor intentelo de nuevo.");
+                        alert.showAndWait();
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText(null);
+                        alert.setTitle("COMPRA REALIZADA");
                         alert.setContentText("Compra realizada con éxito");
+                        alert.showAndWait();
+                        ((Stage) this.pane.getScene().getWindow()).close();
 
-                        Optional<ButtonType> answer = alert.showAndWait();
-                        if (answer.get() == ButtonType.OK) {
-                            stage.close();
-                        }
                     }
 
                 }
@@ -163,6 +174,14 @@ public class ConfirmarCompraController {
             LOGGER.severe("Ha ocurrido un error inesperado");
         }
 
+    }
+
+    private void mostrarAlerta(String titulo, String contenido) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(contenido);
+        alert.showAndWait();
     }
 
     public void setStage(Stage stage) {

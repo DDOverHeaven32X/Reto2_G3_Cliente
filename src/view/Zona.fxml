@@ -45,7 +45,7 @@
             <ContextMenu>
               <items>
                   <MenuItem fx:id="menuItemBorrar" mnemonicParsing="false" text="Borrar" />
-                  <MenuItem mnemonicParsing="false" text="Visualizar Animales de la Zona" />
+                  <MenuItem fx:id="menuItemVisualizarAnimales" mnemonicParsing="false" text="Visualizar Animales de la Zona" />
               </items>
             </ContextMenu>
          </contextMenu>

@@ -422,21 +422,7 @@ public class EntradaController {
     //Método para relalizar el CRUD de DELETE en la tabla
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
-        /*try{
-        if (!validacionesCampos()) {
-                Alert ventan = new Alert(Alert.AlertType.ERROR);
-                ventan.setHeaderText(null);
-                ventan.setTitle("Error");
-                ventan.setContentText("Has introducido valores erroneos");
-                Optional<ButtonType> action3 = ventan.showAndWait();
-                if (action3.get() == ButtonType.OK) {
-                    txtPrecioEntrada.setText("");
-                    comboEntrada.setValue("");
-                    dtpFecha.setValue(null);
-                    ventan.close();
-                }
-                throw new Exception("Datos Erroneos");
-            }*/
+
         //Para realizar el borrado lo hacemos mediante el id de la Entrada
         Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
         factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
