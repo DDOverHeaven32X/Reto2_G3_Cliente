@@ -125,7 +125,7 @@ public class MenuBarController {
             iniController.setStage(stage);
             iniController.initStage(root);
         } catch (IOException e) {
-
+            
         }
     }
     

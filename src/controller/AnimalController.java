@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,6 +40,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.ws.rs.WebApplicationException;
 import logic.AnimalFactoria;
 import logic.ZonaFactoria;
@@ -277,6 +279,8 @@ public class AnimalController {
             LOGGER.log(Level.SEVERE, null, e);
         }
 
+        //Mediante este evento llamamos al metodo handeCloseRequest cuando hacemos click sobre el boton X (Boton de cerrar la ventana).
+        stage.setOnCloseRequest(this::handleCloseRequest);
         stage.show();
     }
 
@@ -625,19 +629,6 @@ public class AnimalController {
         return listaAnimales;
     }
 
-    /*
-    private boolean camposAnimalInformados() {
-        if (txtNombreAnimal.getText().trim().isEmpty() || txtGenero.getValue() == null || txtEspecie.getText().trim().isEmpty() || comboSalud.getValue() == null || txtEdad.getText().trim().isEmpty() || txtPeso.getText().trim().isEmpty() || txtAltura.getText().trim().isEmpty() || comboAlimentacion.getValue() == null || comboZona.getValue() == null) {
-            // Si alguno de los campos está vacío, muestra un mensaje de alerta
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Campos Vacíos");
-            alert.setHeaderText(null);
-            alert.setContentText("Por favor, rellena todos los campos.");
-            alert.showAndWait();
-            return false;
-        }
-        return true;
-    }*/
     private boolean validarCamposAnimal() {
         String nombre = txtNombreAnimal.getText();
         String genero = txtGenero.getValue().toString();
@@ -761,6 +752,30 @@ public class AnimalController {
             }
         }
         return false;
+    }
+    
+    /**
+     * Este metodo es una verificacion cuando el usuario le da al boton de
+     * salir.
+     *
+     * @author Adrian
+     * @param event
+     */
+    private void handleCloseRequest(WindowEvent event) {
+        //Creamos un nuevo objeto Alerta
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("EXIT");
+        //Mostramos una alerta de confirmacion.
+        alert.setContentText("¿Estas seguro que deseas salir de la aplicacion?");
+
+        Optional<ButtonType> answer = alert.showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+
     }
 
     private void showErrorAlert(String string) {
