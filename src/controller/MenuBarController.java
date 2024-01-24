@@ -10,10 +10,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
+import model.Cliente;
 import model.Usuario;
 
 /**
@@ -21,11 +23,13 @@ import model.Usuario;
  *
  * @author 2dam
  */
-public class MenuBarController{
-    
+public class MenuBarController {
+
     private Stage stage;
-    
+
     private Usuario user;
+
+    private Cliente clien;
 
     @FXML
     private MenuBar menuBar;
@@ -43,73 +47,91 @@ public class MenuBarController{
     private Menu menuAyuda;
     @FXML
     private Menu menuCerrarSesion;
-    
-    
-    
+
     @FXML
-    private void miAnimales(ActionEvent event){
-        
-        try{
-            
+    private void miAnimales(ActionEvent event) {
+
+        try {
+            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = (Parent) loader.load();
             AnimalController aniController = ((AnimalController) loader.getController());
             aniController.setStage(stage);
             aniController.initiStage(root);
-            
+
         } catch (IOException e) {
-            
+
         }
     }
+
     @FXML
-    private void miZonas(ActionEvent event){
-        try{
+    private void miZonas(ActionEvent event) {
+        try {
+            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Zona.fxml"));
             Parent root = (Parent) loader.load();
             ZonaController zonController = ((ZonaController) loader.getController());
             zonController.setStage(stage);
             zonController.initiStage(root);
         } catch (IOException e) {
-            
+
         }
     }
+
     @FXML
-    private void miEntradas(ActionEvent event){
-        try{
+    private void miEntradas(ActionEvent event) {
+        try {
+            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Entrada.fxml"));
             Parent root = (Parent) loader.load();
             EntradaController entController = ((EntradaController) loader.getController());
             entController.setStage(stage);
-            entController.initiStage(root);
-        } catch (IOException e) {
+            entController.setClien(clien);
+            entController.setUser(user);
             
+            entController.initiStage(root, user, clien);
+        } catch (IOException e) {
+
         }
     }
+
     @FXML
-    private void miPrincipal(ActionEvent event){
-        try{
+    private void miPrincipal(ActionEvent event) {
+        try {
+            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
             Parent root = (Parent) loader.load();
             PrincipalController priController = ((PrincipalController) loader.getController());
             priController.setStage(stage);
-            priController.initiStage(root, user);
+            priController.setClien(clien);
+            priController.setUser(user);
+            priController.initiStage(root, user, clien);
         } catch (IOException e) {
-            
+
         }
     }
+
     @FXML
-    private void miSesión(ActionEvent event){
-        try{
+    private void miSesión(ActionEvent event) {
+        try {
+            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/InicioSesion.fxml"));
             Parent root = (Parent) loader.load();
             InicioSesionController iniController = ((InicioSesionController) loader.getController());
             iniController.setStage(stage);
             iniController.initStage(root);
         } catch (IOException e) {
-            
+
         }
     }
-    
 
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
+
+    public void setClien(Cliente clien) {
+        this.clien = clien;
+    }
+    
 
 }

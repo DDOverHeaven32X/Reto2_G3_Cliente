@@ -33,6 +33,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import logic.ClienteFactoria;
 import logic.UsuarioFactoria;
 import model.Admin;
 import model.Cliente;
@@ -47,6 +48,9 @@ import model.Usuario;
 public class InicioSesionController {
 
     private Stage stage;
+
+    private Admin admin;
+
     @FXML
     private Pane pane;
     @FXML
@@ -77,11 +81,12 @@ public class InicioSesionController {
     private static final Pattern PASSWORD__PATTERN = Pattern.compile(PASSWORD_REGEX);
 
     private static final Logger LOGGER = Logger.getLogger("/controlador/InicioSesionController");
-    
-    private UsuarioFactoria userFact = new UsuarioFactoria();
-    
-    //private Usuario user = new Usuario();
 
+    private UsuarioFactoria userFact = new UsuarioFactoria();
+
+    private ClienteFactoria clieFact = new ClienteFactoria();
+
+    //private Usuario user = new Usuario();
     /**
      * Initializes the controller class.
      *
@@ -163,6 +168,7 @@ public class InicioSesionController {
             error.setText("");
             if (camposInformados() && maxCarecteres()) {
                 Usuario user = new Usuario();
+                Cliente client = new Cliente();
                 user.setLogin(textEmail.getText());
                 user.setContraseña(pswContraseña.getText());
                 if (pswContraseña.isVisible()) {
@@ -172,43 +178,62 @@ public class InicioSesionController {
                 }
                 //Comprobamos si el usuario está registrado en la base de datos
                 List<Usuario> listaUser;
-                listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), pswContraseña.getText() );
+                listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), pswContraseña.getText());
+
                 //Si la consulta no devuelve nada se lanza una excepción de UserNotFoundException
-                if(listaUser.isEmpty()){
+                if (listaUser.isEmpty()) {
                     throw new UserNotFoundException();
                 }
+                String nombre = listaUser.get(0).getNombre_completo();
+                String login = listaUser.get(0).getLogin();
+                Privilegio privi = listaUser.get(0).getTipo_usuario();
                 //Si la consulta devuelve algo se setearan los datos User devueltos a un Cliente o un Admin
-                    Admin admin = new Admin();
-                    Cliente client = new Cliente();
-                    System.out.println(user.getLogin());
-                    System.out.println(user.getContraseña());
-                    if (user.getLogin().equals("admin@gmail.com") && user.getContraseña().equals("Abcd*1234")) {
-                        user.setTipo_usuario(Privilegio.ADMIN);
-                        admin.setId_user(listaUser.get(0).getId_user());
-                        admin.setTipo_usuario(user.getTipo_usuario());
-                    } else {
-                        user.setTipo_usuario(Privilegio.CLIENT);
-                        client.setId_user(listaUser.get(0).getId_user());
-                        client.setTipo_usuario(user.getTipo_usuario());
-                    }
 
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
-                    Parent root = loader.load();
-                    PrincipalController princiController = ((PrincipalController) loader.getController());
-                    princiController.setUser(user);
-                    princiController.setStage(stage);
-                    princiController.initiStage(root, user);
-                
+                if (user.getLogin().equals("admin@gmail.com") && user.getContraseña().equals("Abcd*1234")) {
+                    user.setTipo_usuario(privi);
+                    user.setId_user(listaUser.get(0).getId_user());
+                    user.setTipo_usuario(user.getTipo_usuario());
+                    user.setNombre_completo(nombre);
+                    user.setLogin(login);
+                    user.setDireccion(listaUser.get(0).getDireccion());
+                    user.setCod_postal(listaUser.get(0).getCod_postal());
+                    user.setTelefono(listaUser.get(0).getTelefono());
+
+                } else {
+
+                    user.setTipo_usuario(privi);
+                    user.setId_user(listaUser.get(0).getId_user());
+                    user.setTipo_usuario(user.getTipo_usuario());
+                    user.setNombre_completo(nombre);
+                    user.setLogin(login);
+                    user.setDireccion(listaUser.get(0).getDireccion());
+                    user.setCod_postal(listaUser.get(0).getCod_postal());
+                    user.setTelefono(listaUser.get(0).getTelefono());
+                    //Establecemos los atributos exclusivos de cliente
+                    Cliente cliente = clieFact.getFactory().find_XML(Cliente.class, user.getId_user().toString());
+                    client.setN_tarjeta(cliente.getN_tarjeta());
+                    client.setPin(cliente.getPin());
+                    //System.out.println(client.getN_tarjeta() + ", " + client.getPin());
+                }
+
+                //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
+                Parent root = loader.load();
+                PrincipalController princiController = ((PrincipalController) loader.getController());
+                princiController.setUser(user);
+                princiController.setClien(client);
+                princiController.setStage(stage);
+                princiController.initiStage(root, user, client);
+                ((Stage) this.pane.getScene().getWindow()).close();
             }
 
-        } catch (IOException  ex) {
+        } catch (IOException ex) {
             error.setVisible(true);
             error.setText("Ha habido algun error durante el inicio de sesion.");
-        } catch(UserNotFoundException e){
+        } catch (UserNotFoundException e) {
             error.setVisible(true);
             error.setText("Usuario no encontrado.");
         }
-        
 
     }
 

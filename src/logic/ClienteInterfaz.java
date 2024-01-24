@@ -66,7 +66,7 @@ public interface ClienteInterfaz {
      * @return
      * @throws WebApplicationException
      */
-    public List<Cliente> find_XML(Class<Cliente> responseType, String id) throws WebApplicationException;
+    public Cliente find_XML(Class<Cliente> responseType, String id) throws WebApplicationException;
 
     /**
      * Busca una entrada por su ID en formato JSON.
@@ -76,7 +76,7 @@ public interface ClienteInterfaz {
      * @return
      * @throws WebApplicationException
      */
-    public List<Cliente> find_JSON(Class<Cliente> responseType, String id) throws WebApplicationException;
+    public Cliente find_JSON(Class<Cliente> responseType, String id) throws WebApplicationException;
 
     /**
      * Crea una nueva entidad Cliente en formato XML.

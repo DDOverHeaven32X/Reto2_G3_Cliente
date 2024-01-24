@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
@@ -305,19 +306,19 @@ public class RegistroController {
 
             img_ojo3.setImage(new Image(psw_pin.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         } else {
-            txt_contraRepeReve.setDisable(true);
-            txt_contraRepeReve.setVisible(false);
-            psw_contraRepe.setDisable(false);
-            psw_contraRepe.setVisible(true);
+            txt_pinReve.setDisable(true);
+            txt_pinReve.setVisible(false);
+            psw_pin.setDisable(false);
+            psw_pin.setVisible(true);
 
-            if (psw_contraRepe.isVisible()) {
-                psw_contraRepe.setText(txt_contraRepeReve.getText());
+            if (psw_pin.isVisible()) {
+                psw_pin.setText(txt_pinReve.getText());
 
             } else {
-                txt_contraRepeReve.setText(psw_contraRepe.getText());
+                txt_pinReve.setText(psw_pin.getText());
             }
 
-            img_ojo3.setImage(new Image(psw_contraRepe.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
+            img_ojo3.setImage(new Image(psw_pin.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         }
     }
 
@@ -378,6 +379,7 @@ public class RegistroController {
 
             if (!(pinMatcher.matcher(psw_pin.getText()).matches())) {
                 txt_pinReve.setText("");
+                psw_pin.setText("");
                 throw new IncorrectPatternException("El pin debe contener 4 exactamente caracteres numericos.");
             }
             /*
@@ -389,7 +391,8 @@ public class RegistroController {
             //Medida para pasar datos String a integers si hace falta
             String telef = txt_tele.getText();
             String tarjeta = txt_tarjeta.getText();
-            String pin = txt_pinReve.getText();
+            String pin = psw_pin.getText();
+
             String codigoPost = txt_zip.getText();
 
             Integer codPostal = Integer.parseInt(codigoPost);
@@ -413,23 +416,15 @@ public class RegistroController {
             ventana.setHeaderText(null);
             ventana.setTitle("Enhorabuena");
             ventana.setContentText("Has logrado registrarte");
+
             Optional<ButtonType> accion = ventana.showAndWait();
             if (accion.get() == ButtonType.OK) {
-                txt_nombre.setText("");
-                txt_email.setText("");
-                psw_contra.setText("");
-                psw_contraRepe.setText("");
-                txt_contraReve.setText("");
-                txt_contraRepeReve.setText("");
-                txt_direccion.setText("");
-                txt_zip.setText("");
-                txt_tele.setText("");
-                txt_pinReve.setText("");
-                psw_pin.setText("");
-                txt_tarjeta.setText("");
-                lbl_error.setText("");
-                txt_nombre.requestFocus();
-                event.consume();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/InicioSesion.fxml"));
+                Parent root = (Parent) loader.load();
+                InicioSesionController signIn = ((InicioSesionController) loader.getController());
+                signIn.setStage(stage);
+                signIn.initStage(root);
+                stage.close();
             } else {
                 txt_nombre.setText("");
                 txt_email.setText("");
@@ -453,6 +448,8 @@ public class RegistroController {
             lbl_error.setVisible(true);
             lbl_error.setText(e.getMessage());
             LOGGER.severe(e.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(RegistroController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

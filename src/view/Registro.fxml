@@ -12,14 +12,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegistroController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegistroController">
    <children>
       <Label fx:id="lbl_registro" alignment="CENTER" layoutX="90.0" layoutY="3.0" text="REGISTRO" textAlignment="JUSTIFY" textFill="#97815f">
          <font>
             <Font name="Lucida Sans Demibold" size="36.0" />
          </font>
       </Label>
-      <Label fx:id="lbl_error" alignment="CENTER" layoutX="31.0" layoutY="54.0" prefHeight="34.0" prefWidth="304.0" text="Aqui mostramos los errores de esta ventana" textAlignment="JUSTIFY" textFill="RED">
+      <Label fx:id="lbl_error" alignment="CENTER" layoutX="31.0" layoutY="51.0" prefHeight="44.0" prefWidth="304.0" text="Aqui mostramos los errores de esta ventana" textAlignment="CENTER" textFill="RED" wrapText="true">
          <font>
             <Font size="14.0" />
          </font></Label>
