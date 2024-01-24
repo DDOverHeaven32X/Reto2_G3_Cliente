@@ -166,15 +166,47 @@ public class EntradaController {
         txtFiltrar.setDisable(true);
         btnBuscar.setDisable(true);
         dtpFiltradoFecha.setDisable(true);
+        //Los clientes no podrán usar ni los campos ni los botones relacionados con el CRUD
+        if(user.getTipo_usuario().equals(Privilegio.CLIENT)){
+            txtPrecioEntrada.setVisible(true);
+            txtPrecioEntrada.setDisable(true);
+            cbcFiltro.setVisible(true);
+            comboEntrada.setVisible(true);
+            comboEntrada.setDisable(true);
+            dtpFecha.setDisable(true);
+            dtpFecha.setVisible(true);
+            lbl_precio.setVisible(true);
+            lbl_precio1.setVisible(true);
+            lbl_tipo.setVisible(true);
+            lbl_fecha.setVisible(true);
+            txtFiltrar.setVisible(true);
+            btnBuscar.setVisible(true);
+            dtpFiltradoFecha.setVisible(true);
+            btnCrear.setDisable(true);
+            btnCrear.setVisible(false);
+            btnModificar.setDisable(true);
+            btnModificar.setVisible(false);
+            btnEliminar.setDisable(true);
+            btnEliminar.setVisible(false);
+        }
         //El foco está en el campo del precio
         txtPrecioEntrada.requestFocus();
         //Activacion del cambio de texto
         txtPrecioEntrada.textProperty().addListener(this::cambioTexto);
+        txtFiltrar.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Llamar al método refreshTableIfFilterEmpty cuando el texto cambie
+            refreshTableIfFilterEmpty();
+        });
+        dtpFiltradoFecha.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Nuevo valor del DatePicker: " + newValue);
+            refreshTableIfFilterEmpty();
+        });
+
         //Los datos de la fila selecionada se añadirán a los campos con esto
         tblEntrada.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         //Combo con sus datos ya introducidos
-        comboEntrada.getItems().addAll(null, "Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
-        cbcFiltro.getItems().addAll(null, "Filtrar por dinero", "Filtrar por fecha");
+        comboEntrada.getItems().addAll(null,"Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
+        cbcFiltro.getItems().addAll("Filtrar por dinero", "Filtrar por fecha");
         //Asignacion de botones
         //System.out.println(cliente.toString());
         btnCrear.setOnAction(this::handleCreateButtonAction);
@@ -199,14 +231,7 @@ public class EntradaController {
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         cbcFiltro.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                if (cbcFiltro.getValue() == null) {
-                    txtFiltrar.setDisable(true);
-                    dtpFiltradoFecha.setDisable(true);
-                    btnBuscar.setVisible(false);
-                    txtFiltrar.setVisible(false);
-                    dtpFiltradoFecha.setVisible(false);
-                    cargarTodo();
-                } else {
+                if (!txtFiltrar.getText().trim().isEmpty() || dtpFiltradoFecha.getValue() == null) {               
                     String filtro = cbcFiltro.getValue().toString();
                     switch (filtro) {
                         case "Filtrar por dinero":
@@ -226,7 +251,15 @@ public class EntradaController {
                             btnBuscar.setDisable(false);
                             break;
                     }
+                }else{
+                    refreshTableIfFilterEmpty();
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Campos Vacíos");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Por favor introduce algun texto para filtrar.");
+                    alert.showAndWait();
                 }
+                
             }
         });
 
@@ -298,6 +331,16 @@ public class EntradaController {
             btnModificar.setDisable(false);
         }
     }
+    //Método que resetea 
+    @FXML
+    private void refreshTableIfFilterEmpty() {
+        if (txtFiltrar.getText().trim().isEmpty() || (dtpFiltradoFecha.getValue() == null)) {
+            entradaData = FXCollections.observableArrayList(cargarTodo());
+            tblEntrada.setItems(entradaData);
+            tblEntrada.refresh();
+        }
+    }
+
 
     //Método para relalizar el CRUD de POST en la tabla
     @FXML
@@ -511,8 +554,8 @@ public class EntradaController {
     private ObservableList<Entrada> entradasClient() {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> EntradasFiltro;
-        //Para Probar
-        String loginPrueba = "client@gmail.com";
+        
+        String loginPrueba = user.getLogin();
         EntradasFiltro = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaDeUsuario_XML(Entrada.class, loginPrueba));
         listaEntradas = FXCollections.observableArrayList(EntradasFiltro);
         try {
