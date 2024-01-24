@@ -125,6 +125,8 @@ public class AnimalController {
 
     private Stage stage;
 
+    private Zona zona;
+
     public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -192,7 +194,7 @@ public class AnimalController {
         btnModificarAnimal.setOnAction(this::handleModifyButtonAction);
         btnEliminarAnimal.setOnAction(this::handleDeleteButtonAction);
         btnBuscar.setOnAction(this::handleSearchButton);
-
+        
         //Menu de contexto
         mItemBorrar.setOnAction(this::handleDeleteButtonAction);
 
@@ -588,6 +590,18 @@ public class AnimalController {
         return listaAnimales;
     }
 
+  /*  @FXML
+    private ObservableList<Animal> cargarFiltroAnimales() {
+        ObservableList<Animal> listaAnimales;
+        List<Animal> filtradoParam;
+        filtradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsInAnArea_XML(Animal.class, zona.getNombre()));
+
+        listaAnimales = FXCollections.observableArrayList(filtradoParam);
+        tableAnimal.setItems(listaAnimales);
+        tableAnimal.refresh();
+        return listaAnimales;
+    }
+    */
     /*
     private boolean camposAnimalInformados() {
         if (txtNombreAnimal.getText().trim().isEmpty() || txtGenero.getValue() == null || txtEspecie.getText().trim().isEmpty() || comboSalud.getValue() == null || txtEdad.getText().trim().isEmpty() || txtPeso.getText().trim().isEmpty() || txtAltura.getText().trim().isEmpty() || comboAlimentacion.getValue() == null || comboZona.getValue() == null) {
@@ -725,4 +739,9 @@ public class AnimalController {
         }
         return false;
     }
+
+    public void setZona(Zona zona) {
+        this.zona = zona;
+    }
+
 }

@@ -7,15 +7,11 @@ package controller;
 
 import static controller.RegistroController.LOGGER;
 import java.io.IOException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -25,7 +21,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -33,10 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -45,7 +37,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import logic.ZonaFactoria;
-import model.Animal;
 import model.Entrada;
 import model.Zona;
 import net.sf.jasperreports.engine.JRException;
@@ -57,7 +48,10 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 /**
- * FXML Controller class
+ * Clase de controlador FXML para gestionar entidades Zona. Este controlador
+ * maneja las interacciones de la interfaz de usuario para crear, modificar y
+ * eliminar zonas. También proporciona funcionalidad para filtrar y generar
+ * informes.
  *
  * @author 2dam
  */
@@ -66,6 +60,8 @@ public class ZonaController {
     private final ZonaFactoria zonaFact = new ZonaFactoria();
     private ObservableList<Zona> zonaData;
     private Zona zona = new Zona();
+
+    private List<Zona> listaZonas;
 
     @FXML
     private Label lbl_nombreZona;
@@ -110,6 +106,12 @@ public class ZonaController {
 
     private Stage stage;
 
+    /**
+     * Inicializa el escenario y configura el estado inicial de los componentes
+     * de la interfaz de usuario.
+     *
+     * @param root El nodo raíz Parent de la escena.
+     */
     public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -163,6 +165,8 @@ public class ZonaController {
 
         //menuItemVisualizarAnimales.setOnAction(this::handleDeleteButtonAction);
         menuItemBorrar.setOnAction(this::handleDeleteButtonAction);
+
+        //menuItemVisualizarAnimales.setOnAction(this::handleVisualizarAnimalesButtonAction);
         //Metodo para cargar los datos de la zona seleccionada
         tableZona.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
@@ -218,7 +222,11 @@ public class ZonaController {
         return listZonas;
     }
 
-    //Método para relalizar el CRUD de POST en la tabla
+    /**
+     * Maneja la acción de crear una nueva Zona.
+     *
+     * @param event El ActionEvent desencadenado por el clic en el botón.
+     */
     @FXML
     private void handleCreateButtonAction(ActionEvent event) {
         //Conversiones necesarias para hacer la inserción
@@ -230,20 +238,32 @@ public class ZonaController {
             String descripcion = txtDescripcionZona.getText();
             String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
             if (validarCamposZona(nombre, descripcion)) {
-                zona.setNombre(nombre);
-                zona.setDescripcion(descripcion);
-                zona.setTipo_animal(tipoAnimal);
+                if (zonaExiste(nombre, descripcion, tipoAnimal)) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Datos repetidos");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Esa Zona ya existe. Modifica algun campo.");
+                    alert.showAndWait();
+                } else {
+                    zona.setNombre(nombre);
+                    zona.setDescripcion(descripcion);
+                    zona.setTipo_animal(tipoAnimal);
 
-                //entrada.setAdmin(admin);
-                zonaFact.getFactory().create_XML(zona);
-                //Cargamos la tabla con el dato nuevo
-                zonaData = FXCollections.observableArrayList(cargarTodo());
+                    //entrada.setAdmin(admin);
+                    zonaFact.getFactory().create_XML(zona);
+                    //Cargamos la tabla con el dato nuevo
+                    zonaData = FXCollections.observableArrayList(cargarTodo());
+                }
             }
         }
 
     }
 
-    //Método para relalizar el CRUD de PUT en la tabla
+    /**
+     * Maneja la acción de modificar una Zona existente.
+     *
+     * @param event El ActionEvent desencadenado por el clic en el botón.
+     */
     @FXML
     private void handleModifyButtonAction(ActionEvent event) {
 
@@ -253,22 +273,33 @@ public class ZonaController {
 
             //Conversiones necesarias para hacer la inserción
             String nombre = txtNombreZona.getText();
-            String descricpion = txtDescripcionZona.getText();
+            String descripcion = txtDescripcionZona.getText();
             String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
+            if (zonaExiste(nombre, descripcion, tipoAnimal)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Datos repetidos");
+                alert.setHeaderText(null);
+                alert.setContentText("Esa Zona ya existe. Modifica algun campo.");
+                alert.showAndWait();
+            } else {
+                //Escogemos el Id para indicar al programa cual entrada debe modificar
+                zona.setId_zona(tableZona.getSelectionModel().getSelectedItem().getId_zona());
+                zona.setNombre(nombre);
+                zona.setDescripcion(descripcion);
+                zona.setTipo_animal(tipoAnimal);
 
-            //Escogemos el Id para indicar al programa cual entrada debe modificar
-            zona.setId_zona(tableZona.getSelectionModel().getSelectedItem().getId_zona());
-            zona.setNombre(nombre);
-            zona.setDescripcion(descricpion);
-            zona.setTipo_animal(tipoAnimal);
-
-            zonaFact.getFactory().edit_XML(zona);
-            //Cargamos la tabla con el dato nuevo
-            zonaData = FXCollections.observableArrayList(cargarTodo());
-
+                zonaFact.getFactory().edit_XML(zona);
+                //Cargamos la tabla con el dato nuevo
+                zonaData = FXCollections.observableArrayList(cargarTodo());
+            }
         }
     }
 
+    /**
+     * Maneja la acción de eliminar una Zona existente.
+     *
+     * @param event El ActionEvent desencadenado por el clic en el botón.
+     */
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
         // Obtener la Zona seleccionada
@@ -291,30 +322,42 @@ public class ZonaController {
         }
     }
 
-    /*
+    /**
+     * Maneja la acción de visualizar animales para la Zona seleccionada. Cierra
+     * la ventana actual y abre una nueva ventana para visualizar los animales
+     * de la Zona.
+     *
+     * @param event El ActionEvent desencadenado por el clic en el botón.
+     */
     @FXML
-    private Zona handleVisualizarAnimalesButtonAction(ActionEvent event) {
+    private void handleVisualizarAnimalesButtonAction(ActionEvent event) {
         Zona selectedZona = tableZona.getSelectionModel().getSelectedItem();
         try {
-            // Obtener la Zona seleccionada
-
+            // Cerrar la ventana actual
             Stage ventanaActual = (Stage) tableZona.getScene().getWindow();
             ventanaActual.close();
+
+            // Abrir la nueva ventana
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = loader.load();
 
-            AnimalController animal = (AnimalController) loader.getController();
-            animal.setStage(stage);
-            animal.initStage(root);
-            // Eliminar la Zona si el usuario confirma
-
+            AnimalController animalController = ((AnimalController) loader.getController());
+            animalController.setZona(selectedZona);
+            animalController.setStage(stage);
+            animalController.initiStage(root);
         } catch (IOException ex) {
             Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return selectedZona;
     }
+
+    /**
+     * Maneja el cambio de selección en la tabla de Zonas. Introduce los datos
+     * de la Zona seleccionada en los campos correspondientes.
+     *
+     * @param observable La propiedad observable.
+     * @param oldValue El valor antiguo.
+     * @param newValue El nuevo valor.
      */
-    //Metodo que introduce los datos en los fields de la zona seleccionada.
     @FXML
     private void handleUsersTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue) {
         if (newValue != null) {
@@ -330,6 +373,13 @@ public class ZonaController {
         }
     }
 
+    /**
+     * Maneja la acción del botón de búsqueda, realizando consultas
+     * parametrizadas en la tabla de Zonas.
+     *
+     * @param actionEvent El ActionEvent desencadenado por el clic en el botón
+     * de búsqueda.
+     */
     //Método de busqueda del botón, sirve para realizar las consultas parametrizadas
     @FXML
     private void handleSearchButton(ActionEvent actionEvent) {
@@ -352,6 +402,12 @@ public class ZonaController {
         }
     }
 
+    /**
+     * Realiza un filtro en la tabla de Zonas por el nombre especificado.
+     *
+     * @return La lista observable de Zonas después de aplicar el filtro por
+     * nombre.
+     */
     //Tipo de filtro que carga la tabla por el nombre de la zona
     @FXML
     private ObservableList<Zona> cargarFiltroNombre() {
@@ -365,6 +421,13 @@ public class ZonaController {
         return listaZonas;
     }
 
+    /**
+     * Realiza un filtro en la tabla de Zonas por el tipo de animal
+     * especificado.
+     *
+     * @return La lista observable de Zonas después de aplicar el filtro por
+     * tipo de animal.
+     */
     // //Tipo de filtro que carga la tabla por el tipo de animal de la zona
     @FXML
     private ObservableList<Zona> cargarFiltroTipoAnimal() {
@@ -378,6 +441,14 @@ public class ZonaController {
         return listaZonas;
     }
 
+    /**
+     * Maneja el cambio en el texto de los campos de filtro. Actualiza la tabla
+     * si el campo de filtro está vacío.
+     *
+     * @param observable La propiedad observable.
+     * @param oldValue El valor antiguo.
+     * @param newValue El nuevo valor.
+     */
     // Método que vacía los campos si hay alguna alteración en la ventana
     @FXML
     private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
@@ -390,6 +461,13 @@ public class ZonaController {
         }
     }
 
+    /**
+     * Método que verifica si todos los campos necesarios para la
+     * creación/modificación de una Zona están informados.
+     *
+     * @return true si todos los campos están informados, false si algún campo
+     * está vacío.
+     */
     private boolean camposZonaInformados() {
         if (txtNombreZona.getText().trim().isEmpty() || txtDescripcionZona.getText().trim().isEmpty() || txtTipoAnimalZona.getValue() == null) {
             // Si alguno de los campos está vacío, muestra un mensaje de alerta
@@ -421,6 +499,9 @@ public class ZonaController {
         return true;
     }
 
+    /**
+     * Método que refresca la tabla si el campo de filtro está vacío.
+     */
     //Metodo que verifica que no hay nada en el textfield filtrar
     @FXML
     private void refreshTableIfFilterEmpty() {
@@ -432,6 +513,12 @@ public class ZonaController {
         }
     }
 
+    /**
+     * Método que muestra una alerta con un título y contenido específicos.
+     *
+     * @param titulo El título de la alerta.
+     * @param contenido El contenido de la alerta.
+     */
     private void mostrarAlerta(String titulo, String contenido) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
@@ -440,10 +527,40 @@ public class ZonaController {
         alert.showAndWait();
     }
 
+    /**
+     * Método que comprueba si una zona con el mismo nombre, descripción y tipo
+     * de animal ya existe.
+     *
+     * @param nombre El nombre de la Zona.
+     * @param descripcion La descripción de la Zona.
+     * @param tipoAnimal El tipo de animal de la Zona.
+     * @return true si la Zona ya existe, false si no.
+     */
+    private boolean zonaExiste(String nombre, String descripcion, String tipoAnimal) {
+        // Buscar entradas con la misma fecha y tipo de entrada
+        listaZonas = zonaFact.getFactory().findAll_XML(Zona.class);
+        for (Zona z : listaZonas) {
+            if (z.getNombre().equals(nombre) && z.getDescripcion().equals(descripcion) && z.getTipo_animal().equals(tipoAnimal)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Método que establece el escenario (Stage) para este controlador.
+     *
+     * @param stage El Stage para este controlador.
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Maneja la acción de generar y mostrar un informe para las Zonas.
+     *
+     * @param event El ActionEvent desencadenado por el clic en el botón.
+     */
     @FXML
     private void handleImprimirAction(ActionEvent event) {
         try {

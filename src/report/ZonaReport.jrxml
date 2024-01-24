@@ -5,8 +5,8 @@
 	<property name="ireport.y" value="0"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="tipo_animal" class="java.lang.String"/>
-        <field name="descripcion" class="java.lang.String"/>
-        <background>
+	<field name="descripcion" class="java.lang.String"/>
+	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
