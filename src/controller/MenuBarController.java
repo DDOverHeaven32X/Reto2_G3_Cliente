@@ -60,6 +60,7 @@ public class MenuBarController {
             Parent root = (Parent) loader.load();
             AnimalController aniController = ((AnimalController) loader.getController());
             
+            aniController.setUsuario(user);
             aniController.setStage(stage);
             aniController.initiStage(root);
 

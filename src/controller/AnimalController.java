@@ -47,6 +47,7 @@ import logic.ZonaFactoria;
 import model.Admin;
 import model.Alimentacion;
 import model.Animal;
+import model.Privilegio;
 import model.Salud;
 import model.Usuario;
 import model.Zona;
@@ -67,8 +68,8 @@ public class AnimalController {
 
     private static final Logger LOGGER = Logger.getLogger("/controller/AnimalController");
 
+    private Usuario user;
     private Admin admin = new Admin();
-    private Usuario user = new Usuario();
     private Animal animal = new Animal();
     private final AnimalFactoria fAnimal = new AnimalFactoria();
     private final ZonaFactoria fZona = new ZonaFactoria();
@@ -176,17 +177,18 @@ public class AnimalController {
         //El foco está en el campo del precio
         txtNombreAnimal.requestFocus();
 
-        //Activacion del cambio de texto
-        txtNombreAnimal.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtGenero.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtEspecie.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        comboSalud.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtEdad.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtPeso.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtAltura.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        comboAlimentacion.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        comboZona.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-
+        //Activacion del cambio de texto unicamente si eres admin
+        if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
+            txtNombreAnimal.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtGenero.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtEspecie.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            comboSalud.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtEdad.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtPeso.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtAltura.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            comboAlimentacion.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            comboZona.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+        }
         //Combo con sus datos ya introducidos
         txtGenero.getItems().addAll("Macho", "Hembra");
         comboFiltrar.getItems().addAll("Por alimentación", "Por especie", "");
@@ -206,8 +208,33 @@ public class AnimalController {
         btnBuscar.setOnAction(this::handleSearchButton);
         btnInforme.setOnAction(this::handleImprimirAction);
 
-        //Menu de contexto
-        mItemBorrar.setOnAction(this::handleDeleteButtonAction);
+        //Menu de contexto unicamente si eres admin
+        if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
+            mItemBorrar.setOnAction(this::handleDeleteButtonAction);
+        } else {
+            mItemBorrar.setVisible(false);
+            mItemBorrar.setDisable(true);
+        }
+
+        //Si el usuario es cliente se deshabilitan los campos donde se ve la informacion y se hacen invisibles los siguientes botones
+        if (user.getTipo_usuario().equals(Privilegio.CLIENT)) {
+            txtNombreAnimal.setDisable(true);
+            txtGenero.setDisable(true);
+            txtEdad.setDisable(true);
+            txtPeso.setDisable(true);
+            txtAltura.setDisable(true);
+            comboSalud.setDisable(true);
+            comboAlimentacion.setDisable(true);
+            txtEspecie.setDisable(true);
+            comboZona.setDisable(true);
+
+            btnCrearAimal.setDisable(true);
+            btnModificarAnimal.setDisable(true);
+            btnEliminarAnimal.setDisable(true);
+            btnCrearAimal.setVisible(false);
+            btnModificarAnimal.setVisible(false);
+            btnEliminarAnimal.setVisible(false);
+        }
 
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         comboFiltrar.setOnAction(new EventHandler<ActionEvent>() {
@@ -322,7 +349,8 @@ public class AnimalController {
                         break;
                 }
                 animal.setZona((Zona) comboZona.getValue());
-                //animal.setAdmin(admin);
+                admin.setId_user(user.getId_user());
+                animal.setAdmin(admin);
 
                 // Comprobar si el animal ya existe
                 if (animalExiste()) {
@@ -581,8 +609,8 @@ public class AnimalController {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERROR");
-                alert.setContentText("Error al cargar el filtro de especies.");
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar el filtro de especies.");
         }
     }
 
@@ -595,8 +623,8 @@ public class AnimalController {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERROR");
-                alert.setContentText("Error al cargar el filtro de zonas.");
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar el filtro de zonas.");
         }
 
     }
@@ -753,7 +781,7 @@ public class AnimalController {
         }
         return false;
     }
-    
+
     /**
      * Este metodo es una verificacion cuando el usuario le da al boton de
      * salir.
@@ -780,5 +808,9 @@ public class AnimalController {
 
     private void showErrorAlert(String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void setUsuario(Usuario user) {
+        this.user = user;
     }
 }
