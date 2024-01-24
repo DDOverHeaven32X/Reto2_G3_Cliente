@@ -50,7 +50,7 @@ public class PrincipalController {
     
     private static final Logger LOGGER = Logger.getLogger("/controlador/CambiarContrasenaController");
 
-    public void initiStage(Parent root, Usuario user, Cliente cliente) {
+    public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -62,7 +62,7 @@ public class PrincipalController {
         });
         
         menubar.setUser(user);
-        menubar.setClien(cliente);
+        menubar.setClien(clien);
         //Ponemos el nombre y correo del usuario en sus labels
         lblUsuario.setText("Nombre de usuario: " + user.getNombre_completo());
         lblEmail.setText("Email: " + user.getLogin());
@@ -88,12 +88,16 @@ public class PrincipalController {
             Parent root = (Parent) loader.load();
 
             CambiarContrasenaController cambiarContra = (CambiarContrasenaController) loader.getController();
-            cambiarContra.setStage(stage, clien);
+            cambiarContra.setStage(stage, user);
             cambiarContra.initStage(root);
             
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
         }
+    }
+
+    public void setSesionUsuario(Usuario user) {
+        this.user=user;
     }
 
 }

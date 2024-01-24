@@ -38,6 +38,7 @@ import logic.UsuarioFactoria;
 import model.Admin;
 import model.Cliente;
 import model.Privilegio;
+import model.SesionUsuario;
 import model.Usuario;
 
 /**
@@ -49,7 +50,7 @@ public class InicioSesionController {
 
     private Stage stage;
 
-    private Admin admin;
+    private Usuario user;
 
     @FXML
     private Pane pane;
@@ -184,46 +185,34 @@ public class InicioSesionController {
                 if (listaUser.isEmpty()) {
                     throw new UserNotFoundException();
                 }
-                String nombre = listaUser.get(0).getNombre_completo();
-                String login = listaUser.get(0).getLogin();
+
                 Privilegio privi = listaUser.get(0).getTipo_usuario();
                 //Si la consulta devuelve algo se setearan los datos User devueltos a un Cliente o un Admin
-
-                if (user.getLogin().equals("admin@gmail.com") && user.getContraseña().equals("Abcd*1234")) {
-                    user.setTipo_usuario(privi);
-                    user.setId_user(listaUser.get(0).getId_user());
-                    user.setTipo_usuario(user.getTipo_usuario());
-                    user.setNombre_completo(nombre);
-                    user.setLogin(login);
-                    user.setDireccion(listaUser.get(0).getDireccion());
-                    user.setCod_postal(listaUser.get(0).getCod_postal());
-                    user.setTelefono(listaUser.get(0).getTelefono());
+                if (privi.equals(Privilegio.ADMIN)) {
+                    user = listaUser.get(0);
+                    SesionUsuario sesionUsuario = SesionUsuario.getSUsuario();
+                    sesionUsuario.setUser(user);
 
                 } else {
-
-                    user.setTipo_usuario(privi);
-                    user.setId_user(listaUser.get(0).getId_user());
-                    user.setTipo_usuario(user.getTipo_usuario());
-                    user.setNombre_completo(nombre);
-                    user.setLogin(login);
-                    user.setDireccion(listaUser.get(0).getDireccion());
-                    user.setCod_postal(listaUser.get(0).getCod_postal());
-                    user.setTelefono(listaUser.get(0).getTelefono());
-                    //Establecemos los atributos exclusivos de cliente
+                    user = listaUser.get(0);
+                    SesionUsuario sesionUsuario = SesionUsuario.getSUsuario();
+                    sesionUsuario.setUser(user);
+                    //Establecemos los atributos tambien al cliente cliente
                     Cliente cliente = clieFact.getFactory().find_XML(Cliente.class, user.getId_user().toString());
+                    client.setId_user(cliente.getId_user());
                     client.setN_tarjeta(cliente.getN_tarjeta());
                     client.setPin(cliente.getPin());
-                    //System.out.println(client.getN_tarjeta() + ", " + client.getPin());
                 }
 
                 //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                 Parent root = loader.load();
                 PrincipalController princiController = ((PrincipalController) loader.getController());
+                princiController.setSesionUsuario(user);
                 princiController.setUser(user);
                 princiController.setClien(client);
                 princiController.setStage(stage);
-                princiController.initiStage(root, user, client);
+                princiController.initiStage(root);
                 ((Stage) this.pane.getScene().getWindow()).close();
             }
 
@@ -291,7 +280,7 @@ public class InicioSesionController {
             error.setVisible(true);
             error.setText("El email no cumple con el patron ");
             return false;
-        } else if (!PASSWORD__PATTERN.matcher(pswContraseña.getText()).matches() && !PASSWORD__PATTERN.matcher(txt_contraReve.getText()).matches()) {
+        } else if ((!PASSWORD__PATTERN.matcher(pswContraseña.getText()).matches() && !PASSWORD__PATTERN.matcher(txt_contraReve.getText()).matches()) || (pswContraseña.getText().length() < 8 && txt_contraReve.getText().length() < 8)) {
             //Hacemos que el lbl error se vea
             error.setVisible(true);
             error.setText("La contraseña debe de contener al menos 8 caracteres, una mayuscula y minuscula");

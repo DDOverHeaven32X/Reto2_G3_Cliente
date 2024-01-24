@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import model.Cliente;
+import model.Usuario;
 
 /**
  * FXML Controller class
@@ -54,8 +55,8 @@ public class CambiarContrasenaController {
     @FXML
     private PasswordField pswContraseña3;
 
+    private Usuario user;
     private Stage stage;
-    private Cliente clien;
 
     /**
      * Initializes the controller class.
@@ -69,9 +70,9 @@ public class CambiarContrasenaController {
         stage.show();
     }
 
-    void setStage(Stage stage, Cliente clien) {
+    void setStage(Stage stage, Usuario user) {
         this.stage = stage;
-        this.clien = clien;
+        this.user = user;
     }
 
 }
