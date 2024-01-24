@@ -51,8 +51,6 @@ public class InicioSesionController {
 
     private Admin admin;
 
-    
-
     @FXML
     private Pane pane;
     @FXML
@@ -181,14 +179,14 @@ public class InicioSesionController {
                 //Comprobamos si el usuario está registrado en la base de datos
                 List<Usuario> listaUser;
                 listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), pswContraseña.getText());
-                String nombre = listaUser.get(0).getNombre_completo();
-                String login = listaUser.get(0).getLogin();
-                Privilegio privi = listaUser.get(0).getTipo_usuario();
 
                 //Si la consulta no devuelve nada se lanza una excepción de UserNotFoundException
                 if (listaUser.isEmpty()) {
                     throw new UserNotFoundException();
                 }
+                String nombre = listaUser.get(0).getNombre_completo();
+                String login = listaUser.get(0).getLogin();
+                Privilegio privi = listaUser.get(0).getTipo_usuario();
                 //Si la consulta devuelve algo se setearan los datos User devueltos a un Cliente o un Admin
 
                 if (user.getLogin().equals("admin@gmail.com") && user.getContraseña().equals("Abcd*1234")) {
@@ -202,7 +200,7 @@ public class InicioSesionController {
                     user.setTelefono(listaUser.get(0).getTelefono());
 
                 } else {
-                    
+
                     user.setTipo_usuario(privi);
                     user.setId_user(listaUser.get(0).getId_user());
                     user.setTipo_usuario(user.getTipo_usuario());
@@ -215,7 +213,7 @@ public class InicioSesionController {
                     Cliente cliente = clieFact.getFactory().find_XML(Cliente.class, user.getId_user().toString());
                     client.setN_tarjeta(cliente.getN_tarjeta());
                     client.setPin(cliente.getPin());
-                    System.out.println(client.getN_tarjeta() + ", " + client.getPin());
+                    //System.out.println(client.getN_tarjeta() + ", " + client.getPin());
                 }
 
                 //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
@@ -226,7 +224,7 @@ public class InicioSesionController {
                 princiController.setClien(client);
                 princiController.setStage(stage);
                 princiController.initiStage(root, user, client);
-
+                ((Stage) this.pane.getScene().getWindow()).close();
             }
 
         } catch (IOException ex) {
