@@ -6,12 +6,17 @@
 package controller;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -25,7 +30,7 @@ import model.Usuario;
  * @author Adrian
  */
 public class CambiarContrasenaController {
-
+    
     @FXML
     private Button btn_cancelar;
     @FXML
@@ -54,25 +59,44 @@ public class CambiarContrasenaController {
     private PasswordField pswContraseña2;
     @FXML
     private PasswordField pswContraseña3;
-
+    
     private Usuario user;
     private Stage stage;
 
     /**
      * Initializes the controller class.
+     *
      * @param root
      */
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
+        
+        btn_cancelar.setOnAction(this::exitHandler);
         stage.setScene(scene);
         stage.setTitle("Cambiar Contraseña");
         stage.show();
     }
-
+    
     void setStage(Stage stage, Usuario user) {
         this.stage = stage;
         this.user = user;
     }
 
+    //Método para cerrar la ventana si no se desea comprar
+    @FXML
+    public void exitHandler(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText("¿Deseas salir?");
+        
+        Optional<ButtonType> answer = alert.showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            stage.close();
+        }
+    }
+    
 }

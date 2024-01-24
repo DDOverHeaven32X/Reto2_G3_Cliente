@@ -159,7 +159,7 @@ public class ZonaController {
 
         //Metodo para filtrar por nombre o tipo animal.
         btnBuscar.setOnAction(this::handleSearchButton);
-
+        //Metodo para imprimir informes
         btnInforme.setOnAction(this::handleImprimirAction);
         // Agregar un listener al cambio de texto en txtFiltrar
         txtFiltrar.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -343,7 +343,7 @@ public class ZonaController {
                 return;
             }
             // Verificar si hay animales en la zona
-            
+
             // Cerrar la ventana actual
             Stage ventanaActual = (Stage) tableZona.getScene().getWindow();
             ventanaActual.close();
