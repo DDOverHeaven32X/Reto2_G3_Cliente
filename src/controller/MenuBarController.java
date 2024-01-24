@@ -16,6 +16,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import model.Cliente;
+import model.SesionUsuario;
 import model.Usuario;
 
 /**
@@ -27,9 +28,11 @@ public class MenuBarController {
 
     private Stage stage;
 
-    private Usuario user;
-
     private Cliente clien;
+    
+    SesionUsuario sUsuario = SesionUsuario.getSUsuario();
+    
+    private Usuario user=sUsuario.getUser();
 
     @FXML
     private MenuBar menuBar;
@@ -56,6 +59,7 @@ public class MenuBarController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = (Parent) loader.load();
             AnimalController aniController = ((AnimalController) loader.getController());
+            
             aniController.setStage(stage);
             aniController.initiStage(root);
 
@@ -105,7 +109,7 @@ public class MenuBarController {
             priController.setStage(stage);
             priController.setClien(clien);
             priController.setUser(user);
-            priController.initiStage(root, user, clien);
+            priController.initiStage(root);
         } catch (IOException e) {
 
         }
@@ -124,7 +128,7 @@ public class MenuBarController {
 
         }
     }
-
+    
     public void setUser(Usuario user) {
         this.user = user;
     }

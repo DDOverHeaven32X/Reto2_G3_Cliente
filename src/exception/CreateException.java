@@ -18,7 +18,7 @@ public class CreateException extends Exception {
 
     public CreateException() {
         try {
-            throw new Exception("Error al intentar crear. ");
+            throw new Exception("Error al crear. ");
         } catch (Exception ex) {
             Logger.getLogger(UserAlreadyExistsException.class.getName()).log(Level.SEVERE, null, ex);
         }
