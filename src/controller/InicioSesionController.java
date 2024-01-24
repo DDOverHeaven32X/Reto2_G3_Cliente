@@ -213,7 +213,7 @@ public class InicioSesionController {
                     Cliente cliente = clieFact.getFactory().find_XML(Cliente.class, user.getId_user().toString());
                     client.setN_tarjeta(cliente.getN_tarjeta());
                     client.setPin(cliente.getPin());
-                    //System.out.println(client.getN_tarjeta() + ", " + client.getPin());
+
                 }
 
                 //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
