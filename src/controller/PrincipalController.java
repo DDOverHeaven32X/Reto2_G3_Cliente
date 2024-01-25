@@ -47,12 +47,13 @@ public class PrincipalController {
     private Usuario user;
 
     private Cliente clien;
-    
+
     private static final Logger LOGGER = Logger.getLogger("/controlador/CambiarContrasenaController");
 
     public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Principal");
         //habilitamos y llamamos al metodo para llamar a la ventana de cambiar contraseña
@@ -60,7 +61,7 @@ public class PrincipalController {
         hyp_cambiarContrasena.setOnMouseClicked(event -> {
             handleLblContraClick();
         });
-        
+
         menubar.setUser(user);
         menubar.setClien(clien);
         //Ponemos el nombre y correo del usuario en sus labels
@@ -90,14 +91,14 @@ public class PrincipalController {
             CambiarContrasenaController cambiarContra = (CambiarContrasenaController) loader.getController();
             cambiarContra.setStage(stage, user);
             cambiarContra.initStage(root);
-            
+
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
         }
     }
 
     public void setSesionUsuario(Usuario user) {
-        this.user=user;
+        this.user = user;
     }
 
 }

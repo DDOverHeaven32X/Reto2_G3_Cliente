@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -49,6 +50,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import logic.EntradaFactoria;
 import model.Admin;
 import model.Cliente;
@@ -143,6 +145,8 @@ public class EntradaController {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
+        stage.setResizable(false);
+
         //La ventana no es modal
         stage.initModality(Modality.NONE);
         stage.setTitle("Entrada");
@@ -167,7 +171,7 @@ public class EntradaController {
         btnBuscar.setDisable(true);
         dtpFiltradoFecha.setDisable(true);
         //Los clientes no podrán usar ni los campos ni los botones relacionados con el CRUD
-        if(user.getTipo_usuario().equals(Privilegio.CLIENT)){
+        if (user.getTipo_usuario().equals(Privilegio.CLIENT)) {
             txtPrecioEntrada.setVisible(true);
             txtPrecioEntrada.setDisable(true);
             cbcFiltro.setVisible(true);
@@ -188,6 +192,12 @@ public class EntradaController {
             btnModificar.setVisible(false);
             btnEliminar.setDisable(true);
             btnEliminar.setVisible(false);
+        } else {
+            btnComprar.setVisible(false);
+            btnComprar.setDisable(true);
+            btnTusEntradas.setVisible(false);
+            btnTusEntradas.setDisable(true);
+
         }
         //El foco está en el campo del precio
         txtPrecioEntrada.requestFocus();
@@ -198,14 +208,14 @@ public class EntradaController {
             refreshTableIfFilterEmpty();
         });
         dtpFiltradoFecha.valueProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("Nuevo valor del DatePicker: " + newValue);
+
             refreshTableIfFilterEmpty();
         });
 
         //Los datos de la fila selecionada se añadirán a los campos con esto
         tblEntrada.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         //Combo con sus datos ya introducidos
-        comboEntrada.getItems().addAll(null,"Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
+        comboEntrada.getItems().addAll(null, "Infantil(0-12)", "Adulto", "Senior(+65)", "Minúsvalido");
         cbcFiltro.getItems().addAll("Filtrar por dinero", "Filtrar por fecha");
         //Asignacion de botones
         //System.out.println(cliente.toString());
@@ -220,18 +230,18 @@ public class EntradaController {
         //Menu de contexto unicamente si eres admin
         if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
             mnItemBorrar.setOnAction(this::handleDeleteButtonAction);
-            mnItemVerEntradas.setOnAction(this::handlerEntradasClient);
+            mnItemVerEntradas.setVisible(false);
+            mnItemVerEntradas.setDisable(true);
         } else {
             mnItemBorrar.setVisible(false);
             mnItemBorrar.setDisable(true);
-            mnItemVerEntradas.setVisible(false);
-            mnItemVerEntradas.setDisable(true);
+            mnItemVerEntradas.setOnAction(this::handlerEntradasClient);
         }
         //Codigo que guarda el valor selecionado
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         cbcFiltro.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                if (!txtFiltrar.getText().trim().isEmpty() || dtpFiltradoFecha.getValue() == null) {               
+                if (!txtFiltrar.getText().trim().isEmpty() || dtpFiltradoFecha.getValue() == null) {
                     String filtro = cbcFiltro.getValue().toString();
                     switch (filtro) {
                         case "Filtrar por dinero":
@@ -251,7 +261,7 @@ public class EntradaController {
                             btnBuscar.setDisable(false);
                             break;
                     }
-                }else{
+                } else {
                     refreshTableIfFilterEmpty();
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Campos Vacíos");
@@ -259,7 +269,7 @@ public class EntradaController {
                     alert.setContentText("Por favor introduce algun texto para filtrar.");
                     alert.showAndWait();
                 }
-                
+
             }
         });
 
@@ -295,7 +305,7 @@ public class EntradaController {
         } catch (Exception e) {
             LOGGER.severe("Error a la hora de cargar los datos");
         }
-
+        stage.setOnCloseRequest(this::handleCloseRequest);
         stage.show();
     }
 
@@ -331,16 +341,16 @@ public class EntradaController {
             btnModificar.setDisable(false);
         }
     }
-    //Método que resetea 
+
+    //Método que resetea
     @FXML
     private void refreshTableIfFilterEmpty() {
-        if (txtFiltrar.getText().trim().isEmpty() || (dtpFiltradoFecha.getValue() == null)) {
+        if (txtFiltrar.getText().trim().isEmpty() || (dtpFiltradoFecha.getValue() == null) || dtpFiltradoFecha.getValue().toString().trim().isEmpty()) {
             entradaData = FXCollections.observableArrayList(cargarTodo());
             tblEntrada.setItems(entradaData);
             tblEntrada.refresh();
         }
     }
-
 
     //Método para relalizar el CRUD de POST en la tabla
     @FXML
@@ -528,12 +538,16 @@ public class EntradaController {
     private ObservableList<Entrada> cargarFiltro1() {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> FiltradoParam;
-        FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorPrecio_XML(Entrada.class, txtFiltrar.getText()));
-
-        listaEntradas = FXCollections.observableArrayList(FiltradoParam);
-        tblEntrada.setItems(listaEntradas);
-        tblEntrada.refresh();
-        return listaEntradas;
+        if (!txtFiltrar.getText().equals("")) {
+            FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorPrecio_XML(Entrada.class, txtFiltrar.getText()));
+            listaEntradas = FXCollections.observableArrayList(FiltradoParam);
+            tblEntrada.setItems(listaEntradas);
+            tblEntrada.refresh();
+            return listaEntradas;
+        } else {
+            listaEntradas = cargarTodo();
+            return listaEntradas;
+        }
     }
 
     //Método que se encarga de realizar la búsqueda de entradas por una fecha fijada
@@ -541,12 +555,17 @@ public class EntradaController {
     private ObservableList<Entrada> cargarFiltro2() {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> FiltradoParam;
-        FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorFecha_XML(Entrada.class, dtpFiltradoFecha.getValue().toString()));
+        if (dtpFiltradoFecha.getValue() != null) {
+            FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorFecha_XML(Entrada.class, dtpFiltradoFecha.getValue().toString()));
+            listaEntradas = FXCollections.observableArrayList(FiltradoParam);
+            tblEntrada.setItems(listaEntradas);
+            tblEntrada.refresh();
+            return listaEntradas;
+        } else {
+            listaEntradas = cargarTodo();
+            return listaEntradas;
+        }
 
-        listaEntradas = FXCollections.observableArrayList(FiltradoParam);
-        tblEntrada.setItems(listaEntradas);
-        tblEntrada.refresh();
-        return listaEntradas;
     }
 
     //Método que muestra las entradas compradas de un cliente
@@ -554,7 +573,7 @@ public class EntradaController {
     private ObservableList<Entrada> entradasClient() {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> EntradasFiltro;
-        
+
         String loginPrueba = user.getLogin();
         EntradasFiltro = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaDeUsuario_XML(Entrada.class, loginPrueba));
         listaEntradas = FXCollections.observableArrayList(EntradasFiltro);
@@ -563,13 +582,18 @@ public class EntradaController {
             if (EntradasFiltro.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setHeaderText(null);
-                alert.setTitle("No tienes entradas");
+                alert.setTitle("Error");
                 //Mostramos una alerta de error.
-                alert.setContentText("No has realizado ningúna compra");
+                alert.setContentText("No tienes entradas compradas");
 
                 Optional<ButtonType> answer = alert.showAndWait();
                 if (answer.get() == ButtonType.OK) {
                     alert.close();
+                    try {
+                        throw new Exception("Entradas vacias");
+                    } catch (Exception ex) {
+                        LOGGER.severe("Entradas vacias");
+                    }
                 }
             }
 
@@ -648,6 +672,22 @@ public class EntradaController {
         }
     }
 
+    private void handleCloseRequest(WindowEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("EXIT");
+        alert.setContentText("¿Estas seguro que deseas salir de la aplicacion?");
+
+        Optional<ButtonType> answer = alert.showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+
+    }
+
+    //Esto a mejorar
     @FXML
     private void handlerEntradasClient(ActionEvent event) {
         entradasClient();

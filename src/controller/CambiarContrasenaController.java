@@ -60,11 +60,13 @@ public class CambiarContrasenaController {
 
     /**
      * Initializes the controller class.
+     *
      * @param root
      */
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Cambiar Contraseña");
         stage.show();

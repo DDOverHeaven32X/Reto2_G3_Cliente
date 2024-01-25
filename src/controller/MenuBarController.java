@@ -29,10 +29,10 @@ public class MenuBarController {
     private Stage stage;
 
     private Cliente clien;
-    
+
     SesionUsuario sUsuario = SesionUsuario.getSUsuario();
-    
-    private Usuario user=sUsuario.getUser();
+
+    private Usuario user = sUsuario.getUser();
 
     @FXML
     private MenuBar menuBar;
@@ -49,6 +49,10 @@ public class MenuBarController {
     @FXML
     private Menu menuAyuda;
     @FXML
+    private MenuItem mItemManual;
+    @FXML
+    private MenuItem mItemDocumentacion;
+    @FXML
     private Menu menuCerrarSesion;
 
     @FXML
@@ -59,7 +63,7 @@ public class MenuBarController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = (Parent) loader.load();
             AnimalController aniController = ((AnimalController) loader.getController());
-            
+
             aniController.setStage(stage);
             aniController.initiStage(root);
 
@@ -92,7 +96,7 @@ public class MenuBarController {
             entController.setStage(stage);
             entController.setClien(clien);
             entController.setUser(user);
-            
+
             entController.initiStage(root, user, clien);
         } catch (IOException e) {
 
@@ -128,7 +132,32 @@ public class MenuBarController {
 
         }
     }
-    
+
+    @FXML
+    private void miAyuda(ActionEvent event) {
+        try {
+            switch (((Stage) this.menuBar.getScene().getWindow()).getTitle()) {
+                case "Animal":
+                    System.out.println("Estas en animal");
+                    break;
+                case "Zona":
+                    System.out.println("Estas en zona");
+                    break;
+                case "Entrada":
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AyudaEntrada.fxml"));
+                    Parent root = (Parent) loader.load();
+                    AyudaEntradaController ayuController = ((AyudaEntradaController) loader.getController());
+                    ayuController.setStage(stage);
+                    ayuController.initStage(root);
+                    break;
+                default:
+
+            }
+        } catch (IOException e) {
+
+        }
+    }
+
     public void setUser(Usuario user) {
         this.user = user;
     }
@@ -136,6 +165,5 @@ public class MenuBarController {
     public void setClien(Cliente clien) {
         this.clien = clien;
     }
-    
 
 }

@@ -81,6 +81,7 @@ public class ConfirmarCompraController {
         stage.setScene(scene);
         stage.setTitle("ConfirmarCompra");
         //Activacion de componentes de la ventana
+        stage.setResizable(false);
         txt_contraReve1.setDisable(false);
         txt_contraReve1.setVisible(true);
         pswPin.setVisible(true);
