@@ -28,6 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.ClienteFactoria;
 import logic.CompraFactoria;
@@ -55,6 +56,8 @@ public class ConfirmarCompraController {
     private TextField txt_contraReve2;
     @FXML
     private PasswordField pswPin;
+    @FXML
+    private Pane pane;
 
     private Stage stage;
 
@@ -78,6 +81,7 @@ public class ConfirmarCompraController {
         stage.setScene(scene);
         stage.setTitle("ConfirmarCompra");
         //Activacion de componentes de la ventana
+        stage.setResizable(false);
         txt_contraReve1.setDisable(false);
         txt_contraReve1.setVisible(true);
         pswPin.setVisible(true);
@@ -99,7 +103,7 @@ public class ConfirmarCompraController {
     public void exitHandler(ActionEvent event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("¿Deseas salir?");
@@ -117,18 +121,39 @@ public class ConfirmarCompraController {
 
         String n_tarjeta = txt_contraReve1.getText();
         String pin = pswPin.getText();
+
+        if (n_tarjeta.length() != 16 || pin.length() != 4) {
+            Alert alertError = new Alert(Alert.AlertType.ERROR);
+            alertError.setHeaderText(null);
+            alertError.setTitle(null);
+            alertError.setContentText("La tarjeta debe tener 16 caracteres y el PIN debe tener 4 caracteres");
+
+            Optional<ButtonType> answer = alertError.showAndWait();
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
+                return; // No continuar con la compra si la longitud no es válida
+            }
+        }
+
         try {
             List<Cliente> clienteCheck = clieFac.getFactory().filtrarPorTarjeta_XML(Cliente.class, n_tarjeta, pin);
 
             if (clienteCheck != null) {
                 listaClient = FXCollections.observableArrayList(clienteCheck);
                 if (listaClient.isEmpty()) {
-                    throw new UserNotFoundException();
+                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                    alert2.setHeaderText(null);
+                    alert2.setTitle(null);
+                    alert2.setContentText("La tarjeta introducida no existe");
+
+                    Optional<ButtonType> answer = alert2.showAndWait();
+                    if (answer.get() == ButtonType.OK) {
+                        alert2.close();
+                    }
                 } else {
                     //Datos de prueba
                     Cliente clie = new Cliente();
                     clie.setId_user(clienteCheck.get(0).getId_user());
-                    
+
                     //Fecha actual del sistema cuando compra
                     LocalDate localDate = LocalDate.now();
                     Date fecha = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -140,24 +165,29 @@ public class ConfirmarCompraController {
                     buy.setCompraId(buyId);
 
                     comFac.getFactory().create_XML(buy);
-                    
-                    if (buy == null) {
-                        LOGGER.severe("Ha ocurrido un fallo en la compra");
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setHeaderText(null);
-                        alert.setTitle(null);
-                        alert.setContentText("Compra realizada con éxito");
 
-                        Optional<ButtonType> answer = alert.showAndWait();
-                        if (answer.get() == ButtonType.OK) {
-                            stage.close();
-                        }
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText(null);
+                    alert.setTitle(null);
+                    alert.setContentText("Compra realizada con éxito");
+
+                    Optional<ButtonType> answer = alert.showAndWait();
+                    if (answer.get() == ButtonType.OK) {
+                        ((Stage) this.pane.getScene().getWindow()).close();
                     }
 
                 }
             } else {
-                LOGGER.severe("Ha introducido algún dato erróneo");
+                // La lista clienteCheck es nula
+                Alert alertError = new Alert(Alert.AlertType.ERROR);
+                alertError.setHeaderText(null);
+                alertError.setTitle(null);
+                alertError.setContentText("Ha ocurrido un error al verificar la tarjeta");
+
+                Optional<ButtonType> answer = alertError.showAndWait();
+                if (answer.get() == ButtonType.OK) {
+                    alertError.close();
+                }
             }
         } catch (Exception e) {
             LOGGER.severe("Ha ocurrido un error inesperado");

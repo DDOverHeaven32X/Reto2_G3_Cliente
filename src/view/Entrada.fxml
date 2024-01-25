@@ -46,8 +46,8 @@
          <contextMenu>
             <ContextMenu>
               <items>
-                  <MenuItem mnemonicParsing="false" text="Borrar" />
-                  <MenuItem mnemonicParsing="false" text="Ver tus Entradas" />
+                  <MenuItem fx:id="mnItemBorrar" mnemonicParsing="false" text="Borrar"  />
+                  <MenuItem fx:id="mnItemVerEntradas" mnemonicParsing="false" text="Ver tus Entradas" />
               </items>
             </ContextMenu>
          </contextMenu>
