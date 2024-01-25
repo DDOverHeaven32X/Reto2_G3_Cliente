@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,6 +37,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import logic.AnimalFactoria;
 import logic.ZonaFactoria;
 import model.Animal;
@@ -199,7 +201,8 @@ public class ZonaController {
         } catch (Exception e) {
             LOGGER.severe("Error a la hora de cargar los datos");
         }
-
+        stage.setResizable(false);
+        stage.setOnCloseRequest(this::handleCloseRequest);
         cargarTodo();
         stage.show();
     }
@@ -600,5 +603,29 @@ public class ZonaController {
         } catch (JRException ex) {
 
         }
+    }
+
+    /**
+     * Este metodo es una verificacion cuando el usuario le da al boton de
+     * salir.
+     *
+     * @author Ander
+     * @param event
+     */
+    private void handleCloseRequest(WindowEvent event) {
+        //Creamos un nuevo objeto Alerta
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("EXIT");
+        //Mostramos una alerta de confirmacion.
+        alert.setContentText("¿Estas seguro que deseas salir de la aplicacion?");
+
+        Optional<ButtonType> answer = alert.showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+
     }
 }
