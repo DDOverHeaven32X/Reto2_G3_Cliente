@@ -10,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -80,6 +79,7 @@ public class MenuBarController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Zona.fxml"));
             Parent root = (Parent) loader.load();
             ZonaController zonController = ((ZonaController) loader.getController());
+            zonController.setUsuario(user);
             zonController.setStage(stage);
             zonController.initiStage(root);
         } catch (IOException e) {

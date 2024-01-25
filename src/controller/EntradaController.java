@@ -379,8 +379,6 @@ public class EntradaController {
                     entrada.setPrecio(precioReal);
                     entrada.setTipo_entrada(comboEntrada.getValue().toString());
                     entrada.setFecha_entrada(fechaBuena);
-                    admin.setId_user(user.getId_user());
-                    entrada.setAdmin(admin);
                     factoryEnt.getFactory().create_XML(entrada);
 
                     // Cargamos la tabla con el dato nuevo

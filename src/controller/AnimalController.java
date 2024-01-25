@@ -138,6 +138,8 @@ public class AnimalController {
 
     private Stage stage;
 
+    private Zona zona;
+
     public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -657,6 +659,23 @@ public class AnimalController {
         return listaAnimales;
     }
 
+    public ObservableList<Animal> cargarFiltroAnimales() {
+        ObservableList<Animal> listaAnimales;
+        List<Animal> filtradoParam;
+        filtradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsInAnArea_XML(Animal.class, zona.getId_zona().toString()));
+        listaAnimales = FXCollections.observableArrayList(filtradoParam);
+        tableAnimal.setItems(listaAnimales);
+        tableAnimal.refresh();
+        if (tableAnimal.getItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("TABLA VACIA");
+            alert.setHeaderText(null);
+            alert.setContentText("No hay ningun animal en esa zona.");
+            alert.showAndWait();
+        }
+        return listaAnimales;
+    }
+
     private boolean validarCamposAnimal() {
         String nombre = txtNombreAnimal.getText();
         String genero = txtGenero.getValue().toString();
@@ -780,6 +799,10 @@ public class AnimalController {
             }
         }
         return false;
+    }
+
+    public void setZona(Zona zona) {
+        this.zona = zona;
     }
 
     /**
