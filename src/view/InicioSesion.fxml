@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InicioSesionController">
+<Pane fx:id="ventanaInicio" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InicioSesionController">
    <children>
       <Label fx:id="error" alignment="CENTER" layoutX="470.0" layoutY="93.0" prefHeight="50.0" prefWidth="358.0" style="-fx-font-size: 15;" text="Aqui mostramos los errores de esta ventana" textAlignment="CENTER" textFill="RED" wrapText="true" />
       <Button fx:id="btnInicioSesion" alignment="CENTER" layoutX="570.0" layoutY="391.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="158.0" style="-fx-background-radius: 30; -fx-background-color: #059f1e; -fx-font-style: white; -fx-font-size: 15;" text="Iniciar Sesion" textFill="#fcfcfc" />
