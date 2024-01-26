@@ -5,11 +5,13 @@
  */
 package controller;
 
+import chiper.Asimetricocliente;
 import exception.IncorrectPatternException;
 import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -388,6 +390,8 @@ public class RegistroController {
              */
             //Si los parametros son correctos creamos el nuevo cliente
             Cliente clie = new Cliente();
+            Asimetricocliente asi = new Asimetricocliente();
+            PublicKey publicKey;
             //Medida para pasar datos String a integers si hace falta
             String telef = txt_tele.getText();
             String tarjeta = txt_tarjeta.getText();
@@ -402,7 +406,11 @@ public class RegistroController {
 
             clie.setNombre_completo(txt_nombre.getText());
             clie.setLogin(txt_email.getText());
-            clie.setContraseña(psw_contra.getText());
+            asi.keyGenerator();
+            publicKey = asi.loadPublicKey();
+            String contra_crypt = asi.encryptAndSaveData(psw_contra.getText(), publicKey).toString();
+            clie.setContraseña(contra_crypt);
+            System.out.println(clie.getContraseña());
             clie.setDireccion(txt_direccion.getText());
             clie.setCod_postal(codPostal);
             clie.setTelefono(telefono);
