@@ -406,10 +406,12 @@ public class RegistroController {
 
             clie.setNombre_completo(txt_nombre.getText());
             clie.setLogin(txt_email.getText());
-            asi.keyGenerator();
+
             publicKey = asi.loadPublicKey();
-            String contra_crypt = asi.encryptAndSaveData(psw_contra.getText(), publicKey).toString();
-            clie.setContraseña(contra_crypt);
+
+            String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(psw_contra.getText(), publicKey));
+
+            clie.setContraseña(contra_crypt_hex);
             System.out.println(clie.getContraseña());
             clie.setDireccion(txt_direccion.getText());
             clie.setCod_postal(codPostal);

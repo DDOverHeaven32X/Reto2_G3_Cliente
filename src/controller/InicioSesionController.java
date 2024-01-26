@@ -4,11 +4,13 @@
  */
 package controller;
 
+import chiper.Asimetricocliente;
 import exception.IncorrectCredentialException;
 import exception.UserNotFoundException;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -167,6 +169,8 @@ public class InicioSesionController {
 
         try {
             error.setText("");
+            Asimetricocliente asi = new Asimetricocliente();
+            PublicKey publicKey;
             if (camposInformados() && maxCarecteres()) {
                 Usuario user = new Usuario();
                 Cliente client = new Cliente();
@@ -177,9 +181,12 @@ public class InicioSesionController {
                 } else {
                     user.setContraseña(txt_contraReve.getText());
                 }
+                publicKey = asi.loadPublicKey();
+
+                String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(pswContraseña.getText(), publicKey));
                 //Comprobamos si el usuario está registrado en la base de datos
                 List<Usuario> listaUser;
-                listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), pswContraseña.getText());
+                listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), contra_crypt_hex);
 
                 //Si la consulta no devuelve nada se lanza una excepción de UserNotFoundException
                 if (listaUser.isEmpty()) {

@@ -35,11 +35,10 @@ public class Asimetricocliente {
         }
     }
 
-    public void keyGenerator() {
+    /*public void keyGenerator() {
         Chiper.GenerarClaves gc = new Chiper.GenerarClaves();
         gc.keyGenerator("C:\\Cifrado");
-    }
-
+    }*/
     public byte[] encryptAndSaveData(String message, PublicKey publicKey) {
         byte[] encryptedData = null;
         try {
@@ -57,7 +56,7 @@ public class Asimetricocliente {
             } else {
                 System.err.println("La carpeta ya existe");
             }
-            Cipher cipher = Cipher.getInstance("RSA");
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             encryptedData = cipher.doFinal(message.getBytes());
 
