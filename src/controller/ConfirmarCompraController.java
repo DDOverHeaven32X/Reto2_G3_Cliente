@@ -81,6 +81,7 @@ public class ConfirmarCompraController {
         stage.setScene(scene);
         stage.setTitle("ConfirmarCompra");
         //Activacion de componentes de la ventana
+        stage.setResizable(false);
         txt_contraReve1.setDisable(false);
         txt_contraReve1.setVisible(true);
         pswPin.setVisible(true);
@@ -120,6 +121,19 @@ public class ConfirmarCompraController {
 
         String n_tarjeta = txt_contraReve1.getText();
         String pin = pswPin.getText();
+
+        if (n_tarjeta.length() != 16 || pin.length() != 4) {
+            Alert alertError = new Alert(Alert.AlertType.ERROR);
+            alertError.setHeaderText(null);
+            alertError.setTitle(null);
+            alertError.setContentText("La tarjeta debe tener 16 caracteres y el PIN debe tener 4 caracteres");
+
+            Optional<ButtonType> answer = alertError.showAndWait();
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
+                return; // No continuar con la compra si la longitud no es válida
+            }
+        }
+
         try {
 
             if (n_tarjeta.isEmpty() || pin.isEmpty()) {
@@ -131,7 +145,15 @@ public class ConfirmarCompraController {
             if (clienteCheck != null) {
                 listaClient = FXCollections.observableArrayList(clienteCheck);
                 if (listaClient.isEmpty()) {
-                    throw new UserNotFoundException();
+                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                    alert2.setHeaderText(null);
+                    alert2.setTitle(null);
+                    alert2.setContentText("La tarjeta introducida no existe");
+
+                    Optional<ButtonType> answer = alert2.showAndWait();
+                    if (answer.get() == ButtonType.OK) {
+                        alert2.close();
+                    }
                 } else {
                     //Datos de prueba
                     Cliente clie = new Cliente();
@@ -149,26 +171,29 @@ public class ConfirmarCompraController {
 
                     comFac.getFactory().create_XML(buy);
 
-                    if (buy == null) {
-                        LOGGER.severe("Ha ocurrido un fallo en la compra");
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setHeaderText(null);
-                        alert.setTitle("FALLO DE COMPRA");
-                        alert.setContentText("Ha ocurrido una fallo al intentar comprar. Por favor intentelo de nuevo.");
-                        alert.showAndWait();
-                    } else {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setHeaderText(null);
-                        alert.setTitle("COMPRA REALIZADA");
-                        alert.setContentText("Compra realizada con éxito");
-                        alert.showAndWait();
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText(null);
+                    alert.setTitle(null);
+                    alert.setContentText("Compra realizada con éxito");
+
+                    Optional<ButtonType> answer = alert.showAndWait();
+                    if (answer.get() == ButtonType.OK) {
                         ((Stage) this.pane.getScene().getWindow()).close();
 
                     }
 
                 }
             } else {
-                LOGGER.severe("Ha introducido algún dato erróneo");
+                // La lista clienteCheck es nula
+                Alert alertError = new Alert(Alert.AlertType.ERROR);
+                alertError.setHeaderText(null);
+                alertError.setTitle(null);
+                alertError.setContentText("Ha ocurrido un error al verificar la tarjeta");
+
+                Optional<ButtonType> answer = alertError.showAndWait();
+                if (answer.get() == ButtonType.OK) {
+                    alertError.close();
+                }
             }
         } catch (Exception e) {
             LOGGER.severe("Ha ocurrido un error inesperado");

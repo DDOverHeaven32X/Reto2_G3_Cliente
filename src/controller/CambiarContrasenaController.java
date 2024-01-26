@@ -71,8 +71,7 @@ public class CambiarContrasenaController {
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
-        
-        btn_cancelar.setOnAction(this::exitHandler);
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Cambiar Contraseña");
         stage.show();
