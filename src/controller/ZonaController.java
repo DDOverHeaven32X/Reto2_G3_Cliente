@@ -6,6 +6,11 @@
 package controller;
 
 import static controller.RegistroController.LOGGER;
+import exception.CreateException;
+import exception.DeleteException;
+import exception.IncorrectPatternException;
+import exception.ReadException;
+import exception.UpdateException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,8 +45,11 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import logic.AnimalFactoria;
 import logic.ZonaFactoria;
+import model.Admin;
 import model.Animal;
 import model.Entrada;
+import model.Privilegio;
+import model.Usuario;
 import model.Zona;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -64,6 +72,8 @@ public class ZonaController {
     private final ZonaFactoria zonaFact = new ZonaFactoria();
     private ObservableList<Zona> zonaData;
     private Zona zona = new Zona();
+    private Admin admin = new Admin();
+    private Usuario user;
 
     private List<Zona> listaZonas;
 
@@ -148,12 +158,16 @@ public class ZonaController {
         txtNombreZona.requestFocus();
 
         //Metodo para el cambio de texto
-        txtNombreZona.textProperty().addListener(this::cambioTexto);
-        //Asignacion de botones
-        btnCrearZona.setOnAction(this::handleCreateButtonAction);
+        if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
+            txtNombreZona.textProperty().addListener(this::cambioTexto);
+        }
 
         //Cargamos la combo con los valores posibles 
         txtTipoAnimalZona.getItems().addAll("Peces", "Anfibios", "Arácnidos", "Artrópodos", "Mamíferos", "Aves", "Reptiles", "Insectos");
+
+        //Asignacion de botones
+        btnCrearZona.setOnAction(this::handleCreateButtonAction);
+
         //Metodo para modificar la zona
         btnModificarZona.setOnAction(this::handleModifyButtonAction);
         //Metodo para eliminar la zona
@@ -169,7 +183,26 @@ public class ZonaController {
             refreshTableIfFilterEmpty();
         });
 
-        menuItemBorrar.setOnAction(this::handleDeleteButtonAction);
+        //Menu de contexto unicamente si eres admin
+        if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
+            menuItemBorrar.setOnAction(this::handleDeleteButtonAction);
+        } else {
+            menuItemBorrar.setVisible(false);
+            menuItemBorrar.setDisable(true);
+        }
+
+        if (user.getTipo_usuario().equals(Privilegio.CLIENT)) {
+            txtNombreZona.setDisable(true);
+            txtDescripcionZona.setDisable(true);
+            txtTipoAnimalZona.setDisable(true);
+
+            btnCrearZona.setDisable(true);
+            btnModificarZona.setDisable(true);
+            btnEliminarZona.setDisable(true);
+            btnCrearZona.setVisible(false);
+            btnModificarZona.setVisible(false);
+            btnEliminarZona.setVisible(false);
+        }
 
         menuItemVisualizarAnimales.setOnAction(this::handleVisualizarAnimalesButtonAction);
         //Metodo para cargar los datos de la zona seleccionada
@@ -235,34 +268,49 @@ public class ZonaController {
      */
     @FXML
     private void handleCreateButtonAction(ActionEvent event) {
-        //Conversiones necesarias para hacer la inserción
-        if (!camposZonaInformados()) {
+        try {
+            //Conversiones necesarias para hacer la inserción
+            if (!camposZonaInformados()) {
 
-        } else {
-            // Utiliza el método validarCamposZona para verificar restricciones
-            String nombre = txtNombreZona.getText();
-            String descripcion = txtDescripcionZona.getText();
-            String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
-            if (validarCamposZona(nombre, descripcion)) {
-                if (zonaExiste(nombre, descripcion, tipoAnimal)) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Datos repetidos");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Esa Zona ya existe. Modifica algun campo.");
-                    alert.showAndWait();
+            } else {
+                // Utiliza el método validarCamposZona para verificar restricciones
+                String nombre = txtNombreZona.getText();
+                String descripcion = txtDescripcionZona.getText();
+                String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
+                if (validarCamposZona(nombre, descripcion)) {
+                    if (zonaExiste(nombre, descripcion, tipoAnimal)) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Datos repetidos");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Esa Zona ya existe. Modifica algun campo.");
+                        alert.showAndWait();
+
+                    } else {
+                        zona.setNombre(nombre);
+                        zona.setDescripcion(descripcion);
+                        zona.setTipo_animal(tipoAnimal);
+                        admin.setId_user(user.getId_user());
+                        zona.setAdmin(admin);
+                        if (zonaFact != null) {
+                            zonaFact.getFactory().create_XML(zona);
+                        } else {
+                            throw new CreateException();
+                        }
+
+                        //Cargamos la tabla con el dato nuevo
+                        zonaData = FXCollections.observableArrayList(cargarTodo());
+
+                    }
                 } else {
-                    zona.setNombre(nombre);
-                    zona.setDescripcion(descripcion);
-                    zona.setTipo_animal(tipoAnimal);
-
-                    //entrada.setAdmin(admin);
-                    zonaFact.getFactory().create_XML(zona);
-                    //Cargamos la tabla con el dato nuevo
-                    zonaData = FXCollections.observableArrayList(cargarTodo());
+                    throw new IncorrectPatternException("Error en el patron");
                 }
-            }
-        }
 
+            }
+        } catch (IncorrectPatternException ex) {
+            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CreateException ex) {
+            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -272,32 +320,46 @@ public class ZonaController {
      */
     @FXML
     private void handleModifyButtonAction(ActionEvent event) {
+        try {
+            if (!camposZonaInformados()) {
 
-        if (!camposZonaInformados()) {
-
-        } else {
-
-            //Conversiones necesarias para hacer la inserción
-            String nombre = txtNombreZona.getText();
-            String descripcion = txtDescripcionZona.getText();
-            String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
-            if (zonaExiste(nombre, descripcion, tipoAnimal)) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Datos repetidos");
-                alert.setHeaderText(null);
-                alert.setContentText("Esa Zona ya existe. Modifica algun campo.");
-                alert.showAndWait();
             } else {
-                //Escogemos el Id para indicar al programa cual entrada debe modificar
-                zona.setId_zona(tableZona.getSelectionModel().getSelectedItem().getId_zona());
-                zona.setNombre(nombre);
-                zona.setDescripcion(descripcion);
-                zona.setTipo_animal(tipoAnimal);
 
-                zonaFact.getFactory().edit_XML(zona);
-                //Cargamos la tabla con el dato nuevo
-                zonaData = FXCollections.observableArrayList(cargarTodo());
+                //Conversiones necesarias para hacer la inserción
+                String nombre = txtNombreZona.getText();
+                String descripcion = txtDescripcionZona.getText();
+                String tipoAnimal = txtTipoAnimalZona.getSelectionModel().getSelectedItem().toString();
+                if (validarCamposZona(nombre, descripcion)) {
+                    if (zonaExiste(nombre, descripcion, tipoAnimal)) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Datos repetidos");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Esa Zona ya existe. Modifica algun campo.");
+                        alert.showAndWait();
+
+                    } else {
+                        //Escogemos el Id para indicar al programa cual entrada debe modificar
+                        zona.setId_zona(tableZona.getSelectionModel().getSelectedItem().getId_zona());
+                        zona.setNombre(nombre);
+                        zona.setDescripcion(descripcion);
+                        zona.setTipo_animal(tipoAnimal);
+                        if (zonaFact != null) {
+                            zonaFact.getFactory().edit_XML(zona);
+                        } else {
+                            throw new UpdateException();
+                        }
+
+                        //Cargamos la tabla con el dato nuevo
+                        zonaData = FXCollections.observableArrayList(cargarTodo());
+                    }
+                } else {
+                    throw new IncorrectPatternException("Error en el patron de algun campo");
+                }
             }
+        } catch (UpdateException ex) {
+            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IncorrectPatternException ex) {
+            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -308,24 +370,32 @@ public class ZonaController {
      */
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
-        // Obtener la Zona seleccionada
-        Zona selectedZona = tableZona.getSelectionModel().getSelectedItem();
+        try {
+            // Obtener la Zona seleccionada
+            Zona selectedZona = tableZona.getSelectionModel().getSelectedItem();
 
-        // Confirmar la eliminación
-        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Confirmar Eliminación");
-        confirmacion.setHeaderText("¿Estás seguro de que deseas eliminar la Zona?");
-        confirmacion.setContentText("Esta acción no se puede deshacer.");
+            // Confirmar la eliminación
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Confirmar Eliminación");
+            confirmacion.setHeaderText("¿Estás seguro de que deseas eliminar la Zona?");
+            confirmacion.setContentText("Esta acción no se puede deshacer.");
 
-        Optional<ButtonType> resultado = confirmacion.showAndWait();
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
 
-        if (resultado.get() == ButtonType.OK) {
-            // Eliminar la Zona si el usuario confirma
-            zonaFact.getFactory().remove(selectedZona.getId_zona().toString());
-
-            // Recargar la tabla con los datos actualizados
-            zonaData = FXCollections.observableArrayList(cargarTodo());
+            if (resultado.get() == ButtonType.OK) {
+                if (zonaFact != null) {
+                    // Eliminar la Zona si el usuario confirma
+                    zonaFact.getFactory().remove(selectedZona.getId_zona().toString());
+                } else {
+                    throw new DeleteException();
+                }
+                // Recargar la tabla con los datos actualizados
+                zonaData = FXCollections.observableArrayList(cargarTodo());
+            }
+        } catch (DeleteException ex) {
+            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**
@@ -347,28 +417,33 @@ public class ZonaController {
             }
             // Verificar si hay animales en la zona
 
-            // Cerrar la ventana actual
-            Stage ventanaActual = (Stage) tableZona.getScene().getWindow();
-            ventanaActual.close();
-
             // Abrir la nueva ventana
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = loader.load();
 
             AnimalController animalController = ((AnimalController) loader.getController());
             animalController.setZona(selectedZona);
+            animalController.setUsuario(user);
             animalController.setStage(stage);
             animalController.initiStage(root);
             animalController.cargarFiltroAnimales();
 
+            // Cerrar la ventana actual
+            Stage ventanaActual = (Stage) tableZona.getScene().getWindow();
+            ventanaActual.close();
+
         } catch (IOException ex) {
             // Manejo de excepciones de E/S
             mostrarAlerta("Error de E/S", "Error al cargar la vista de animales.");
-            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger
+                    .getLogger(ZonaController.class
+                            .getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             // Manejo de excepciones generales
             mostrarAlerta("Error", "Ocurrió un error inesperado.");
-            Logger.getLogger(ZonaController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger
+                    .getLogger(ZonaController.class
+                            .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -435,7 +510,9 @@ public class ZonaController {
     private ObservableList<Zona> cargarFiltroNombre() {
         ObservableList<Zona> listaZonas;
         List<Zona> FiltradoParam;
-        FiltradoParam = FXCollections.observableArrayList(zonaFact.getFactory().filtrarZonaPorNombre_XML(Zona.class, txtFiltrar.getText()));
+        FiltradoParam
+                = FXCollections.observableArrayList(zonaFact.getFactory().filtrarZonaPorNombre_XML(Zona.class,
+                        txtFiltrar.getText()));
 
         listaZonas = FXCollections.observableArrayList(FiltradoParam);
         tableZona.setItems(listaZonas);
@@ -455,7 +532,9 @@ public class ZonaController {
     private ObservableList<Zona> cargarFiltroTipoAnimal() {
         ObservableList<Zona> listaZonas;
         List<Zona> FiltradoParam;
-        FiltradoParam = FXCollections.observableArrayList(zonaFact.getFactory().filtrarZonaPorTipoAnimal_XML(Zona.class, txtFiltrar.getText()));
+        FiltradoParam
+                = FXCollections.observableArrayList(zonaFact.getFactory().filtrarZonaPorTipoAnimal_XML(Zona.class,
+                        txtFiltrar.getText()));
 
         listaZonas = FXCollections.observableArrayList(FiltradoParam);
         tableZona.setItems(listaZonas);
@@ -547,6 +626,7 @@ public class ZonaController {
         alert.setHeaderText(null);
         alert.setContentText(contenido);
         alert.showAndWait();
+
     }
 
     /**
@@ -560,7 +640,8 @@ public class ZonaController {
      */
     private boolean zonaExiste(String nombre, String descripcion, String tipoAnimal) {
         // Buscar entradas con la misma fecha y tipo de entrada
-        listaZonas = zonaFact.getFactory().findAll_XML(Zona.class);
+        listaZonas = zonaFact.getFactory().findAll_XML(Zona.class
+        );
         for (Zona z : listaZonas) {
             if (z.getNombre().equals(nombre) && z.getDescripcion().equals(descripcion) && z.getTipo_animal().equals(tipoAnimal)) {
                 return true;
@@ -627,5 +708,9 @@ public class ZonaController {
             event.consume();
         }
 
+    }
+
+    void setUsuario(Usuario user) {
+        this.user = user;
     }
 }

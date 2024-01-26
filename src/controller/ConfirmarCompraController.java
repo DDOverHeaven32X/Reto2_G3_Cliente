@@ -135,11 +135,6 @@ public class ConfirmarCompraController {
         }
 
         try {
-
-            if (n_tarjeta.isEmpty() || pin.isEmpty()) {
-                mostrarAlerta("Campos Vacíos", "Por favor, rellena todos los campos.");
-                return;
-            }
             List<Cliente> clienteCheck = clieFac.getFactory().filtrarPorTarjeta_XML(Cliente.class, n_tarjeta, pin);
 
             if (clienteCheck != null) {
@@ -199,14 +194,6 @@ public class ConfirmarCompraController {
             LOGGER.severe("Ha ocurrido un error inesperado");
         }
 
-    }
-
-    private void mostrarAlerta(String titulo, String contenido) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(contenido);
-        alert.showAndWait();
     }
 
     public void setStage(Stage stage) {

@@ -5,12 +5,9 @@
  */
 package controller;
 
-import java.net.URL;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -41,6 +38,7 @@ public class RecuperarContrasenaController {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Recuperar Contraseña");
+        stage.setResizable(false);
         btn_cancelar.setOnAction(this::exitHandler);
         stage.show();
     }

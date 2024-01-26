@@ -10,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -63,7 +62,8 @@ public class MenuBarController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = (Parent) loader.load();
             AnimalController aniController = ((AnimalController) loader.getController());
-
+            
+            aniController.setUsuario(user);
             aniController.setStage(stage);
             aniController.initiStage(root);
 
@@ -79,6 +79,7 @@ public class MenuBarController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Zona.fxml"));
             Parent root = (Parent) loader.load();
             ZonaController zonController = ((ZonaController) loader.getController());
+            zonController.setUsuario(user);
             zonController.setStage(stage);
             zonController.initiStage(root);
         } catch (IOException e) {
@@ -138,9 +139,14 @@ public class MenuBarController {
         try {
             FXMLLoader loader;
             Parent root;
+            
             switch (((Stage) this.menuBar.getScene().getWindow()).getTitle()) {
                 case "Animal":
-                    System.out.println("Estas en animal");
+                    loader = new FXMLLoader(getClass().getResource("/view/AyudaAnimal.fxml"));
+                    root = (Parent) loader.load();
+                    AyudaAnimalController ayudaController = ((AyudaAnimalController) loader.getController());
+                    ayudaController.setStage(stage);
+                    ayudaController.initStage(root);
                     break;
                 case "Zona":
                     loader = new FXMLLoader(getClass().getResource("/view/AyudaZona.fxml"));

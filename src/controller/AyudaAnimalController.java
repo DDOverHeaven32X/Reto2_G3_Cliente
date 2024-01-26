@@ -5,10 +5,7 @@
  */
 package controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -18,18 +15,20 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * Controlador de la ventana de ayuda de Entrada
+ * FXML Controller class
  *
- * @author Diego
+ * @author 2dam
  */
-public class AyudaEntradaController {
+public class AyudaAnimalController {
 
     @FXML
     private AnchorPane anchor;
     @FXML
-    private WebView webEntrada;
-
+    private WebView webAnimal;
+    
     Stage stage = new Stage();
+    
+    
 
     public void initStage(Parent root) {
 
@@ -38,19 +37,19 @@ public class AyudaEntradaController {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setOnShowing(this::showWindow);
-        stage.setTitle("Manual de ventana Entradas");
+        stage.setTitle("Manual de ventana Animales");
+        stage.setResizable(false);
         stage.show();
 
     }
 
-    @FXML
     private void showWindow(WindowEvent event) {
-        WebEngine webEngine = webEntrada.getEngine();
-        webEngine.load(getClass().getResource("/html/entrada.html").toExternalForm());
+        WebEngine webEngine = webAnimal.getEngine();
+        webEngine.load(getClass().getResource("/html/animal.html").toExternalForm());
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
+    }    
+    
 }
