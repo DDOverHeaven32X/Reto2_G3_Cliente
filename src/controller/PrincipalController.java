@@ -25,6 +25,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Cliente;
+import model.Privilegio;
 import model.Usuario;
 
 /**
@@ -62,17 +63,22 @@ public class PrincipalController {
         stage.setScene(scene);
         stage.setTitle("Principal");
         //habilitamos y llamamos al metodo para llamar a la ventana de cambiar contraseña
-        hyp_cambiarContrasena.setDisable(false);
-        hyp_cambiarContrasena.setOnMouseClicked(event -> {
-            handleLblContraClick();
-        });
+        if (user.getTipo_usuario().equals(Privilegio.CLIENT)) {
+            hyp_cambiarContrasena.setDisable(false);
+            hyp_cambiarContrasena.setOnMouseClicked(event -> {
+                handleLblContraClick();
+            });
+        } else {
+            hyp_cambiarContrasena.setDisable(true);
+            hyp_cambiarContrasena.setVisible(false);
+        }
 
         menubar.setUser(user);
         menubar.setClien(clien);
         //Ponemos el nombre y correo del usuario en sus labels
         lblUsuario.setText("Nombre de usuario: " + user.getNombre_completo());
         lblEmail.setText("Email: " + user.getLogin());
-        
+
         //Mediante este evento llamamos al metodo handeCloseRequest cuando hacemos click sobre el boton X (Boton de cerrar la ventana).
         stage.setOnCloseRequest(this::handleCloseRequest);
         stage.show();
@@ -97,14 +103,15 @@ public class PrincipalController {
             Parent root = (Parent) loader.load();
 
             CambiarContrasenaController cambiarContra = (CambiarContrasenaController) loader.getController();
-            cambiarContra.setStage(stage, user);
+            cambiarContra.setStage(stage);
+            cambiarContra.setUser(user);
             cambiarContra.initStage(root);
 
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
         }
     }
-    
+
     /**
      * Este metodo es una verificacion cuando el usuario le da al boton de
      * salir.

@@ -157,6 +157,8 @@ public class RegistroController {
         txt_contraReve.setVisible(false);
         txt_contraRepeReve.setDisable(true);
         txt_contraRepeReve.setVisible(false);
+        txt_pinReve.setDisable(true);
+        txt_pinReve.setVisible(false);
         //Evento hyper-enlace que te envia a la ventana de inicio de sesion
         hyperlinkCuentaR.setOnMouseClicked(this::tienesCuenta);
         //Eventos que habilitan la validacion de los textareas

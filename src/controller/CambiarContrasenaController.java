@@ -26,7 +26,7 @@ import model.Usuario;
  * @author Adrian
  */
 public class CambiarContrasenaController {
-    
+
     @FXML
     private Button btn_cancelar;
     @FXML
@@ -55,7 +55,7 @@ public class CambiarContrasenaController {
     private PasswordField pswContraseña2;
     @FXML
     private PasswordField pswContraseña3;
-    
+
     private Usuario user;
     private Stage stage;
 
@@ -67,17 +67,12 @@ public class CambiarContrasenaController {
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
-        
+
         btn_cancelar.setOnAction(this::exitHandler);
         stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Cambiar Contraseña");
         stage.show();
-    }
-    
-    void setStage(Stage stage, Usuario user) {
-        this.stage = stage;
-        this.user = user;
     }
 
     //Método para cerrar la ventana si no se desea comprar
@@ -89,11 +84,19 @@ public class CambiarContrasenaController {
         alert.setHeaderText(null);
         alert.setTitle(null);
         alert.setContentText("¿Deseas salir?");
-        
+
         Optional<ButtonType> answer = alert.showAndWait();
         if (answer.get() == ButtonType.OK) {
             stage.close();
         }
     }
-    
+
+    void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    void setUser(Usuario user) {
+        this.user = user;
+    }
+
 }
