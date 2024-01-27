@@ -118,6 +118,7 @@ public class InicioSesionController {
         error.setDisable(false);
         //El texto cuenta esta habilitado.
         hyperlinkCuentaIS.setDisable(false);
+        idPasswdOlvidada.setDisable(false);
         //Al inicio de la ventana el foco estará puesto en el campo email del usuario (textEmail).
         textEmail.requestFocus();
         //Hacemos que el lbl error no se vea
@@ -133,6 +134,9 @@ public class InicioSesionController {
         //Mediante este evento llamamos al metodo de cambiar a la ventana de registro.
         hyperlinkCuentaIS.setOnMouseClicked(event -> {
             handleLblCuentaClick();
+        });
+        idPasswdOlvidada.setOnMouseClicked(event -> {
+            recuperarContraseñaHandler();
         });
         //Mediante esta propiedad llamamos al metodo camposInformados()
         textEmail.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -313,6 +317,20 @@ public class InicioSesionController {
             RegistroController registro = (RegistroController) loader.getController();
             registro.setStage(stage);
             registro.initStage(root);
+
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
+        }
+    }
+    private void recuperarContraseñaHandler(){
+        try {
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/RecuperarContrasena.fxml"));
+            Parent root = loader.load();
+
+            RecuperarContrasenaController recu = (RecuperarContrasenaController) loader.getController();
+            recu.setStage(stage);
+            recu.initStage(root);
 
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);

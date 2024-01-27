@@ -36,9 +36,9 @@ import model.Cliente;
 import model.Usuario;
 
 /**
- * FXML Controller class
+ * Controlador de la ventana de cambiar contraseña
  *
- * @author Adrian
+ * @author Ander
  */
 public class CambiarContrasenaController {
 
@@ -90,7 +90,7 @@ public class CambiarContrasenaController {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Cambiar Contraseña");
-        stage.show();
+        
 
         //Inicialicazion de los elementos de la ventana
         btn_cancelar.setDisable(false);
@@ -111,7 +111,7 @@ public class CambiarContrasenaController {
         btn_cancelar.setOnAction(this::cerrarVentana);
         
         
-
+        stage.show();
     }
 
     /**
