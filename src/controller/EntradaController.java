@@ -380,9 +380,13 @@ public class EntradaController {
                     ventanita.showAndWait();
                 } else {
                     // Si no existe, proceder con la inserción
+                    
+                    Admin admin = new Admin();
+                    admin.setId_user(user.getId_user());
                     entrada.setPrecio(precioReal);
                     entrada.setTipo_entrada(comboEntrada.getValue().toString());
                     entrada.setFecha_entrada(fechaBuena);
+                    entrada.setAdmin(admin);
                     if (factoryEnt != null) {
                         factoryEnt.getFactory().create_XML(entrada);
                     } else {
