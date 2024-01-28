@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InicioSesionController">
+<Pane fx:id="ventanaInicio" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InicioSesionController">
    <children>
       <Label fx:id="error" alignment="CENTER" layoutX="470.0" layoutY="93.0" prefHeight="50.0" prefWidth="358.0" style="-fx-font-size: 15;" text="Aqui mostramos los errores de esta ventana" textAlignment="CENTER" textFill="RED" wrapText="true" />
       <Button fx:id="btnInicioSesion" alignment="CENTER" layoutX="570.0" layoutY="391.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="158.0" style="-fx-background-radius: 30; -fx-background-color: #059f1e; -fx-font-style: white; -fx-font-size: 15;" text="Iniciar Sesion" textFill="#fcfcfc" />
@@ -34,7 +34,6 @@
             <Image url="@../imagenes/symbole-de-cle-verte.png" />
          </image>
       </ImageView>
-      <TextField fx:id="txt_contraReve" layoutX="506.0" layoutY="249.0" prefHeight="50.0" prefWidth="269.0" promptText="Contraseña" style="-fx-border-color: #70FF84;" />
       <Button fx:id="btn_verContra" layoutX="780.0" layoutY="256.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="53.0" style="-fx-background-color: #059f1e; -fx-background-radius: 30px;" textFill="#059f1e">
          <graphic>
             <ImageView fx:id="img_ojo" fitHeight="30.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
@@ -51,18 +50,19 @@
          </image>
       </ImageView>
       <TextField fx:id="textEmail" layoutX="506.0" layoutY="164.0" prefHeight="49.0" prefWidth="269.0" promptText="Correo Electronico" style="-fx-border-color: #70FF84;" />
+      <PasswordField fx:id="pswContraseña" layoutX="506.0" layoutY="249.0" prefHeight="50.0" prefWidth="269.0" promptText="Contraseña" style="-fx-border-color: #70FF84;" />
+      <TextField fx:id="txt_contraReve" layoutX="506.0" layoutY="249.0" prefHeight="50.0" prefWidth="269.0" promptText="Contraseña" style="-fx-border-color: #70FF84;" />
       <Separator layoutX="447.0" layoutY="367.0" prefHeight="3.0" prefWidth="186.0" />
       <Separator layoutX="664.0" layoutY="366.0" prefHeight="3.0" prefWidth="186.0" />
       <Label layoutX="644.0" layoutY="358.0" text="O" />
-      <Hyperlink fx:id="idPasswdOlvidada" layoutX="573.0" layoutY="461.0" text="¿Has olvidado tu contraseña?" textFill="#9a6653">
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Hyperlink>
-      <PasswordField fx:id="pswContraseña" layoutX="506.0" layoutY="249.0" prefHeight="50.0" prefWidth="269.0" promptText="Contraseña" style="-fx-border-color: #70FF84;" />
       <Hyperlink fx:id="hyperlinkCuentaIS" layoutX="560.0" layoutY="323.0" text="¿Todavia no tienes cuenta?">
          <font>
             <Font size="14.0" />
+         </font>
+      </Hyperlink>
+      <Hyperlink fx:id="idPasswdOlvidada" layoutX="573.0" layoutY="461.0" text="¿Has olvidado tu contraseña?" textFill="#9a6653">
+         <font>
+            <Font size="11.0" />
          </font>
       </Hyperlink>
    </children>

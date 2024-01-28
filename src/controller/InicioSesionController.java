@@ -100,7 +100,7 @@ public class InicioSesionController {
         LOGGER.info("Iniciando la ventana de Inicio de Sesion");
 
         Scene scene = new Scene(root);
-        Stage stage = new Stage();
+        stage = new Stage();
 
         //El boton inicio de sesion esta deshabilitado.
         btnInicioSesion.setDisable(true);
@@ -214,7 +214,7 @@ public class InicioSesionController {
                     client.setN_tarjeta(cliente.getN_tarjeta());
                     client.setPin(cliente.getPin());
                 }
-
+                
                 //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                 Parent root = loader.load();
@@ -224,7 +224,7 @@ public class InicioSesionController {
                 princiController.setClien(client);
                 princiController.setStage(stage);
                 princiController.initiStage(root);
-                ((Stage) this.pane.getScene().getWindow()).close();
+                stage.close();
             }
 
         } catch (IOException ex) {

@@ -120,20 +120,37 @@ public class CambiarContrasenaController {
      * @param actionEvent
      */
     public void cambiarContra(ActionEvent actionEvent) {
-
+        
         try {
-            if ((pswContraseña1.getText().isEmpty() || pswContraseña2.getText().isEmpty())
-                    || (txt_contraReve1.getText().isEmpty() || txt_contraReve2.getText().isEmpty())
-                    || pswContraseña1.getText().equals(pswContraseña2.getText())
-                    || txt_contraReve1.getText().equals(txt_contraReve2.getText())) {
+            if ( pswContraseña1.getText().equals(pswContraseña2.getText())
+                    || pswContraseña1.getText().isEmpty() || pswContraseña2.getText().isEmpty()) {
                 throw new IllegalArgumentException("La contraseña nueva no debe ser igual a la anterior y no debe ser nula o vacía");
-            } else if ((pswContraseña2.getText().isEmpty() || pswContraseña3.getText().isEmpty())
-                    || (txt_contraReve2.getText().isEmpty() || txt_contraReve3.getText().isEmpty())
-                    || !pswContraseña2.getText().equals(pswContraseña3.getText())
-                    || txt_contraReve2.getText().equals(txt_contraReve3.getText())) {
+            } else if (!pswContraseña2.getText().equals(pswContraseña3.getText())
+                    || pswContraseña2.getText().isEmpty() || pswContraseña3.getText().isEmpty()) {
                 throw new IllegalArgumentException("Las contraseñas no coinciden y no deben ser nulas o vacías");
+            } else if (!pswContraseña1.getText().equals(user.getContraseña())){
+                throw new Exception("Debes de introducir tu contraseña actual para hacer el cambio de contraseña");
             }
+
         } catch (IllegalArgumentException ex) {
+            String mensaje = ex.getMessage();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setTitle("Error en la contraseña");
+            alert.setContentText(mensaje);
+            Optional<ButtonType> answer = alert.showAndWait();
+
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
+                pswContraseña1.clear();
+                txt_contraReve1.clear();
+                pswContraseña2.clear();
+                txt_contraReve2.clear();
+                pswContraseña3.clear();
+                txt_contraReve3.clear();
+                alert.close();
+                return;
+            }
+        } catch (Exception ex) {
             String mensaje = ex.getMessage();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
@@ -172,7 +189,17 @@ public class CambiarContrasenaController {
         clieNew.setTipo_usuario(cli.getTipo_usuario());
         clieNew.setN_tarjeta(cli.getN_tarjeta());
         clieNew.setPin(cli.getPin());
+        
         clienfac.getFactory().cambiarContra_XML(clieNew);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle(null);
+        alert.setContentText(user.getNombre_completo() + " su contraseña ha sido cambiada");
+
+        Optional<ButtonType> answer = alert.showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            stage.close();
+        }
     }
     
     private void revelarContra(MouseEvent event) {

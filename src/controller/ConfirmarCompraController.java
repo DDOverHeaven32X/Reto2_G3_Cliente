@@ -174,6 +174,7 @@ public class ConfirmarCompraController {
                     Optional<ButtonType> answer = alert.showAndWait();
                     if (answer.get() == ButtonType.OK) {
                         ((Stage) this.pane.getScene().getWindow()).close();
+
                     }
 
                 }

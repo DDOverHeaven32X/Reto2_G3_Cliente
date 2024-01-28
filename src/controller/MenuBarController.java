@@ -10,7 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -63,7 +62,8 @@ public class MenuBarController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = (Parent) loader.load();
             AnimalController aniController = ((AnimalController) loader.getController());
-
+            
+            aniController.setUsuario(user);
             aniController.setStage(stage);
             aniController.initiStage(root);
 
@@ -79,6 +79,7 @@ public class MenuBarController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Zona.fxml"));
             Parent root = (Parent) loader.load();
             ZonaController zonController = ((ZonaController) loader.getController());
+            zonController.setUsuario(user);
             zonController.setStage(stage);
             zonController.initiStage(root);
         } catch (IOException e) {
@@ -136,16 +137,27 @@ public class MenuBarController {
     @FXML
     private void miAyuda(ActionEvent event) {
         try {
+            FXMLLoader loader;
+            Parent root;
+            
             switch (((Stage) this.menuBar.getScene().getWindow()).getTitle()) {
                 case "Animal":
-                    System.out.println("Estas en animal");
+                    loader = new FXMLLoader(getClass().getResource("/view/AyudaAnimal.fxml"));
+                    root = (Parent) loader.load();
+                    AyudaAnimalController ayudaController = ((AyudaAnimalController) loader.getController());
+                    ayudaController.setStage(stage);
+                    ayudaController.initStage(root);
                     break;
                 case "Zona":
-                    System.out.println("Estas en zona");
+                    loader = new FXMLLoader(getClass().getResource("/view/AyudaZona.fxml"));
+                    root = (Parent) loader.load();
+                    AyudaZonaController zonaController = ((AyudaZonaController) loader.getController());
+                    zonaController.setStage(stage);
+                    zonaController.initStage(root);
                     break;
                 case "Entrada":
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AyudaEntrada.fxml"));
-                    Parent root = (Parent) loader.load();
+                    loader = new FXMLLoader(getClass().getResource("/view/AyudaEntrada.fxml"));
+                    root = (Parent) loader.load();
                     AyudaEntradaController ayuController = ((AyudaEntradaController) loader.getController());
                     ayuController.setStage(stage);
                     ayuController.initStage(root);

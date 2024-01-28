@@ -5,8 +5,12 @@
  */
 package controller;
 
+import exception.CreateException;
+import exception.DeleteException;
 import exception.IncorrectCredentialException;
+import exception.IncorrectPatternException;
 import exception.ReadException;
+import exception.UpdateException;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -358,7 +362,7 @@ public class EntradaController {
         try {
             // Conversiones necesarias para hacer la inserción
             if (!validacionesCampos()) {
-
+                throw new IncorrectPatternException("Error en el patron de algun campo!");
             } else {
 
                 String precio = txtPrecioEntrada.getText();
@@ -379,14 +383,21 @@ public class EntradaController {
                     entrada.setPrecio(precioReal);
                     entrada.setTipo_entrada(comboEntrada.getValue().toString());
                     entrada.setFecha_entrada(fechaBuena);
-                    factoryEnt.getFactory().create_XML(entrada);
+                    if (factoryEnt != null) {
+                        factoryEnt.getFactory().create_XML(entrada);
+                    } else {
+                        throw new CreateException();
+                    }
 
                     // Cargamos la tabla con el dato nuevo
                     entradaData = FXCollections.observableArrayList(cargarTodo());
+
                 }
             }
-        } catch (Exception ex) {
+        } catch (CreateException ex) {
             LOGGER.severe(ex.getMessage());
+        } catch (IncorrectPatternException ex) {
+            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -463,7 +474,7 @@ public class EntradaController {
 
         try {
             if (!validacionesCampos()) {
-
+                throw new IncorrectPatternException("Error en el patron de algun campo.");
             } else {
                 String precio;
                 precio = txtPrecioEntrada.getText();
@@ -477,29 +488,38 @@ public class EntradaController {
                 entrada.setPrecio(precioReal);
                 entrada.setTipo_entrada(comboEntrada.getValue().toString());
                 entrada.setFecha_entrada(fechaBuena);
-
-                factoryEnt.getFactory().edit_XML(entrada);
+                if (factoryEnt != null) {
+                    factoryEnt.getFactory().edit_XML(entrada);
+                } else {
+                    throw new UpdateException();
+                }
                 //Cargamos la tabla con el dato nuevo
                 entradaData = FXCollections.observableArrayList(cargarTodo());
             }
-        } catch (Exception e) {
+        } catch (IncorrectPatternException e) {
             LOGGER.severe(e.getMessage());
+        } catch (UpdateException ex) {
+            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     //Método para relalizar el CRUD de DELETE en la tabla
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
+        try {
+            //Para realizar el borrado lo hacemos mediante el id de la Entrada
+            Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
+            if (factoryEnt != null) {
+                factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
+            } else {
+                throw new DeleteException();
+            }
+            //Cargamos la tabla con el dato nuevo
+            entradaData = FXCollections.observableArrayList(cargarTodo());
 
-        //Para realizar el borrado lo hacemos mediante el id de la Entrada
-        Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
-        factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
-
-        //Cargamos la tabla con el dato nuevo
-        entradaData = FXCollections.observableArrayList(cargarTodo());
-        /*}catch(Exception e){
-            LOGGER.severe("Datos erroneos");
-        }*/
+        } catch (DeleteException ex) {
+            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     //Método que incrusta los datos de la tabla a los campos de parametrización

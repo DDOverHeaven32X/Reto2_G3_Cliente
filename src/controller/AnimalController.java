@@ -7,6 +7,7 @@ package controller;
 
 import exception.CreateException;
 import exception.DeleteException;
+import exception.IncorrectPatternException;
 import exception.UpdateException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,12 +41,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.ws.rs.WebApplicationException;
 import logic.AnimalFactoria;
 import logic.ZonaFactoria;
 import model.Admin;
 import model.Alimentacion;
 import model.Animal;
+import model.Privilegio;
 import model.Salud;
 import model.Usuario;
 import model.Zona;
@@ -65,8 +69,8 @@ public class AnimalController {
 
     private static final Logger LOGGER = Logger.getLogger("/controller/AnimalController");
 
+    private Usuario user;
     private Admin admin = new Admin();
-    private Usuario user = new Usuario();
     private Animal animal = new Animal();
     private final AnimalFactoria fAnimal = new AnimalFactoria();
     private final ZonaFactoria fZona = new ZonaFactoria();
@@ -135,6 +139,8 @@ public class AnimalController {
 
     private Stage stage;
 
+    private Zona zona;
+
     public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -174,17 +180,18 @@ public class AnimalController {
         //El foco está en el campo del precio
         txtNombreAnimal.requestFocus();
 
-        //Activacion del cambio de texto
-        txtNombreAnimal.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtGenero.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtEspecie.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        comboSalud.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtEdad.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtPeso.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        txtAltura.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        comboAlimentacion.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-        comboZona.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
-
+        //Activacion del cambio de texto unicamente si eres admin
+        if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
+            txtNombreAnimal.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtGenero.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtEspecie.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            comboSalud.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtEdad.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtPeso.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            txtAltura.textProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            comboAlimentacion.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+            comboZona.valueProperty().addListener((observable, oldValue, newValue) -> cambioTexto(null, null, null));
+        }
         //Combo con sus datos ya introducidos
         txtGenero.getItems().addAll("Macho", "Hembra");
         comboFiltrar.getItems().addAll("Por alimentación", "Por especie", "");
@@ -204,8 +211,33 @@ public class AnimalController {
         btnBuscar.setOnAction(this::handleSearchButton);
         btnInforme.setOnAction(this::handleImprimirAction);
 
-        //Menu de contexto
-        mItemBorrar.setOnAction(this::handleDeleteButtonAction);
+        //Menu de contexto unicamente si eres admin
+        if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
+            mItemBorrar.setOnAction(this::handleDeleteButtonAction);
+        } else {
+            mItemBorrar.setVisible(false);
+            mItemBorrar.setDisable(true);
+        }
+
+        //Si el usuario es cliente se deshabilitan los campos donde se ve la informacion y se hacen invisibles los siguientes botones
+        if (user.getTipo_usuario().equals(Privilegio.CLIENT)) {
+            txtNombreAnimal.setDisable(true);
+            txtGenero.setDisable(true);
+            txtEdad.setDisable(true);
+            txtPeso.setDisable(true);
+            txtAltura.setDisable(true);
+            comboSalud.setDisable(true);
+            comboAlimentacion.setDisable(true);
+            txtEspecie.setDisable(true);
+            comboZona.setDisable(true);
+
+            btnCrearAimal.setDisable(true);
+            btnModificarAnimal.setDisable(true);
+            btnEliminarAnimal.setDisable(true);
+            btnCrearAimal.setVisible(false);
+            btnModificarAnimal.setVisible(false);
+            btnEliminarAnimal.setVisible(false);
+        }
 
         //Dependiendo que tipo de filtro se escoja, ciertos elementos de la ventana se alteran
         comboFiltrar.setOnAction(new EventHandler<ActionEvent>() {
@@ -277,6 +309,8 @@ public class AnimalController {
             LOGGER.log(Level.SEVERE, null, e);
         }
 
+        //Mediante este evento llamamos al metodo handeCloseRequest cuando hacemos click sobre el boton X (Boton de cerrar la ventana).
+        stage.setOnCloseRequest(this::handleCloseRequest);
         stage.show();
     }
 
@@ -318,7 +352,8 @@ public class AnimalController {
                         break;
                 }
                 animal.setZona((Zona) comboZona.getValue());
-                //animal.setAdmin(admin);
+                admin.setId_user(user.getId_user());
+                animal.setAdmin(admin);
 
                 // Comprobar si el animal ya existe
                 if (animalExiste()) {
@@ -341,10 +376,17 @@ public class AnimalController {
                     }
                     return;
                 }
-                fAnimal.getFactory().create_XML(animal);
+                if (fAnimal != null) {
+                    fAnimal.getFactory().create_XML(animal);
+                } else {
+                    throw new CreateException();
+
+                }
                 //Cargamos la tabla con el animal nuevo
                 animalData = FXCollections.observableArrayList(cargarTodo());
 
+            } else {
+                throw new IncorrectPatternException("Error de patron en algun campo.");
             }
 
         } catch (WebApplicationException e) {
@@ -357,6 +399,10 @@ public class AnimalController {
             } catch (CreateException ex) {
                 Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (IncorrectPatternException ex) {
+            Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CreateException ex) {
+            Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -402,10 +448,16 @@ public class AnimalController {
                         break;
                 }
                 animal.setZona((Zona) comboZona.getValue());
+                if (fAnimal != null) {
+                    fAnimal.getFactory().edit_XML(animal);
+                } else {
+                    throw new UpdateException();
+                }
 
-                fAnimal.getFactory().edit_XML(animal);
                 //Cargamos la tabla con el dato nuevo
                 animalData = FXCollections.observableArrayList(cargarTodo());
+            } else {
+                throw new IncorrectPatternException("Error en el patron de algun campo.");
             }
 
         } catch (WebApplicationException e) {
@@ -418,6 +470,10 @@ public class AnimalController {
             } catch (UpdateException ex) {
                 Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (UpdateException ex) {
+            Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IncorrectPatternException ex) {
+            Logger.getLogger(AnimalController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -437,8 +493,11 @@ public class AnimalController {
             if (answer.get() == ButtonType.OK) {
                 //Para realizar el borrado lo hacemos mediante el id de la Entrada
                 Animal animalElegido = tableAnimal.getSelectionModel().getSelectedItem();
-                fAnimal.getFactory().remove(animalElegido.getId_animal().toString());
-
+                if (fAnimal != null) {
+                    fAnimal.getFactory().remove(animalElegido.getId_animal().toString());
+                } else {
+                    throw new DeleteException();
+                }
                 //Cargamos la tabla con el dato nuevo
                 animalData = FXCollections.observableArrayList(cargarTodo());
             } else {
@@ -577,8 +636,8 @@ public class AnimalController {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERROR");
-                alert.setContentText("Error al cargar el filtro de especies.");
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar el filtro de especies.");
         }
     }
 
@@ -591,8 +650,8 @@ public class AnimalController {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
             Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERROR");
-                alert.setContentText("Error al cargar el filtro de zonas.");
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar el filtro de zonas.");
         }
 
     }
@@ -625,19 +684,23 @@ public class AnimalController {
         return listaAnimales;
     }
 
-    /*
-    private boolean camposAnimalInformados() {
-        if (txtNombreAnimal.getText().trim().isEmpty() || txtGenero.getValue() == null || txtEspecie.getText().trim().isEmpty() || comboSalud.getValue() == null || txtEdad.getText().trim().isEmpty() || txtPeso.getText().trim().isEmpty() || txtAltura.getText().trim().isEmpty() || comboAlimentacion.getValue() == null || comboZona.getValue() == null) {
-            // Si alguno de los campos está vacío, muestra un mensaje de alerta
+    public ObservableList<Animal> cargarFiltroAnimales() {
+        ObservableList<Animal> listaAnimales;
+        List<Animal> filtradoParam;
+        filtradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsInAnArea_XML(Animal.class, zona.getId_zona().toString()));
+        listaAnimales = FXCollections.observableArrayList(filtradoParam);
+        tableAnimal.setItems(listaAnimales);
+        tableAnimal.refresh();
+        if (tableAnimal.getItems().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Campos Vacíos");
+            alert.setTitle("TABLA VACIA");
             alert.setHeaderText(null);
-            alert.setContentText("Por favor, rellena todos los campos.");
+            alert.setContentText("No hay ningun animal en esa zona.");
             alert.showAndWait();
-            return false;
         }
-        return true;
-    }*/
+        return listaAnimales;
+    }
+
     private boolean validarCamposAnimal() {
         String nombre = txtNombreAnimal.getText();
         String genero = txtGenero.getValue().toString();
@@ -763,7 +826,39 @@ public class AnimalController {
         return false;
     }
 
+    public void setZona(Zona zona) {
+        this.zona = zona;
+    }
+
+    /**
+     * Este metodo es una verificacion cuando el usuario le da al boton de
+     * salir.
+     *
+     * @author Adrian
+     * @param event
+     */
+    private void handleCloseRequest(WindowEvent event) {
+        //Creamos un nuevo objeto Alerta
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("EXIT");
+        //Mostramos una alerta de confirmacion.
+        alert.setContentText("¿Estas seguro que deseas salir de la aplicacion?");
+
+        Optional<ButtonType> answer = alert.showAndWait();
+        if (answer.get() == ButtonType.OK) {
+            Platform.exit();
+        } else {
+            event.consume();
+        }
+
+    }
+
     private void showErrorAlert(String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void setUsuario(Usuario user) {
+        this.user = user;
     }
 }
