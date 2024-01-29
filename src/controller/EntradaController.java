@@ -510,19 +510,33 @@ public class EntradaController {
     //Método para relalizar el CRUD de DELETE en la tabla
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
-        try {
-            //Para realizar el borrado lo hacemos mediante el id de la Entrada
-            Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
-            if (factoryEnt != null) {
-                factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
-            } else {
-                throw new DeleteException();
+        try {            
+            Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();     
+            
+            if (selectedEntrada == null) {
+                
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setHeaderText(null);
+                errorAlert.setTitle("Error");
+                errorAlert.setContentText("Por favor, selecciona una entrada para borrar.");
+                errorAlert.showAndWait();
+                return;
             }
-            //Cargamos la tabla con el dato nuevo
-            entradaData = FXCollections.observableArrayList(cargarTodo());
-
-        } catch (DeleteException ex) {
-            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText(null);
+            alert.setTitle("Confirmación");
+            alert.setContentText("¿Deseas borrar esta entrada?");            
+            Optional<ButtonType> answer = alert.showAndWait();            
+            if (answer.get() == ButtonType.OK) {
+                if (factoryEnt != null) {                    
+                    factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());       
+                    entradaData = FXCollections.observableArrayList(cargarTodo());
+                } else {    
+                    Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, "No hay entradas para borrar");
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, "Error al intentar borrar la entrada", ex);
         }
     }
 

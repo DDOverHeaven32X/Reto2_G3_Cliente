@@ -59,6 +59,8 @@ public class RecuperarContrasenaController {
     //Aqui asignamos el patron del email
     private static final String patronEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,300}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(patronEmail);
+    
+    private static final Logger LOGGER = Logger.getLogger("/controller/RecuperarContrasenaController");
 
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
@@ -89,7 +91,7 @@ public class RecuperarContrasenaController {
                 Optional<ButtonType> answer = alert.showAndWait();
                 if (answer.isPresent() && answer.get() == ButtonType.OK) {
                     txt_email.setText("");
-                    stage.close();
+                    alert.close();
                     try {
                         throw new Exception("Demasiados caracteres");
                     } catch (Exception ex) {
@@ -105,7 +107,7 @@ public class RecuperarContrasenaController {
 
                 Optional<ButtonType> answer = alert.showAndWait();
                 if (answer.isPresent() && answer.get() == ButtonType.OK) {
-                    stage.close();
+                    alert.close();
                     txt_email.setText("");
                     try {
                         throw new Exception("Patrón incorrecto");
@@ -152,10 +154,11 @@ public class RecuperarContrasenaController {
 
             Optional<ButtonType> answer = alert.showAndWait();
             if (answer.get() == ButtonType.OK) {
-                stage.close();
+                alert.close();
             }
 
         } catch (UserNotFoundException e) {
+            LOGGER.severe("Patrón erroneo");
         }
 
     }
