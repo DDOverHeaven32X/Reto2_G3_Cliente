@@ -380,7 +380,7 @@ public class EntradaController {
                     ventanita.showAndWait();
                 } else {
                     // Si no existe, proceder con la inserción
-                    
+
                     Admin admin = new Admin();
                     admin.setId_user(user.getId_user());
                     entrada.setPrecio(precioReal);
@@ -513,14 +513,24 @@ public class EntradaController {
         try {
             //Para realizar el borrado lo hacemos mediante el id de la Entrada
             Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
-            if (factoryEnt != null) {
-                factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
-            } else {
-                throw new DeleteException();
-            }
-            //Cargamos la tabla con el dato nuevo
-            entradaData = FXCollections.observableArrayList(cargarTodo());
 
+            // Confirmar la eliminación
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Confirmar Eliminación");
+            confirmacion.setHeaderText("¿Estás seguro de que deseas eliminar la Entrada?");
+            confirmacion.setContentText("Esta acción no se puede deshacer.");
+
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
+
+            if (resultado.get() == ButtonType.OK) {
+                if (factoryEnt != null) {
+                    factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
+                } else {
+                    throw new DeleteException();
+                }
+                //Cargamos la tabla con el dato nuevo
+                entradaData = FXCollections.observableArrayList(cargarTodo());
+            }
         } catch (DeleteException ex) {
             Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
         }
