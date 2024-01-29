@@ -217,7 +217,7 @@ public class InicioSesionController {
                 princiController.setClien(client);
                 princiController.setStage(stage);
                 princiController.initiStage(root);
-                ((Stage) this.pane.getScene().getWindow()).close();
+                stage.close();
             }
 
         } catch (IOException ex) {
