@@ -158,4 +158,20 @@ public interface ClienteInterfaz {
      */
     public void RecuperarContra_JSON(Object requestEntity) throws ClientErrorException;
 
+    /**
+     * Método para cambiar la contraseña del cliente(XML)
+     *
+     * @param requestEntity
+     * @throws WebApplicationException
+     */
+    public void cambiarContra_XML(Object requestEntity) throws WebApplicationException;
+
+    /**
+     * Método para cambiar la contraseña del cliente(JSON)
+     *
+     * @param requestEntity
+     * @throws WebApplicationException
+     */
+    public void cambiarContra_JSON(Object requestEntity) throws WebApplicationException;
+
 }

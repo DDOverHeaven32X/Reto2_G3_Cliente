@@ -4,11 +4,13 @@
  */
 package controller;
 
+import chiper.Asimetricocliente;
 import exception.IncorrectCredentialException;
 import exception.UserNotFoundException;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.security.PublicKey;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -98,7 +100,7 @@ public class InicioSesionController {
         LOGGER.info("Iniciando la ventana de Inicio de Sesion");
 
         Scene scene = new Scene(root);
-        Stage stage = new Stage();
+        stage = new Stage();
 
         //El boton inicio de sesion esta deshabilitado.
         btnInicioSesion.setDisable(true);
@@ -134,7 +136,7 @@ public class InicioSesionController {
             handleLblCuentaClick();
         });
         idPasswdOlvidada.setOnMouseClicked(event -> {
-            handleLblRecuperarContraClick();
+            recuperarContraseñaHandler();
         });
         //Mediante esta propiedad llamamos al metodo camposInformados()
         textEmail.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -171,6 +173,8 @@ public class InicioSesionController {
 
         try {
             error.setText("");
+            Asimetricocliente asi = new Asimetricocliente();
+            PublicKey publicKey;
             if (camposInformados() && maxCarecteres()) {
                 Usuario user = new Usuario();
                 Cliente client = new Cliente();
@@ -181,9 +185,12 @@ public class InicioSesionController {
                 } else {
                     user.setContraseña(txt_contraReve.getText());
                 }
+                publicKey = asi.loadPublicKey();
+
+                String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(pswContraseña.getText(), publicKey));
                 //Comprobamos si el usuario está registrado en la base de datos
                 List<Usuario> listaUser;
-                listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), pswContraseña.getText());
+                listaUser = userFact.getFactory().find_XML(Usuario.class, textEmail.getText(), contra_crypt_hex);
 
                 //Si la consulta no devuelve nada se lanza una excepción de UserNotFoundException
                 if (listaUser.isEmpty()) {
@@ -207,7 +214,7 @@ public class InicioSesionController {
                     client.setN_tarjeta(cliente.getN_tarjeta());
                     client.setPin(cliente.getPin());
                 }
-
+                
                 //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                 Parent root = loader.load();
@@ -315,6 +322,20 @@ public class InicioSesionController {
             LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
         }
     }
+    private void recuperarContraseñaHandler(){
+        try {
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/RecuperarContrasena.fxml"));
+            Parent root = loader.load();
+
+            RecuperarContrasenaController recu = (RecuperarContrasenaController) loader.getController();
+            recu.setStage(stage);
+            recu.initStage(root);
+
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
+        }
+    }
 
     /**
      * Este metodo es una verificacion cuando el usuario le da al boton de
@@ -378,20 +399,6 @@ public class InicioSesionController {
             }
 
             img_ojo.setImage(new Image(pswContraseña.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
-        }
-    }
-
-    private void handleLblRecuperarContraClick() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/RecuperarContrasena.fxml"));
-            Parent root = (Parent) loader.load();
-
-            RecuperarContrasenaController recuperarContra = (RecuperarContrasenaController) loader.getController();
-            recuperarContra.setStage(stage);
-            recuperarContra.initStage(root);
-
-        } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
         }
     }
 

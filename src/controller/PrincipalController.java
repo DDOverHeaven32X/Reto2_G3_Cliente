@@ -97,7 +97,8 @@ public class PrincipalController {
             Parent root = (Parent) loader.load();
 
             CambiarContrasenaController cambiarContra = (CambiarContrasenaController) loader.getController();
-            cambiarContra.setStage(stage, user);
+            cambiarContra.setStage(stage);
+            cambiarContra.setUser(user);
             cambiarContra.initStage(root);
 
         } catch (IOException ex) {

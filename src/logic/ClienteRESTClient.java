@@ -138,6 +138,16 @@ public class ClienteRESTClient implements ClienteInterfaz {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
+    @Override
+    public void cambiarContra_XML(Object requestEntity) throws WebApplicationException {
+        webTarget.path("cambiarContra").request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    }
+
+    @Override
+    public void cambiarContra_JSON(Object requestEntity) throws WebApplicationException {
+        webTarget.path("cambiarContra").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+    }
+
     public void close() {
         client.close();
     }
