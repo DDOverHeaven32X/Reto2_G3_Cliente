@@ -1,179 +1,193 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zonas</title>
-    <style type="text/css">
-      
-body {
-    background-color: #F8F8F8;
-    align-items: center;
-    margin: 50px auto;
-    padding: 20px;
-    max-width: 1200px; /* Limita el ancho de la página para una mejor lectura */
-    font-family: 'Arial', sans-serif;
-}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Zonas</title>
+        <style type="text/css">
 
-div.cuerpo {
-    margin: 20px;
-    margin-top: 30px;
-    text-align: center;
-}
+            body {
+                background-color: #F8F8F8;
+                align-items: center;
+                margin: 50px auto;
+                padding: 20px;
+                max-width: 1200px; /* Limita el ancho de la página para una mejor lectura */
+                font-family: 'Arial', sans-serif;
+            }
 
-img {
-    width: 700px;
-    height: 500px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: block;
-    margin: 20px auto; /* Centra la imagen */
-}
+            div.cuerpo {
+                margin: 20px;
+                margin-top: 30px;
+                text-align: center;
+            }
 
-hr {
-    border: 2px solid #4C7438;
-    border-radius: 5px;
-}
+            img {
+                width: 700px;
+                height: 500px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                display: block;
+                margin: 20px auto; /* Centra la imagen */
+            }
 
-p.destaca, p.client, p.admin {
-    color: #4C7438;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+            hr {
+                border: 2px solid #4C7438;
+                border-radius: 5px;
+            }
 
-p {
-    text-align: center;
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
+            p.destaca, p.client, p.admin {
+                color: #4C7438;
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
 
-h1 {
-    text-align: center;
-    color: #4C7438;
-    font-size: 36px;
-    margin-bottom: 30px;
-}
+            p {
+                text-align: center;
+                font-size: 16px;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
 
-a {
-    color: #006400;
-    text-decoration: none;
-    font-size: 18px;
-}
+            h1 {
+                text-align: center;
+                color: #4C7438;
+                font-size: 36px;
+                margin-bottom: 30px;
+            }
 
-a:hover {
-    color: #4C7438;
-}
+            a {
+                color: #006400;
+                text-decoration: none;
+                font-size: 18px;
+            }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    text-align: left;
-    margin-bottom: 20px;
-}
+            a:hover {
+                color: #4C7438;
+            }
 
-ul li {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
+            ul {
+                list-style-type: none;
+                padding: 0;
+                text-align: left;
+                margin-bottom: 20px;
+            }
 
-ul li:before {
-    content: '•';
-    color: #4C7438;
-    margin-right: 8px;
-}
+            ul li {
+                margin-bottom: 10px;
+                font-size: 16px;
+            }
 
-a.menu-link {
-    color: #006400;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 18px;
-}
+            ul li:before {
+                content: '•';
+                color: #4C7438;
+                margin-right: 8px;
+            }
 
-a.menu-link:hover {
-    text-decoration: underline;
-}
+            a.menu-link {
+                color: #006400;
+                text-decoration: none;
+                font-weight: bold;
+                font-size: 18px;
+            }
 
-/* Estilo específico para las imágenes del 7.1 */
-.center-images {
-    display: flex;
-    justify-content: space-around;
-}
+            a.menu-link:hover {
+                text-decoration: underline;
+            }
 
-.center-images img {
-    width: 300px;
-    height: 200px;
-    border-radius: 10px;
-    margin: 0 10px;
-}
+            /* Estilo específico para las imágenes del 7.1 */
+            .center-images {
+                display: flex;
+                justify-content: space-around;
+            }
 
-
+            .center-images img {
+                width: 300px;
+                height: 200px;
+                border-radius: 10px;
+                margin: 0 10px;
+            }
 
 
-    </style>
-</head>
-<body>
-    <hr>
-    <h1 align="Center">Zonas</h1>
-    <hr>
-    <div class="cuerpo">
-        <p>Bienvenido a la ventana de asistencia, elige el tipo de ayuda que necesitas:</p>
-        <center>
-            <a href="#client">Ayuda para Cliente</a>
-            <a href="#admin">Ayuda para Admin</a>
-        </center>
+
+
+        </style>
+    </head>
+    <body>
+        <hr>
+        <h1 align="Center">Zonas</h1>
+        <hr>
+        <div class="cuerpo">
+            <p>Bienvenido a la ventana de asistencia, elige el tipo de ayuda que necesitas:</p>
+            <center>
+                <a href="#client">Ayuda para Cliente</a>
+                <a href="#admin">Ayuda para Admin</a>
+            </center>
+
+            <p class="admin">Asistencia para Admin</p>
+            <center><p class="destaca">Fig 1: Ventana Zona</p><img src ="../imagenes/Zona1.PNG" alt= "ventana"></center>
+            <p>Esta es la interfaz al abrir la ventana. Observa que los botones de Modificar y Borrar están inactivos.</p>
+            <br>
+            <center><p class="destaca">Fig 2: Activación de botones</p><img src ="../imagenes/Zona2.PNG" alt= "ventana2"></center>
+            <br>
+            <p>Al completar los 2 campos vacíos, los botones se activarán, permitiendo la funcionalidad de la ventana.</p>
+            <center><p class="destaca">Fig 3: Creando una Zona</p><img src ="../imagenes/Zona3.PNG" alt= "ventana3"></center>
+            <br>
+            <p>Si los campos se han completado correctamente (de lo contrario, aparecerá una ventana de error), la Zona que has introducido se mostrará en la tabla correspondiente (la clave de admin aparecerá si has iniciado sesión como admin).</p>
+            <br>
+            <center><p class="destaca">Fig 4: Rellenando los datos seleccionando un elemento </p><img src ="../imagenes/Zona4.PNG" alt= "ventana4"></center>
+            <p>Al seleccionar un elemento de la tabla, los datos característicos se marcarán en su campo correspondiente, permitiendo el borrado y la modificación.</p>
+            <br>
+            <center><p class="destaca">Fig 5: Ejemplo de Modificación </p><img src ="../imagenes/Zona5.PNG" alt= "ventana5"></center>
+            <p>Una vez que has elegido una de las filas y los datos están en ellas, puedes modificar o borrar. Para modificar, selecciona el campo que deseas cambiar y pulsa el botón de modificar. Si los datos son correctos, la ventana mostrará la zona modificada; de lo contrario, saldrá un error y podrás intentarlo nuevamente.</p>
+            <br>
+            <center><p class="destaca">Fig 6.1: Confirmación de borrado </p><img src ="../imagenes/Zona6.PNG" alt= "ventana6"></center>
+            <p>Al presionar borrar, aparecerá una ventana preguntándote si realmente quieres borrar la zona seleccionada. Si presionas sí, se verificarán los datos y, en caso de ser incorrectos, saldrá un error y podrás intentarlo de nuevo. Si los datos son correctos, el mensaje se borrará como se muestra aquí:</p> 
+            <br>
+
+
+            <center><p class="destaca">Fig 7.1: Error en alguno de los campos </p><img src ="../imagenes/Zona9.PNG" alt= "ventana9" style="width: 600px; height: 300px"> <br/><img src ="../imagenes/Zona8.PNG" alt= "ventana9" style="width: 600px; height: 300px"> <img src ="../imagenes/Zona7.PNG" alt= "ventana9" style="width: 600px; height: 300px"></center>
+            <br>
+            <center><p class="destaca">Fig 8: Filtrados </p><img src ="../imagenes/Zona14.PNG" alt= "ventana11"  style="width: 350px; height: 300px;"></center>
+            <p>Esta ventana tiene 2 opciones de filtrado: Por valor nombre de zona y por tipo de animal. Por nombre:</p>
+            <center><p class="destaca">Fig 9: Filtrado por Nombre </p><img src ="../imagenes/Zona10.PNG" alt= "ventana12"  style="width: 800px; height: 200px;"></center>
+            <p>Si buscamos uno de los valores por parámetro de la tabla, se mostrará la zona; si no se encuentra, la tabla estará vacía, indicando que no hay valores para el parámetro indicado. Para volver a ver todas las Zonas, selecciona la opción todos los Zonas.</p>
+            <br>
+            <center><p class="destaca">Fig 10: Filtrado por Tipo de Animal </p><img src ="../imagenes/Zona11.PNG" alt= "ventana13" style="width: 800px; height: 200px;"></center>
+            <p>Si buscamos uno de los valores por clave de la tabla, se mostrará la zona; si no se encuentra, la tabla estará vacía, indicando que no hay valores para la clave indicada. Para volver a ver todas las Zonas, selecciona la opción todos los Zonas.</p>
+            <br>
+            <center><p class="destaca">Fig 11: Informe </p><img src ="../imagenes/Zona12.PNG" alt= "ventana14"></center>
+            <p>Al presionar el botón de informe en la ventana de Zona, aparecerá una ventana emergente con un informe de JasperReports, mostrando la información detallada de la tabla de Zonas. Aquí puedes imprimirlo, etc...</p>
+            <br>
+            <center><p class="destaca">Fig 13: Navegación Menubar</p><img src ="../imagenes/Zona13.PNG" alt= "ventana15" style="width: 1000px; height: 80px;"></center>
+            <p>En la esquina superior izquierda hay un menú de navegación para moverte entre diferentes ventanas, con varias opciones:</p>
+            <ul type="number">
+                <li>Inicio:<br>
+                    Inicio te permite regresar a la ventana principal</li>
+                <li>Navegación:<br>
+                    Tiene 3 opciones, cada una te enviará a una ventana representativa.</li>
+                <li>Navegación:<br>
+                    Tiene 2 opciones, sacar el menu de ayuda y sacar el manual de usuario.</li>
+                <li>Cerrar sesión:<br>
+                    Cierra la sesión y te lleva a la ventana de registro de nuestra aplicación.</li>
+            </ul>
+        </div>
         <br>
-        <p class="client">Asistencia para Cliente</p>
-        <br>
-        <p class="admin">Asistencia para Admin</p>
-       <center><p class="destaca">Fig 1: Ventana Zona</p><img src ="../imagenes/Zona1.PNG" alt= "ventana"></center>
-        <p>Esta es la interfaz al abrir la ventana. Observa que los botones de Modificar y Borrar están inactivos.</p>
-        <br>
-        <center><p class="destaca">Fig 2: Activación de botones</p><img src ="../imagenes/Zona2.PNG" alt= "ventana2"></center>
-        <br>
-        <p>Al completar los 2 campos vacíos, los botones se activarán, permitiendo la funcionalidad de la ventana.</p>
-        <center><p class="destaca">Fig 3: Creando una Zona</p><img src ="../imagenes/Zona3.PNG" alt= "ventana3"></center>
-        <br>
-        <p>Si los campos se han completado correctamente (de lo contrario, aparecerá una ventana de error), la Zona que has introducido se mostrará en la tabla correspondiente (la clave de admin aparecerá si has iniciado sesión como admin).</p>
-        <br>
-        <center><p class="destaca">Fig 4: Rellenando los datos seleccionando un elemento </p><img src ="../imagenes/Zona4.PNG" alt= "ventana4"></center>
-        <p>Al seleccionar un elemento de la tabla, los datos característicos se marcarán en su campo correspondiente, permitiendo el borrado y la modificación.</p>
-        <br>
-        <center><p class="destaca">Fig 5: Ejemplo de Modificación </p><img src ="../imagenes/Zona5.PNG" alt= "ventana5"></center>
-        <p>Una vez que has elegido una de las filas y los datos están en ellas, puedes modificar o borrar. Para modificar, selecciona el campo que deseas cambiar y pulsa el botón de modificar. Si los datos son correctos, la ventana mostrará la zona modificada; de lo contrario, saldrá un error y podrás intentarlo nuevamente.</p>
-        <br>
-        <center><p class="destaca">Fig 6.1: Confirmación de borrado </p><img src ="../imagenes/Zona6.PNG" alt= "ventana6"></center>
-        <p>Al presionar borrar, aparecerá una ventana preguntándote si realmente quieres borrar la zona seleccionada. Si presionas sí, se verificarán los datos y, en caso de ser incorrectos, saldrá un error y podrás intentarlo de nuevo. Si los datos son correctos, el mensaje se borrará como se muestra aquí:</p> 
-        <br>
-        
-        
-        <center><p class="destaca">Fig 7.1: Error en alguno de los campos </p><img src ="../imagenes/Zona9.PNG" alt= "ventana9" style="width: 600px; height: 300px"> <br/><img src ="../imagenes/Zona8.PNG" alt= "ventana9" style="width: 600px; height: 300px"> <img src ="../imagenes/Zona7.PNG" alt= "ventana9" style="width: 600px; height: 300px"></center>
-        <br>
-        <center><p class="destaca">Fig 8: Filtrados </p><img src ="../imagenes/Zona14.PNG" alt= "ventana11"  style="width: 350px; height: 300px;"></center>
-        <p>Esta ventana tiene 2 opciones de filtrado: Por valor nombre de zona y por tipo de animal. Por nombre:</p>
-        <center><p class="destaca">Fig 9: Filtrado por Nombre </p><img src ="../imagenes/Zona10.PNG" alt= "ventana12"  style="width: 800px; height: 200px;"></center>
-        <p>Si buscamos uno de los valores por parámetro de la tabla, se mostrará la zona; si no se encuentra, la tabla estará vacía, indicando que no hay valores para el parámetro indicado. Para volver a ver todas las Zonas, selecciona la opción todos los Zonas.</p>
-        <br>
-        <center><p class="destaca">Fig 10: Filtrado por Tipo de Animal </p><img src ="../imagenes/Zona11.PNG" alt= "ventana13" style="width: 800px; height: 200px;"></center>
-        <p>Si buscamos uno de los valores por clave de la tabla, se mostrará la zona; si no se encuentra, la tabla estará vacía, indicando que no hay valores para la clave indicada. Para volver a ver todas las Zonas, selecciona la opción todos los Zonas.</p>
-        <br>
-        <center><p class="destaca">Fig 11: Informe </p><img src ="../imagenes/Zona12.PNG" alt= "ventana14"></center>
-        <p>Al presionar el botón de informe en la ventana de Zona, aparecerá una ventana emergente con un informe de JasperReports, mostrando la información detallada de la tabla de Zonas. Aquí puedes imprimirlo, etc...</p>
-        <br>
-        <center><p class="destaca">Fig 13: Navegación Menubar</p><img src ="../imagenes/Zona13.PNG" alt= "ventana15" style="width: 1000px; height: 80px;"></center>
-        <p>En la esquina superior izquierda hay un menú de navegación para moverte entre diferentes ventanas, con varias opciones:</p>
-        <ul type="number">
-           <li>Inicio:<br>
-            Inicio te permite regresar a la ventana principal</li>
-             <li>Navegación:<br>
-            Tiene 3 opciones, cada una te enviará a una ventana representativa.</li>
-			<li>Navegación:<br>
-            Tiene 2 opciones, sacar el menu de ayuda y sacar el manual de usuario.</li>
-             <li>Cerrar sesión:<br>
-                 Cierra la sesión y te lleva a la ventana de registro de nuestra aplicación.</li>
-        </ul>
-    </div>
+        <p id="client" class="client">Asistencia para Cliente</p>
+    <center><p class="destaca">Fig 8: Filtrados </p><img src ="../imagenes/Zona15.PNG" alt= "ventana11"  style="width: 350px; height: 300px;"></center>
+    <p>Esta ventana muestra una tabla con las diferentes zonas que hay en el parque natural.</p>
+    <center><p class="destaca">Fig 8: Filtrados </p><img src ="../imagenes/Zona14.PNG" alt= "ventana11"  style="width: 350px; height: 300px;"></center>
+    <p>Esta ventana tiene 2 opciones de filtrado: Por valor nombre de zona y por tipo de animal. Por nombre:</p>
+    <center><p class="destaca">Fig 9: Filtrado por Nombre </p><img src ="../imagenes/Zona10.PNG" alt= "ventana12"  style="width: 800px; height: 200px;"></center>
+    <p>Si buscamos uno de los valores por parámetro de la tabla, se mostrará la zona; si no se encuentra, la tabla estará vacía, indicando que no hay valores para el parámetro indicado. Para volver a ver todas las Zonas, selecciona la opción todos los Zonas.</p>
+    <br>
+    <center><p class="destaca">Fig 10: Filtrado por Tipo de Animal </p><img src ="../imagenes/Zona11.PNG" alt= "ventana13" style="width: 800px; height: 200px;"></center>
+    <p>Si buscamos uno de los valores por clave de la tabla, se mostrará la zona; si no se encuentra, la tabla estará vacía, indicando que no hay valores para la clave indicada. Para volver a ver todas las Zonas, selecciona la opción todos los Zonas.</p>
+    <br>
+    <center><p class="destaca">Fig 11: Informe </p><img src ="../imagenes/Zona12.PNG" alt= "ventana14"></center>
+    <p>Al presionar el botón de informe en la ventana de Zona, aparecerá una ventana emergente con un informe de JasperReports, mostrando la información detallada de la tabla de Zonas. Aquí puedes imprimirlo, etc...</p>
+    <br>
+
 </body>
 
 </html>
