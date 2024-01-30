@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.AnimalFactoria;
+import model.Entrada;
 import model.Privilegio;
 import model.Usuario;
 import model.Zona;
@@ -217,9 +218,8 @@ public class ZonaControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void TestE_createZonaExiste() {
+    public void TestF_createZonaExiste() {
         int rowCount = tableZona.getItems().size();
-
         // Simulate filling out zone creation fields
         clickOn(txtNombreZona).write("Tundra");
 
@@ -236,7 +236,7 @@ public class ZonaControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void TestF_modifyZona() {
+    public void TestG_modifyZona() {
 
         int rowCount = tableZona.getItems().size();
         assertNotEquals("La tabla no tiene datos: no se puede realizar la prueba.", rowCount, 0);
@@ -277,12 +277,12 @@ public class ZonaControllerTest extends ApplicationTest {
                 (Zona) tableZona.getItems().get(selectedIndex));*/
         List<Zona> zonas = tableZona.getItems();
         assertEquals("La zona se ha añadido correctamente!",
-                zonas.stream().filter(z -> z.getNombre().equals(modifiedZone.getNombre())).count(), 1);
+                zonas.stream().filter(z -> z.getNombre().equals(modifiedZone.getNombre()) && z.getDescripcion().equals(modifiedZone.getDescripcion())).count(), 1);
     }
 
     @Test
     //@Ignore
-    public void testG_cancelar_eliminar_zona() {
+    public void testH_cancelar_eliminar_zona() {
         // Verificar que la tabla tenga al menos una fila
         int rowCount = tableZona.getItems().size();
         assertNotEquals("La tabla no tiene datos: No se puede realizar la prueba.", rowCount, 0);
@@ -305,7 +305,7 @@ public class ZonaControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void testH_deleteZona() {
+    public void testI_deleteZona() {
         // Verificar que la tabla tenga al menos una fila
         int rowCount = tableZona.getItems().size();
         assertNotEquals("La tabla no tiene datos: No se puede realizar la prueba.", rowCount, 0);
@@ -326,6 +326,25 @@ public class ZonaControllerTest extends ApplicationTest {
 
         // Verificar que la fila se ha eliminado
         assertEquals("¡La fila se ha eliminado!", rowCount - 1, tableZona.getItems().size());
+
+    }
+
+    @Test
+    public void testJ_FiltrarNombre() {
+        clickOn(comboFiltrar);
+        type(KeyCode.DOWN);
+        clickOn("Filtrar por nombre");
+        verifyThat(txtFiltrar, isVisible());
+        verifyThat(txtFiltrar, isEnabled());
+        clickOn(txtFiltrar);
+        write("Selva");
+        clickOn(btnBuscar);
+
+        String valorString = "Selva";
+
+        List<Zona> zonas = tableZona.getItems();
+        long count = zonas.stream().filter(z -> z.getNombre().equals("Selva")).count();
+        assertEquals("El número de zonas con el nombre 'Selva' no es el esperado", 2, count);
 
     }
 }

@@ -442,7 +442,12 @@ public class EntradaController {
         } else {
             // Si no hay campos vacíos, validar patrones
             try {
-                Double.parseDouble(txtPrecioEntrada.getText());
+                Double precio = Double.parseDouble(txtPrecioEntrada.getText());
+                if (precio <= 0 || precio >= 100) {
+                    mostrarAlerta("Error de Validación", "El precio de entrada debe estar entre 0 y 100, ambos no icluidos.");
+                    txtPrecioEntrada.setText("");
+                    validacionesExitosas = false;
+                }
             } catch (NumberFormatException e) {
                 mostrarAlerta("Error de Validación", "Has introducido caracteres no válidos en el campo de Precio de Entrada.");
                 txtPrecioEntrada.setText("");
@@ -551,6 +556,9 @@ public class EntradaController {
             txtPrecioEntrada.setText(ticket.getPrecio().toString());
             comboEntrada.setValue(ticket.getTipo_entrada());
             dtpFecha.setValue(fechaNueva);
+        } else {
+            btnEliminar.setDisable(true);
+            btnModificar.setDisable(true);
         }
     }
 
@@ -590,6 +598,7 @@ public class EntradaController {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> FiltradoParam;
         if (dtpFiltradoFecha.getValue() != null) {
+
             FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorFecha_XML(Entrada.class, dtpFiltradoFecha.getValue().toString()));
             listaEntradas = FXCollections.observableArrayList(FiltradoParam);
             tblEntrada.setItems(listaEntradas);

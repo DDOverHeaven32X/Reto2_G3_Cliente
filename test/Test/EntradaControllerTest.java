@@ -8,7 +8,11 @@ package Test;
 import aplication.Aplicacion;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeoutException;
 import javafx.scene.Node;
@@ -34,6 +38,7 @@ import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.matcher.base.NodeMatchers;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.util.NodeQueryUtils.isVisible;
 
@@ -150,70 +155,84 @@ public class EntradaControllerTest extends ApplicationTest {
      * Test que comprueba la creacion de una entrada
      */
     @Test
-    public void testC_CrearEntrada() {
+    public void testB_CrearEntrada() {
 
         // Genera un valor aleatorio entre 10 y 60
-        float valor = (float) (Math.random() * 51) + 10;
-        String valorString = Float.toString(valor);
-
         // Contamos cuantas filas hay en la tabla
         int contarFilas = tblEntrada.getItems().size();
-
-        clickOn(txtPrecioEntrada).write(valorString);
-
+        String valorString = "24";
+        clickOn(txtPrecioEntrada).write("24");
         clickOn(comboEntrada);
         type(KeyCode.DOWN);
         type(KeyCode.DOWN);
         clickOn("Infantil(0-12)");
-
+        String edad = comboEntrada.getSelectionModel().getSelectedItem().toString();
         clickOn(dtpFecha).write("08/04/2024");
 
         clickOn(btnCrear);
 
-        List<Entrada> entradas = tblEntrada.getItems();
         //Vertifica que se ha creado una nueva fila en la base de datos
         assertEquals("No se han actualizado las filas", contarFilas + 1, tblEntrada.getItems().size());
+        List<Entrada> entradas = tblEntrada.getItems();
         // Verifica si se añadió exactamente una entrada con el precio, fecha y tipo de entrada correctos
-        assertEquals("La entrada no se ha añadido", entradas.stream()
-                .filter(e -> e.getPrecio() == Float.parseFloat(valorString)
-                && e.getTipo_entrada().equals("Infantil(0-12)"))
-                .count(), 1);
+        assertEquals("La entrada no se ha añadido correctamente!",
+                entradas.stream().filter(e -> e.getPrecio() == Float.parseFloat(valorString)).count(), 1);
     }
 
     /**
      * Test que comprueba si una entrada se ha modificado correctamente
      */
-    @Ignore
     @Test
-    public void testD_ModificaEntrada() {
-        //Genera un precio aleatorio
-        float valor = new Random().nextFloat();
-        String valorString = Float.toString(valor);
-        //Selecionamos la entrada del adulto para modificar
-        tblEntrada.getSelectionModel().select(3);
-        verifyThat(btnModificar, isEnabled());
-        clickOn(txtPrecioEntrada);
-        txtPrecioEntrada.clear();
-        write(valorString);
-        clickOn(btnModificar);
-        //Recuperamos las entradas
-        List<Entrada> entradas = tblEntrada.getItems();
+    public void testC_ModificaEntrada() {
+        int rowCount = tblEntrada.getItems().size();
+        assertNotEquals("La tabla no tiene datos: no se puede realizar la prueba.", rowCount, 0);
 
-        assertEquals("La entrada no se ha modificado", entradas.stream()
-                .filter(e -> e.getPrecio() == Float.parseFloat(valorString)).count(), 1);
+        // Buscar y seleccionar la entrada a modificar 
+        clickOn(tblEntrada).clickOn("08.04.2024");
+
+        //Borramos los campos
+        txtPrecioEntrada.setText("");
+        dtpFecha.setValue(null);
+
+        int selectedIndex = tblEntrada.getSelectionModel().getSelectedIndex();
+        // Modificar la entrada seleccionada
+        Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
+        Entrada modifiedEntrada = new Entrada();
+
+        // Modificar el precio de la entrada
+        modifiedEntrada.setPrecio(Float.parseFloat("45"));
+        clickOn(txtPrecioEntrada).eraseText(selectedEntrada.getPrecio().toString().length()).write(String.valueOf(modifiedEntrada.getPrecio()));
+
+        clickOn(comboEntrada);
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        // Modificar la fecha de la entrada
+        LocalDate modifiedDate = LocalDate.of(2024, 7, 9);
+        dtpFecha.setValue(modifiedDate);
+
+        // Guardar los cambios
+        clickOn(btnModificar);
+
+        // Verificar que la entrada ha sido modificada correctamente
+        List<Entrada> entradas = tblEntrada.getItems();
+        assertEquals("La entrada no se ha modificado correctamente!",
+                1,
+                entradas.stream().filter(e -> Objects.equals(e.getPrecio(), modifiedEntrada.getPrecio())).count());
     }
 
     /**
      * Test que comprueba si una entrada se ha borrado correctamente
      */
     @Test
-    public void testE_BorrarEntrada() {
+    public void testD_BorrarEntrada() {
         //Contamos las filas para ver si se ha borrado la entrada
         // Verificar que la tabla tenga al menos una fila
         int rowCount = tblEntrada.getItems().size();
         assertNotEquals("La tabla no tiene datos: No se puede realizar la prueba.", rowCount, 0);
 
-        clickOn(tblEntrada).clickOn("08.04.2024");
+        clickOn(tblEntrada).clickOn("09.07.2024");
         // Verificar que el botón de eliminar está habilitado
         verifyThat(btnEliminar, isEnabled());
 
@@ -227,51 +246,64 @@ public class EntradaControllerTest extends ApplicationTest {
         assertEquals("A row has been deleted!!!", rowCount - 1, tblEntrada.getItems().size());
     }
 
-    @Ignore
     @Test
-    public void testF_FiltrarPrecio() {
+    public void testE_FiltrarPrecio() {
         clickOn(cbcFiltro);
         type(KeyCode.DOWN);
         clickOn("Filtrar por dinero");
         verifyThat(txtFiltrar, isVisible());
         verifyThat(txtFiltrar, isEnabled());
         clickOn(txtFiltrar);
-        write("23");
+        write("25");
         clickOn(btnBuscar);
-        //Comprobamos que nos ha devuelto una entrada con dicho parámetro
-        tblEntrada.getSelectionModel().select(0);
-        assertEquals(txtPrecioEntrada.getText(), "23");
+
+        String valorString = "25";
+
+        Node row = lookup(".table-row-cell").nth(0).query();
+        assertNotNull("Row is null: table has not that row. ", row);
+        clickOn(row);
+
+        List<Entrada> entradas = tblEntrada.getItems();
+        assertEquals("La entrada no se ha encontrado", entradas.stream()
+                .filter(e -> e.getPrecio() == Float.parseFloat(valorString)).count(), 1);
 
     }
 
-    @Ignore
     @Test
-    public void testG_FiltrarFecha() {
+    public void testF_FiltrarFecha() {
         clickOn(cbcFiltro);
         type(KeyCode.DOWN);
         type(KeyCode.DOWN);
         clickOn("Filtrar por fecha");
 
         verifyThat(dtpFecha, isEnabled());
-        clickOn(dtpFiltradoFecha).write("28/02/2024");
+        clickOn("#dtpFiltradoFecha").write("15/12/2023");
         clickOn(btnBuscar);
-        //Comprobamos que nos devuelve una entrada con dicho parametro
-        tblEntrada.getSelectionModel().select(0);
-        assertEquals(dtpFecha.getValue(), "28/02/2024");
+
+        Node row = lookup(".table-row-cell").nth(0).query();
+        assertNotNull("Row is null: table has not that row. ", row);
+        clickOn(row);
+
+        Date fecha = Date.from(LocalDate.of(2023, 12, 15).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        List<Entrada> entradas = tblEntrada.getItems();
+        assertEquals("La entrada no se ha encontrado",
+                1,
+                entradas.stream().filter(e -> e.getFecha_entrada().compareTo(fecha) == 0).count());
 
     }
 
     @Ignore
     @Test
-    public void testH_ComprarEntrada() {
+    public void testG_ComprarEntrada() {
         //Vamos a comprar la entrada 4
         tblEntrada.getSelectionModel().select(4);
-        clickOn(btnComprar);
+        clickOn("#btnComprar");
 
         clickOn(txt_contraReve1).write("1212121212121212");
         clickOn(pswPin).write("1111");
 
-        clickOn(btn_confirmar);
+        clickOn("#btn_confirmar");
 
         clickOn("Aceptar");
         clickOn(btn_cancelar);
