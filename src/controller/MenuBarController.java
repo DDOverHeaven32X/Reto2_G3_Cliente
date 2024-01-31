@@ -5,11 +5,19 @@
  */
 package controller;
 
+import java.awt.Desktop;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -62,7 +70,7 @@ public class MenuBarController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = (Parent) loader.load();
             AnimalController aniController = ((AnimalController) loader.getController());
-            
+
             aniController.setUsuario(user);
             aniController.setStage(stage);
             aniController.initiStage(root);
@@ -139,7 +147,7 @@ public class MenuBarController {
         try {
             FXMLLoader loader;
             Parent root;
-            
+
             switch (((Stage) this.menuBar.getScene().getWindow()).getTitle()) {
                 case "Animal":
                     loader = new FXMLLoader(getClass().getResource("/view/AyudaAnimal.fxml"));
