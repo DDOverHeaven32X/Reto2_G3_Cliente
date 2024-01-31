@@ -6,6 +6,7 @@
 package logic;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import static javafx.scene.input.KeyCode.T;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
@@ -31,7 +32,8 @@ public class ZonaRESTClient implements ZonaInterfaz {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/Reto2_G3_Servidor/webresources";
+    private final ResourceBundle configFile = ResourceBundle.getBundle("config.url");
+    private final String BASE_URI = configFile.getString("BASE_URI");
 
     public ZonaRESTClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

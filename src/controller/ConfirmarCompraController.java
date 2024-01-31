@@ -147,6 +147,8 @@ public class ConfirmarCompraController {
 
                     Optional<ButtonType> answer = alert2.showAndWait();
                     if (answer.get() == ButtonType.OK) {
+                        txt_contraReve1.setText("");
+                        pswPin.setText("");
                         alert2.close();
                     }
                 } else {

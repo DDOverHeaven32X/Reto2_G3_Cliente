@@ -378,6 +378,7 @@ public class EntradaController {
                     ventanita.setTitle("Error");
                     ventanita.setContentText("La entrada que intentas crear ya existe");
                     ventanita.showAndWait();
+                    return;
                 } else {
                     // Si no existe, proceder con la inserción
 
@@ -395,13 +396,14 @@ public class EntradaController {
 
                     // Cargamos la tabla con el dato nuevo
                     entradaData = FXCollections.observableArrayList(cargarTodo());
-
                 }
             }
+
         } catch (CreateException ex) {
             LOGGER.severe(ex.getMessage());
         } catch (IncorrectPatternException ex) {
             Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 
@@ -438,6 +440,7 @@ public class EntradaController {
             alert.setContentText("Antes de realizar una acción, asegúrate de no dejar ningún campo vacío.");
 
             Optional<ButtonType> answer = alert.showAndWait();
+            
 
         } else {
             // Si no hay campos vacíos, validar patrones
@@ -447,17 +450,20 @@ public class EntradaController {
                     mostrarAlerta("Error de Validación", "El precio de entrada debe estar entre 0 y 100, ambos no icluidos.");
                     txtPrecioEntrada.setText("");
                     validacionesExitosas = false;
+                   
                 }
             } catch (NumberFormatException e) {
                 mostrarAlerta("Error de Validación", "Has introducido caracteres no válidos en el campo de Precio de Entrada.");
                 txtPrecioEntrada.setText("");
                 validacionesExitosas = false;
+                
             }
 
             if (dtpFecha.getValue() != null && dtpFecha.getValue().isBefore(java.time.LocalDate.now())) {
                 mostrarAlerta("Error de Validación", "No puedes ingresar fechas anteriores a la actual.");
                 dtpFecha.setValue(null);
                 validacionesExitosas = false;
+               
             }
         }
 

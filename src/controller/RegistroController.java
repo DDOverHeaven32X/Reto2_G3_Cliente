@@ -7,10 +7,12 @@ package controller;
 
 import chiper.Asimetricocliente;
 import exception.IncorrectPatternException;
+import exception.ServerConnectionException;
 import javafx.event.Event;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.security.PublicKey;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -34,6 +36,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javax.ws.rs.ProcessingException;
 import logic.ClienteFactoria;
 import model.Cliente;
 
@@ -454,12 +457,17 @@ public class RegistroController {
                 event.consume();
             }
             //Control de excepciones
-        } catch (IncorrectPatternException e) {
+        }catch(ProcessingException | ConnectException e){
+            txt_nombre.requestFocus();
+            lbl_error.setVisible(true);
+            lbl_error.setText("La conexión al servidor falló, intentelo de nuevo o más tarde");
+            LOGGER.severe(e.getMessage());
+        }catch (IncorrectPatternException e) {
             txt_nombre.requestFocus();
             lbl_error.setVisible(true);
             lbl_error.setText(e.getMessage());
             LOGGER.severe(e.getMessage());
-        } catch (IOException ex) {
+        }catch (IOException ex) {
             Logger.getLogger(RegistroController.class.getName()).log(Level.SEVERE, null, ex);
         }
 

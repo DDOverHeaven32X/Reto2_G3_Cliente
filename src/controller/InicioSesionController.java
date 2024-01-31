@@ -5,6 +5,7 @@
 package controller;
 
 import chiper.Asimetricocliente;
+import static controller.RegistroController.LOGGER;
 import exception.IncorrectCredentialException;
 import exception.UserNotFoundException;
 import javafx.event.ActionEvent;
@@ -35,6 +36,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.ws.rs.ProcessingException;
 import logic.ClienteFactoria;
 import logic.UsuarioFactoria;
 import model.Admin;
@@ -227,7 +229,12 @@ public class InicioSesionController {
                 stage.close();
             }
 
-        } catch (IOException ex) {
+        } catch(ProcessingException | ConnectException e){
+            textEmail.requestFocus();
+            error.setVisible(true);
+            error.setText("La conexión al servidor falló, intentelo de nuevo o más tarde");
+            LOGGER.severe(e.getMessage());
+        }catch (IOException ex) {
             error.setVisible(true);
             error.setText("Ha habido algun error durante el inicio de sesion.");
         } catch (UserNotFoundException e) {

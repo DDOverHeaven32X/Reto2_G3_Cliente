@@ -7,6 +7,7 @@ package Test;
 
 import aplication.Aplicacion;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +15,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -41,7 +46,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.base.NodeMatchers;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.util.NodeQueryUtils.isVisible;
-
+import org.testfx.util.WaitForAsyncUtils;
 /**
  * Test que asegura el funcionamiento CRUD de la ventana Entradas
  *
@@ -155,8 +160,47 @@ public class EntradaControllerTest extends ApplicationTest {
      * Test que se asegura de iniciar sesion para llegar hasta la ventana de
      * entrada
      */
+    
     @Test
-    public void TestA_comprobar_boton_inicio_habilitado() {
+    public void TestA_ComprobarCampos() {
+        clickOn(btnCrear);
+        verifyThat("Antes de realizar una acción, asegúrate de no dejar ningún campo vacío.", isVisible());
+        clickOn("Aceptar");
+        
+        clickOn(txtPrecioEntrada).write("150");
+        clickOn(comboEntrada);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        clickOn("Infantil(0-12)");
+        
+        dtpFecha = lookup("#dtpFecha").query();
+        
+        clickOn(dtpFecha).write("08/04/2024");
+        
+        clickOn(btnCrear);
+        
+        verifyThat("El precio de entrada debe estar entre 0 y 100, ambos no icluidos.", isVisible());
+        clickOn("Aceptar");
+        
+        clickOn(txtPrecioEntrada).write("23");
+        clickOn(comboEntrada);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        clickOn("Infantil(0-12)");
+        
+        dtpFecha = lookup("#dtpFecha").query();
+        
+        clickOn(dtpFecha).write("08/04/2023");
+        
+        clickOn(btnCrear);
+        
+        verifyThat("No puedes ingresar fechas anteriores a la actual.", isVisible());
+        
+        clickOn("Aceptar");
+    }
+    
+    @Test
+    public void TestB_comprobar_boton_inicio_habilitado() {
         clickOn(textEmail).write("admin@gmail.com");
         clickOn(pswContraseña).write("Abcd*1234");
         verifyThat(btnInicioSesion, isEnabled());
@@ -170,8 +214,9 @@ public class EntradaControllerTest extends ApplicationTest {
     /**
      * Test que comprueba la creacion de una entrada
      */
+    
     @Test
-    public void testB_CrearEntrada() {
+    public void testC_CrearEntrada() {
 
         // Genera un valor aleatorio entre 10 y 60
         // Contamos cuantas filas hay en la tabla
@@ -182,7 +227,9 @@ public class EntradaControllerTest extends ApplicationTest {
         type(KeyCode.DOWN);
         type(KeyCode.DOWN);
         clickOn("Infantil(0-12)");
-        String edad = comboEntrada.getSelectionModel().getSelectedItem().toString();
+        
+        dtpFecha = lookup("#dtpFecha").query();
+        
         clickOn(dtpFecha).write("08/04/2024");
 
         clickOn(btnCrear);
@@ -194,12 +241,38 @@ public class EntradaControllerTest extends ApplicationTest {
         assertEquals("La entrada no se ha añadido correctamente!",
                 entradas.stream().filter(e -> e.getPrecio() == Float.parseFloat(valorString)).count(), 1);
     }
+    @Ignore
+    @Test
+    public void testD_CreateEntradaRepetida(){
+        int contarFilas = tblEntrada.getItems().size();
+
+        clickOn(txtPrecioEntrada).write("24");
+        clickOn(comboEntrada);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        clickOn("Infantil(0-12)");
+
+        // Asegurarse de que el DatePicker esté presente
+        verifyThat("#dtpFecha", NodeMatchers.isVisible());
+
+        clickOn("#dtpFecha").write("08/04/2024");
+
+        clickOn(btnCrear);
+
+        verifyThat("La entrada que intentas crear ya existe", isVisible());
+        clickOn("Aceptar");
+        assertEquals("No se ha añadido ninguna entrada!!", contarFilas, tblEntrada.getItems().size());
+    }
+        
+        
+    
 
     /**
      * Test que comprueba si una entrada se ha modificado correctamente
      */
+    
     @Test
-    public void testC_ModificaEntrada() {
+    public void testE_ModificaEntrada() {
         int rowCount = tblEntrada.getItems().size();
         assertNotEquals("La tabla no tiene datos: no se puede realizar la prueba.", rowCount, 0);
 
@@ -241,8 +314,31 @@ public class EntradaControllerTest extends ApplicationTest {
     /**
      * Test que comprueba si una entrada se ha borrado correctamente
      */
+    
+    
     @Test
-    public void testD_BorrarEntrada() {
+    public void testF_CancelarBorrarEntrada() {
+        //Contamos las filas para ver si se ha borrado la entrada
+        // Verificar que la tabla tenga al menos una fila
+        int rowCount = tblEntrada.getItems().size();
+        assertNotEquals("La tabla no tiene datos: No se puede realizar la prueba.", rowCount, 0);
+
+        clickOn(tblEntrada).clickOn("09.07.2024");
+        // Verificar que el botón de eliminar está habilitado
+        verifyThat(btnEliminar, isEnabled());
+
+        clickOn(btnEliminar);
+
+        // Verificar que se muestra el mensaje de confirmación
+        verifyThat("¿Estás seguro de que deseas eliminar la Entrada?", isVisible());
+        // Confirmar la eliminación haciendo clic en el botón predeterminado del diálogo de confirmación
+        clickOn("Cancelar");
+
+        assertEquals("A row has been deleted!!!", rowCount - 1, tblEntrada.getItems().size());
+    }
+    
+    @Test
+    public void testG_BorrarEntrada() {
         //Contamos las filas para ver si se ha borrado la entrada
         // Verificar que la tabla tenga al menos una fila
         int rowCount = tblEntrada.getItems().size();
@@ -262,8 +358,9 @@ public class EntradaControllerTest extends ApplicationTest {
         assertEquals("A row has been deleted!!!", rowCount - 1, tblEntrada.getItems().size());
     }
 
+    
     @Test
-    public void testE_FiltrarPrecio() {
+    public void testH_FiltrarPrecio() {
         clickOn(cbcFiltro);
         type(KeyCode.DOWN);
         clickOn("Filtrar por dinero");
@@ -284,9 +381,10 @@ public class EntradaControllerTest extends ApplicationTest {
                 .filter(e -> e.getPrecio() == Float.parseFloat(valorString)).count(), 1);
 
     }
-
+    
+    
     @Test
-    public void testF_FiltrarFecha() {
+    public void testI_FiltrarFecha() {
         clickOn(cbcFiltro);
         type(KeyCode.DOWN);
         type(KeyCode.DOWN);
@@ -309,32 +407,52 @@ public class EntradaControllerTest extends ApplicationTest {
 
     }
 
+    
     @Test
-    public void testG_ComprarEntrada() {
+    public void testJ_ComprarEntrada() {
         //Vamos a comprar la entrada 4
         cambiarAClient();
-        clickOn(tblEntrada).clickOn("20.12.2023");
+        clickOn(tblEntrada).clickOn("17.01.2024");
         clickOn("#btnComprar");
 
         txt_contraReve1 = lookup("#txt_contraRevel").query();
         pswPin = lookup("#pswPin").query();
         btn_confirmar = lookup("#btn_confirmar").query();
         btn_cancelar = lookup("#btn_cancelar").query();
+        btnTusEntradas = lookup("#btnTusEntradas").query();
+
+        try {
+            WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> {
+                btn_confirmar = lookup("#btn_confirmar").query();
+
+                return btn_confirmar != null;
+            });
+            WaitForAsyncUtils.waitFor(5, TimeUnit.SECONDS, () -> {
+                txt_contraReve1 = lookup("#txt_contraReve1").query();
+
+                return txt_contraReve1 != null;
+            });
+        } catch (TimeoutException ex) {
+            Logger.getLogger(EntradaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         clickOn(txt_contraReve1).write("1212121212121212");
         clickOn(pswPin).write("1111");
 
         clickOn("#btn_confirmar");
+        
+        clickOn("Aceptar");
 
         btnTusEntradas = lookup("#btnTusEntradas").query();
 
-        clickOn("Aceptar");
-        clickOn(btn_cancelar);
-        clickOn("Aceptar");
-
         clickOn(btnTusEntradas);
+        
+        verifyThat("Mostrando tus entradas compradas, pulsa aceptar para dejar de verlas", NodeMatchers.isVisible());
+        
         clickOn("Aceptar");
 
     }
+    
+    
 
 }
