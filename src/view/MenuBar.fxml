@@ -23,7 +23,7 @@
          </items></Menu>
       <Menu fx:id="menuCerrarSesion" mnemonicParsing="false" onAction="#miSesión" style="-fx-padding: 12px 90px; -fx-font-size: 14px;" text="CERRAR SESION">
          <items>
-            <MenuItem mnemonicParsing="false" style="-fx-padding: 0px 91px;" text="Cerrar Sesion" />
+            <MenuItem fx:id="mItemCerrarSesion" mnemonicParsing="false" style="-fx-padding: 0px 91px;" text="Cerrar Sesion" />
          </items></Menu>
    </menus>
 </MenuBar>

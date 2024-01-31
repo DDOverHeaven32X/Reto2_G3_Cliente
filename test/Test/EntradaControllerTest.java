@@ -63,13 +63,13 @@ public class EntradaControllerTest extends ApplicationTest {
 
     private Pane pane;
 
-    private Menu menuNavegar;
+    private Menu menuNavegar, menuCerrarSesion;
 
     private TableView<Entrada> tblEntrada;
 
     private TableColumn tbcIdEntrada, tbcTipo, tbcPrecio, tbcFecha;
 
-    private MenuItem mnItemBorrar, mItemEntradas;
+    private MenuItem mnItemBorrar, mItemEntradas, mItemCerrarSesion;
 
     private PasswordField pswContraseña;
 
@@ -101,6 +101,8 @@ public class EntradaControllerTest extends ApplicationTest {
         Node menuNavegar = lookup("#menuNavegar").nth(1).query();
         Node mItemEntradas = lookup("#mItemEntradas").nth(1).query();
         Node mItemBorrar = lookup("#mItemBorrar").nth(1).query();
+        Node menuCerrarSesion = lookup("#menuCerrarSesion").nth(1).query();
+        Node mItemCerrarSesion = lookup("#mItemCerrarSesion").nth(1).query();
 
         tblEntrada = lookup("#tblEntrada").query();
 
@@ -128,10 +130,24 @@ public class EntradaControllerTest extends ApplicationTest {
     /**
      * Método que limpia los campos
      */
-    public void limpiarCampos() {
-        txtPrecioEntrada.setText("");
-        dtpFecha.setValue(null);
-        comboEntrada.setValue("");
+    public void cambiarAClient() {
+        clickOn("#menuCerrarSesion");
+        clickOn("#mItemCerrarSesion");
+        clickOn("Aceptar");
+
+        textEmail = lookup("#textEmail").query();
+        pswContraseña = lookup("#pswContraseña").query();
+        btnInicioSesion = lookup("#btnInicioSesion").query();
+        Node menuNavegar = lookup("#menuNavegar").nth(1).query();
+        Node mItemEntradas = lookup("#mItemEntradas").nth(1).query();
+
+        clickOn(textEmail).write("client@gmail.com");
+        clickOn(pswContraseña).write("Abcd*1234");
+        verifyThat(btnInicioSesion, isEnabled());
+        clickOn(btnInicioSesion);
+
+        clickOn("#menuNavegar");
+        clickOn("#mItemEntradas");
 
     }
 
@@ -187,7 +203,7 @@ public class EntradaControllerTest extends ApplicationTest {
         int rowCount = tblEntrada.getItems().size();
         assertNotEquals("La tabla no tiene datos: no se puede realizar la prueba.", rowCount, 0);
 
-        // Buscar y seleccionar la entrada a modificar 
+        // Buscar y seleccionar la entrada a modificar
         clickOn(tblEntrada).clickOn("08.04.2024");
 
         //Borramos los campos
@@ -254,10 +270,10 @@ public class EntradaControllerTest extends ApplicationTest {
         verifyThat(txtFiltrar, isVisible());
         verifyThat(txtFiltrar, isEnabled());
         clickOn(txtFiltrar);
-        write("25");
+        write("15");
         clickOn(btnBuscar);
 
-        String valorString = "25";
+        String valorString = "15";
 
         Node row = lookup(".table-row-cell").nth(0).query();
         assertNotNull("Row is null: table has not that row. ", row);
@@ -277,14 +293,14 @@ public class EntradaControllerTest extends ApplicationTest {
         clickOn("Filtrar por fecha");
 
         verifyThat(dtpFecha, isEnabled());
-        clickOn("#dtpFiltradoFecha").write("15/12/2023");
+        clickOn("#dtpFiltradoFecha").write("19/01/2024");
         clickOn(btnBuscar);
 
         Node row = lookup(".table-row-cell").nth(0).query();
         assertNotNull("Row is null: table has not that row. ", row);
         clickOn(row);
 
-        Date fecha = Date.from(LocalDate.of(2023, 12, 15).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date fecha = Date.from(LocalDate.of(2024, 01, 19).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         List<Entrada> entradas = tblEntrada.getItems();
         assertEquals("La entrada no se ha encontrado",
@@ -293,17 +309,24 @@ public class EntradaControllerTest extends ApplicationTest {
 
     }
 
-    @Ignore
     @Test
     public void testG_ComprarEntrada() {
         //Vamos a comprar la entrada 4
-        tblEntrada.getSelectionModel().select(4);
+        cambiarAClient();
+        clickOn(tblEntrada).clickOn("20.12.2023");
         clickOn("#btnComprar");
+
+        txt_contraReve1 = lookup("#txt_contraRevel").query();
+        pswPin = lookup("#pswPin").query();
+        btn_confirmar = lookup("#btn_confirmar").query();
+        btn_cancelar = lookup("#btn_cancelar").query();
 
         clickOn(txt_contraReve1).write("1212121212121212");
         clickOn(pswPin).write("1111");
 
         clickOn("#btn_confirmar");
+
+        btnTusEntradas = lookup("#btnTusEntradas").query();
 
         clickOn("Aceptar");
         clickOn(btn_cancelar);
