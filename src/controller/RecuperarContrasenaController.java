@@ -59,7 +59,7 @@ public class RecuperarContrasenaController {
     //Aqui asignamos el patron del email
     private static final String patronEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,300}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(patronEmail);
-    
+
     private static final Logger LOGGER = Logger.getLogger("/controller/RecuperarContrasenaController");
 
     public void initStage(Parent root) {
@@ -126,23 +126,19 @@ public class RecuperarContrasenaController {
                 throw new UserNotFoundException();
             }
             Cliente clieNew = new Cliente();
-            Asimetricocliente asi = new Asimetricocliente();
-            PublicKey publicKey;
-            publicKey = asi.loadPublicKey();
-            //Buscamos el cliente que ha solicitado el cambio de contraseña y sobreescribimos los datos cambiados por el
-            String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(listaUser.get(0).getContraseña(), publicKey));
+
             clieNew.setLogin(txt_email.getText());
-            System.out.println(listaUser.get(0).getContraseña());
-            //clieNew.setContraseña(contra_crypt_hex);
-            clieNew.setCod_postal(listaUser.get(0).getCod_postal());
-            clieNew.setId_user(listaUser.get(0).getId_user());
-            clieNew.setCod_postal(listaUser.get(0).getCod_postal());
-            clieNew.setDireccion(listaUser.get(0).getDireccion());
-            clieNew.setNombre_completo(listaUser.get(0).getNombre_completo());
-            clieNew.setTelefono(listaUser.get(0).getTelefono());
-            clieNew.setTipo_usuario(listaUser.get(0).getTipo_usuario());
-            //clieNew.setN_tarjeta(listaUser.get(0).getN_tarjeta());
-            //clieNew.setPin(listaCliente.get(0).getPin());
+            Cliente cli = clienfac.getFactory().find_XML(Cliente.class, listaUser.get(0).getId_user().toString());
+
+            clieNew.setId_user(cli.getId_user());
+            clieNew.setCod_postal(cli.getCod_postal());
+            clieNew.setDireccion(cli.getDireccion());
+            clieNew.setLogin(cli.getLogin());
+            clieNew.setNombre_completo(cli.getNombre_completo());
+            clieNew.setTelefono(cli.getTelefono());
+            clieNew.setTipo_usuario(cli.getTipo_usuario());
+            clieNew.setN_tarjeta(cli.getN_tarjeta());
+            clieNew.setPin(cli.getPin());
 
             clienfac.getFactory().RecuperarContra_XML(clieNew);
             clienfac.getFactory().cambiarContra_XML(clieNew);

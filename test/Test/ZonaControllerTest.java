@@ -32,7 +32,6 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.util.NodeQueryUtils.isVisible;
-import static sun.security.rsa.RSAUtil.KeyType.lookup;
 
 /**
  *
@@ -75,14 +74,14 @@ public class ZonaControllerTest extends ApplicationTest {
     private PasswordField pswContraseña;
 
     private Stage stage;
-    
+
     private Pane ventanaInicio;
+
     /**
      *
      * @param primaryStage
      * @throws Exception
      */
-    
 
     @Override
     public void start(Stage primaryStage) throws Exception {

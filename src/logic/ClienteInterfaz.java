@@ -26,7 +26,7 @@ public interface ClienteInterfaz {
      * @return
      * @throws WebApplicationException
      */
-    public List<Cliente> filtrarPorTarjeta_XML(Class<Cliente> responseType, String n_tarjeta, String pin) throws ClientErrorException;
+    public List<Cliente> filtrarPorTarjeta_XML(Class<Cliente> responseType, String n_tarjeta, String pin) throws WebApplicationException;
 
     /**
      * Filtra una entrada por una tarjeta específica y devuelve sus datos en
@@ -38,7 +38,7 @@ public interface ClienteInterfaz {
      * @return
      * @throws WebApplicationException
      */
-    public List<Cliente> filtrarPorTarjeta_JSON(Class<Cliente> responseType, String n_tarjeta, String pin) throws ClientErrorException;
+    public List<Cliente> filtrarPorTarjeta_JSON(Class<Cliente> responseType, String n_tarjeta, String pin) throws WebApplicationException;
 
     /**
      * Actualiza una entidad Cliente en formato XML.
@@ -129,7 +129,7 @@ public interface ClienteInterfaz {
      * @return
      * @throws ClientErrorException
      */
-    public List<Cliente> findRange_XML(Class<Cliente> responseType, String from, String to) throws ClientErrorException;
+    public List<Cliente> findRange_XML(Class<Cliente> responseType, String from, String to) throws WebApplicationException;
 
     /**
      * Busca un rango de entradas en formato JSON.
@@ -140,7 +140,7 @@ public interface ClienteInterfaz {
      * @return
      * @throws ClientErrorException
      */
-    public List<Cliente> findRange_JSON(Class<Cliente> responseType, String from, String to) throws ClientErrorException;
+    public List<Cliente> findRange_JSON(Class<Cliente> responseType, String from, String to) throws WebApplicationException;
 
     /**
      * Recupera contraseña en formato XML.
@@ -148,7 +148,7 @@ public interface ClienteInterfaz {
      * @param requestEntity
      * @throws ClientErrorException
      */
-    public void RecuperarContra_XML(Object requestEntity) throws ClientErrorException;
+    public void RecuperarContra_XML(Object requestEntity) throws WebApplicationException;
 
     /**
      * Recupera contraseña en formato JSON.
@@ -156,7 +156,7 @@ public interface ClienteInterfaz {
      * @param requestEntity
      * @throws ClientErrorException
      */
-    public void RecuperarContra_JSON(Object requestEntity) throws ClientErrorException;
+    public void RecuperarContra_JSON(Object requestEntity) throws WebApplicationException;
 
     /**
      * Método para cambiar la contraseña del cliente(XML)
