@@ -344,7 +344,61 @@ public class ZonaControllerTest extends ApplicationTest {
 
         List<Zona> zonas = tableZona.getItems();
         long count = zonas.stream().filter(z -> z.getNombre().equals("Selva")).count();
-        assertEquals("El número de zonas con el nombre 'Selva' no es el esperado", 2, count);
+        assertEquals("El número de zonas con el nombre 'Selva' no es el esperado", 1, count);
+
+    }
+
+    @Test
+    public void testK_FiltrarTipoAnimal() {
+        txtFiltrar.clear();
+        clickOn(comboFiltrar);
+        type(KeyCode.DOWN);
+        clickOn("Filtrar por tipo animal");
+        verifyThat(txtFiltrar, isVisible());
+        verifyThat(txtFiltrar, isEnabled());
+        clickOn(txtFiltrar);
+        write("Mamiferos");
+        clickOn(btnBuscar);
+
+        String valorString = "Mamíferos";
+
+        List<Zona> zonas = tableZona.getItems();
+        long count = zonas.stream().filter(z -> z.getTipo_animal().equals(valorString)).count();
+        assertEquals("El número de zonas con el tipo animal 'Mamiferos' no es el esperado", 3, count);
+
+    }
+
+    @Test
+    public void testL_ProbrarErroresCampos() {
+        txtFiltrar.clear();
+        int rowCount = tableZona.getItems().size();
+
+        clickOn(btnCrearZona);
+        verifyThat("Por favor, complete todos los campos.", isVisible());
+        clickOn("Aceptar");
+
+        clickOn(txtNombreZona).write("Bosque123");
+        clickOn(txtDescripcionZona).write("El bosque, ese mágico reino de la naturaleza, es un vasto tapiz de vida donde los árboles se alzan majestuosos hacia el cielo.");
+        clickOn(txtTipoAnimalZona);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        clickOn(btnCrearZona);
+
+        verifyThat("El nombre debe tener hasta 20 caracteres y no puede contener números.", isVisible());
+        clickOn("Aceptar");
+
+        txtNombreZona.clear();
+        txtDescripcionZona.clear();
+
+        clickOn(txtNombreZona).write("Bosque");
+        clickOn(txtDescripcionZona).write("El bosque, ese mágico reino de la naturaleza, es un vasto tapiz de vida donde los árboles se alzan majestuosos hacia el cielo, formando un dosel verde que filtra la luz del sol. Bajo su sombra, una multitud de criaturas encuentra refugio: desde los diminutos insectos que pululan entre la hojarasca hasta los imponentes ciervos que deambulan entre los troncos centenarios. El aire está impregnado del aroma fresco de la vegetación, mientras que el suelo es un tapiz de musgos y helechos que susurran bajo los pasos.");
+        clickOn(txtTipoAnimalZona);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        clickOn(btnCrearZona);
+
+        verifyThat("La descripción debe tener hasta 200 caracteres.", isVisible());
+        clickOn("Aceptar");
 
     }
 }
