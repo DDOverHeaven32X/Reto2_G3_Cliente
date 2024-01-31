@@ -66,7 +66,6 @@ public class MenuBarController {
     private void miAnimales(ActionEvent event) {
 
         try {
-            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Animal.fxml"));
             Parent root = (Parent) loader.load();
             AnimalController aniController = ((AnimalController) loader.getController());
@@ -74,7 +73,7 @@ public class MenuBarController {
             aniController.setUsuario(user);
             aniController.setStage(stage);
             aniController.initiStage(root);
-
+            ((Stage) this.menuBar.getScene().getWindow()).close();
         } catch (IOException e) {
 
         }
@@ -83,13 +82,13 @@ public class MenuBarController {
     @FXML
     private void miZonas(ActionEvent event) {
         try {
-            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Zona.fxml"));
             Parent root = (Parent) loader.load();
             ZonaController zonController = ((ZonaController) loader.getController());
             zonController.setUsuario(user);
             zonController.setStage(stage);
             zonController.initiStage(root);
+            ((Stage) this.menuBar.getScene().getWindow()).close();
         } catch (IOException e) {
 
         }
@@ -98,15 +97,14 @@ public class MenuBarController {
     @FXML
     private void miEntradas(ActionEvent event) {
         try {
-            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Entrada.fxml"));
             Parent root = (Parent) loader.load();
             EntradaController entController = ((EntradaController) loader.getController());
             entController.setStage(stage);
             entController.setClien(clien);
             entController.setUser(user);
-
             entController.initiStage(root, user, clien);
+            ((Stage) this.menuBar.getScene().getWindow()).close();
         } catch (IOException e) {
 
         }
@@ -115,7 +113,6 @@ public class MenuBarController {
     @FXML
     private void miPrincipal(ActionEvent event) {
         try {
-            ((Stage) this.menuBar.getScene().getWindow()).close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
             Parent root = (Parent) loader.load();
             PrincipalController priController = ((PrincipalController) loader.getController());
@@ -123,6 +120,7 @@ public class MenuBarController {
             priController.setClien(clien);
             priController.setUser(user);
             priController.initiStage(root);
+            ((Stage) this.menuBar.getScene().getWindow()).close();
         } catch (IOException e) {
 
         }
@@ -131,12 +129,24 @@ public class MenuBarController {
     @FXML
     private void miSesión(ActionEvent event) {
         try {
-            ((Stage) this.menuBar.getScene().getWindow()).close();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/InicioSesion.fxml"));
-            Parent root = (Parent) loader.load();
-            InicioSesionController iniController = ((InicioSesionController) loader.getController());
-            iniController.setStage(stage);
-            iniController.initStage(root);
+            //Creamos un nuevo objeto Alerta
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText(null);
+            alert.setTitle("EXIT");
+            //Mostramos una alerta de confirmacion.
+            alert.setContentText("¿Estas seguro que deseas cerrar sesion?");
+
+            Optional<ButtonType> answer = alert.showAndWait();
+            if (answer.get() == ButtonType.OK) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/InicioSesion.fxml"));
+                Parent root = (Parent) loader.load();
+                InicioSesionController iniController = ((InicioSesionController) loader.getController());
+                iniController.setStage(stage);
+                iniController.initStage(root);
+                ((Stage) this.menuBar.getScene().getWindow()).close();
+            } else {
+                event.consume();
+            }
         } catch (IOException e) {
 
         }

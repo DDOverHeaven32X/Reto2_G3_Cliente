@@ -380,7 +380,7 @@ public class EntradaController {
                     ventanita.showAndWait();
                 } else {
                     // Si no existe, proceder con la inserción
-                    
+
                     Admin admin = new Admin();
                     admin.setId_user(user.getId_user());
                     entrada.setPrecio(precioReal);
@@ -442,7 +442,12 @@ public class EntradaController {
         } else {
             // Si no hay campos vacíos, validar patrones
             try {
-                Double.parseDouble(txtPrecioEntrada.getText());
+                Double precio = Double.parseDouble(txtPrecioEntrada.getText());
+                if (precio <= 0 || precio >= 100) {
+                    mostrarAlerta("Error de Validación", "El precio de entrada debe estar entre 0 y 100, ambos no icluidos.");
+                    txtPrecioEntrada.setText("");
+                    validacionesExitosas = false;
+                }
             } catch (NumberFormatException e) {
                 mostrarAlerta("Error de Validación", "Has introducido caracteres no válidos en el campo de Precio de Entrada.");
                 txtPrecioEntrada.setText("");
@@ -510,33 +515,29 @@ public class EntradaController {
     //Método para relalizar el CRUD de DELETE en la tabla
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
-        try {            
-            Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();     
-            
-            if (selectedEntrada == null) {
-                
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setHeaderText(null);
-                errorAlert.setTitle("Error");
-                errorAlert.setContentText("Por favor, selecciona una entrada para borrar.");
-                errorAlert.showAndWait();
-                return;
-            }
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setHeaderText(null);
-            alert.setTitle("Confirmación");
-            alert.setContentText("¿Deseas borrar esta entrada?");            
-            Optional<ButtonType> answer = alert.showAndWait();            
-            if (answer.get() == ButtonType.OK) {
-                if (factoryEnt != null) {                    
-                    factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());       
-                    entradaData = FXCollections.observableArrayList(cargarTodo());
-                } else {    
-                    Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, "No hay entradas para borrar");
+        try {
+            //Para realizar el borrado lo hacemos mediante el id de la Entrada
+            Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
+
+            // Confirmar la eliminación
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Confirmar Eliminación");
+            confirmacion.setHeaderText("¿Estás seguro de que deseas eliminar la Entrada?");
+            confirmacion.setContentText("Esta acción no se puede deshacer.");
+
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
+
+            if (resultado.get() == ButtonType.OK) {
+                if (factoryEnt != null) {
+                    factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
+                } else {
+                    throw new DeleteException();
                 }
+                //Cargamos la tabla con el dato nuevo
+                entradaData = FXCollections.observableArrayList(cargarTodo());
             }
-        } catch (Exception ex) {
-            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, "Error al intentar borrar la entrada", ex);
+        } catch (DeleteException ex) {
+            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -555,6 +556,9 @@ public class EntradaController {
             txtPrecioEntrada.setText(ticket.getPrecio().toString());
             comboEntrada.setValue(ticket.getTipo_entrada());
             dtpFecha.setValue(fechaNueva);
+        } else {
+            btnEliminar.setDisable(true);
+            btnModificar.setDisable(true);
         }
     }
 
@@ -594,6 +598,7 @@ public class EntradaController {
         ObservableList<Entrada> listaEntradas;
         List<Entrada> FiltradoParam;
         if (dtpFiltradoFecha.getValue() != null) {
+
             FiltradoParam = FXCollections.observableArrayList(factoryEnt.getFactory().filtrarEntradaPorFecha_XML(Entrada.class, dtpFiltradoFecha.getValue().toString()));
             listaEntradas = FXCollections.observableArrayList(FiltradoParam);
             tblEntrada.setItems(listaEntradas);
