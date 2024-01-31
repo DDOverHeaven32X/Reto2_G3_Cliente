@@ -515,29 +515,34 @@ public class EntradaController {
     //Método para relalizar el CRUD de DELETE en la tabla
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
-        try {
-            //Para realizar el borrado lo hacemos mediante el id de la Entrada
-            Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();
-
-            // Confirmar la eliminación
-            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacion.setTitle("Confirmar Eliminación");
-            confirmacion.setHeaderText("¿Estás seguro de que deseas eliminar la Entrada?");
-            confirmacion.setContentText("Esta acción no se puede deshacer.");
-
-            Optional<ButtonType> resultado = confirmacion.showAndWait();
-
-            if (resultado.get() == ButtonType.OK) {
-                if (factoryEnt != null) {
-                    factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());
-                } else {
+        try {            
+            Entrada selectedEntrada = tblEntrada.getSelectionModel().getSelectedItem();     
+            
+            if (selectedEntrada == null) {
+                
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setHeaderText(null);
+                errorAlert.setTitle("Error");
+                errorAlert.setContentText("Por favor, selecciona una entrada para borrar.");
+                errorAlert.showAndWait();
+                return;
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText(null);
+            alert.setTitle("Confirmación");
+            alert.setContentText("¿Deseas borrar esta entrada?");            
+            Optional<ButtonType> answer = alert.showAndWait();            
+            if (answer.get() == ButtonType.OK) {
+                if (factoryEnt != null) {                    
+                    factoryEnt.getFactory().remove(selectedEntrada.getId_entrada().toString());       
+                } else {    
                     throw new DeleteException();
                 }
-                //Cargamos la tabla con el dato nuevo
+                //Recargamos la tabla
                 entradaData = FXCollections.observableArrayList(cargarTodo());
             }
         } catch (DeleteException ex) {
-            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, "Error al intentar borrar la entrada", ex);
         }
     }
 

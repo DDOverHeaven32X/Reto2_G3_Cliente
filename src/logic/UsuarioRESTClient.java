@@ -26,7 +26,7 @@ import model.Usuario;
  *
  * @author Diego
  */
-public class UsuarioRESTClient implements UsuarioInterfaz{
+public class UsuarioRESTClient implements UsuarioInterfaz {
 
     private WebTarget webTarget;
     private Client client;
@@ -42,6 +42,22 @@ public class UsuarioRESTClient implements UsuarioInterfaz{
         WebTarget resource = webTarget;
         resource = resource.path("count");
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    @Override
+    public List<Usuario> findLogin_XML(Class<Usuario> responseType, String login) throws WebApplicationException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("VerUsuariosPorLogin/{0}", new Object[]{login}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(new GenericType<List<Usuario>>() {
+        });
+    }
+
+    @Override
+    public List<Usuario> findLogin_JSON(Class<Usuario> responseType, String login) throws WebApplicationException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("VerUsuariosPorLogin/{0}", new Object[]{login}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Usuario>>() {
+        });
     }
 
     @Override
@@ -118,5 +134,5 @@ public class UsuarioRESTClient implements UsuarioInterfaz{
     public void close() {
         client.close();
     }
-    
+
 }

@@ -128,9 +128,7 @@ public class CambiarContrasenaController {
             } else if (!pswContraseña2.getText().equals(pswContraseña3.getText())
                     || pswContraseña2.getText().isEmpty() || pswContraseña3.getText().isEmpty()) {
                 throw new IllegalArgumentException("Las contraseñas no coinciden y no deben ser nulas o vacías");
-            } else if (!pswContraseña1.getText().equals(user.getContraseña())){
-                throw new Exception("Debes de introducir tu contraseña actual para hacer el cambio de contraseña");
-            }
+            } 
 
         } catch (IllegalArgumentException ex) {
             String mensaje = ex.getMessage();
@@ -176,7 +174,7 @@ public class CambiarContrasenaController {
         PublicKey publicKey;
         publicKey = asi.loadPublicKey();
         //Buscamos el cliente que ha solicitado el cambio de contraseña y sobreescribimos los datos cambiados por el
-        String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(pswContraseña2.getText(), publicKey));
+        String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(pswContraseña2.getText(), publicKey));       
         Cliente cli = clienfac.getFactory().find_XML(Cliente.class, user.getId_user().toString());
         Cliente clieNew = new Cliente();
         clieNew.setContraseña(contra_crypt_hex);

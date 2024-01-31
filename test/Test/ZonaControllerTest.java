@@ -44,7 +44,7 @@ import static org.testfx.util.NodeQueryUtils.isVisible;
 
 /**
  *
- * @author 2dam
+ * @author Ander
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ZonaControllerTest extends ApplicationTest {
@@ -195,7 +195,7 @@ public class ZonaControllerTest extends ApplicationTest {
     }
 
     /**
-     * Test user creation.
+     * Test zona creation.
      */
     @Test
     public void TestE_createZona() {
