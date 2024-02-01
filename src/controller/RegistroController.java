@@ -417,9 +417,8 @@ public class RegistroController {
             publicKey = asi.loadPublicKey();
 
             String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(psw_contra.getText(), publicKey));
-
+            System.out.println(contra_crypt_hex);
             clie.setContraseña(contra_crypt_hex);
-            System.out.println(clie.getContraseña());
             clie.setDireccion(txt_direccion.getText());
             clie.setCod_postal(codPostal);
             clie.setTelefono(telefono);

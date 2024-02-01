@@ -19,7 +19,6 @@
       </Menu>
       <Menu fx:id="menuAyuda" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="AYUDA">
          <items>
-            <MenuItem fx:id="mItemManual" mnemonicParsing="false"  style="-fx-padding: 2px 56px;" text="Manual Usuario" />
             <MenuItem fx:id="mItemDocumentacion" mnemonicParsing="false" onAction="#miAyuda" style="-fx-padding: 2px 56px;" text="Ayuda Ventana" />
          </items></Menu>
       <Menu fx:id="menuCerrarSesion" mnemonicParsing="false" onAction="#miSesión" style="-fx-padding: 12px 90px; -fx-font-size: 14px;" text="CERRAR SESION">

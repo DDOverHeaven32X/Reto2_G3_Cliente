@@ -61,7 +61,11 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 /**
- * FXML Controller class
+ * Controlador FXML para la gestión de animales en el sistema. Permite la
+ * creación, modificación y eliminación de animales, así como la generación de
+ * informes. Esta clase se encarga de manejar la interfaz gráfica y la lógica
+ * asociada a la gestión de animales. El controlador interactúa con la capa de
+ * modelo para realizar operaciones CRUD en la base de datos.
  *
  * @author Adrian
  */
@@ -141,6 +145,13 @@ public class AnimalController {
 
     private Zona zona;
 
+    /**
+     * Inicializa la ventana de gestión de animales. Configura los campos,
+     * botones y eventos asociados a la gestión de animales.
+     *
+     * @param root El nodo raíz de la escena de la ventana de gestión de
+     * animales.
+     */
     public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -423,6 +434,7 @@ public class AnimalController {
                 //Escogemos el Id para indicar al programa que animal debe modificar
                 animal.setId_animal(tableAnimal.getSelectionModel().getSelectedItem().getId_animal());
 
+                //Recogemos todos los valores
                 animal.setNombre(txtNombreAnimal.getText());
                 animal.setGenero(txtGenero.getValue().toString());
                 animal.setEspecie(txtEspecie.getText());
@@ -454,7 +466,7 @@ public class AnimalController {
                     throw new UpdateException();
                 }
 
-                //Cargamos la tabla con el dato nuevo
+                //Cargamos la tabla con el dato modificado
                 animalData = FXCollections.observableArrayList(cargarTodo());
             } else {
                 throw new IncorrectPatternException("Error en el patron de algun campo.");
@@ -498,7 +510,7 @@ public class AnimalController {
                 } else {
                     throw new DeleteException();
                 }
-                //Cargamos la tabla con el dato nuevo
+                //Cargamos la tabla sin el animal eliminado
                 animalData = FXCollections.observableArrayList(cargarTodo());
             } else {
                 event.consume();
@@ -518,17 +530,35 @@ public class AnimalController {
 
     }
 
+    /**
+     * Maneja la acción del botón para imprimir un informe de animales. Compila
+     * y llena el informe utilizando JasperReports y lo muestra en una ventana.
+     *
+     * @param event El evento de acción que desencadena la impresión del
+     * informe.
+     */
     @FXML
     private void handleImprimirAction(ActionEvent event) {
         try {
+            // Compilar el informe Jasper
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/report/AnimalReport.jrxml"));
+
+            // Crear una fuente de datos para los elementos del informe
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Animal>) this.tableAnimal.getItems());
+
+            // Configurar los parámetros del informe (si es necesario)
             Map<String, Object> parameters = new HashMap<>();
+
+            // Llenar el informe con los datos y los parámetros
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+
+            // Mostrar el informe en una ventana
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
+            // Manejar excepciones de JasperReports
             LOGGER.log(Level.SEVERE, null, ex);
+            // Mostrar un mensaje de error al usuario
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Error al imprimir");
             alert.showAndWait();
@@ -584,6 +614,7 @@ public class AnimalController {
     @FXML
     private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
         try {
+            //Si los campos estan vacios todos los botones del CRUD estaran desactivados, una vez esten todos rellenados se activaran
             if (txtNombreAnimal.getText().trim().isEmpty() || txtGenero.getValue() == null || txtEspecie.getText().trim().isEmpty() || comboSalud.getValue() == null || txtEdad.getText().trim().isEmpty() || txtPeso.getText().trim().isEmpty() || txtAltura.getText().trim().isEmpty() || comboAlimentacion.getValue() == null || comboZona.getValue() == null) {
                 btnCrearAimal.setDisable(true);
                 btnModificarAnimal.setDisable(true);
@@ -603,9 +634,10 @@ public class AnimalController {
     private void handleUsersTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue) {
         try {
             if (newValue != null) {
-
+                // Obtener el animal seleccionado
                 Animal a = (Animal) newValue;
 
+                // Introducir los datos del animal en los campos de edición
                 txtNombreAnimal.setText(a.getNombre());
                 txtGenero.setValue(a.getGenero());
                 txtEspecie.setText(a.getEspecie());
@@ -617,90 +649,155 @@ public class AnimalController {
                 comboZona.setValue(a.getZona());
             }
         } catch (Exception e) {
+            // Manejar excepciones
             LOGGER.log(Level.SEVERE, null, e);
         }
-
     }
 
+    /**
+     * Carga las especies únicas en el filtro de especies. Obtiene todas las
+     * especies únicas de la base de datos y las carga en el filtro de especies.
+     */
     @FXML
     private void cargarFiltroComboEspecie() {
         try {
+            // Obtener todos los animales de la base de datos
             List<Animal> animales = fAnimal.getFactory().findAll_XML(Animal.class);
             Set<String> especiesUnicas = new HashSet<>();
 
+            // Obtener las especies únicas de los animales
             for (Animal a : animales) {
                 especiesUnicas.add(a.getEspecie());
             }
 
+            // Cargar las especies únicas en el filtro de especies
             comboFiltrarEspecie.getItems().addAll(especiesUnicas);
         } catch (Exception e) {
+            // Manejar excepciones
             LOGGER.log(Level.SEVERE, null, e);
+            // Mostrar un mensaje de error al usuario
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setContentText("Error al cargar el filtro de especies.");
+            alert.showAndWait();
         }
     }
 
+    /**
+     * Carga todas las zonas disponibles en el combo de zonas. Obtiene todas las
+     * zonas de la base de datos y las carga en el combo de zonas.
+     */
     @FXML
     private void cargarComboZona() {
         try {
+            // Obtener todas las zonas de la base de datos
             ObservableList<Zona> todaszonas = FXCollections.observableArrayList(fZona.getFactory().findAll_XML(Zona.class));
-            List<Zona> zonas = FXCollections.observableArrayList(todaszonas);
-            comboZona.getItems().addAll(zonas);
+
+            // Cargar todas las zonas en el combo de zonas
+            comboZona.getItems().addAll(todaszonas);
         } catch (Exception e) {
+            // Manejar excepciones
             LOGGER.log(Level.SEVERE, null, e);
+            // Mostrar un mensaje de error al usuario
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setContentText("Error al cargar el filtro de zonas.");
+            alert.showAndWait();
         }
-
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Carga y filtra los animales por tipo de alimentación. Obtiene los
+     * animales que tienen la alimentación especificada y los muestra en la
+     * tabla.
+     *
+     * @return Una lista observable de animales filtrados por alimentación.
+     */
     @FXML
     private ObservableList<Animal> cargarFiltroAlimentacion() {
         ObservableList<Animal> listaAnimales;
-        List<Animal> FiltradoParam;
-        FiltradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsByFeeding_XML(Animal.class, comboFiltrarAlimentacion.getValue().toString()));
+        List<Animal> filtradoParam;
 
-        listaAnimales = FXCollections.observableArrayList(FiltradoParam);
+        // Obtener los animales filtrados por alimentación
+        filtradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsByFeeding_XML(Animal.class, comboFiltrarAlimentacion.getValue().toString()));
+
+        // Crear una lista observable de animales filtrados
+        listaAnimales = FXCollections.observableArrayList(filtradoParam);
+
+        // Mostrar los animales filtrados en la tabla
         tableAnimal.setItems(listaAnimales);
         tableAnimal.refresh();
+
         return listaAnimales;
     }
 
+    /**
+     * Carga y filtra los animales por especie. Obtiene los animales que
+     * pertenecen a la especie especificada y los muestra en la tabla.
+     *
+     * @return Una lista observable de animales filtrados por especie.
+     */
     @FXML
     private ObservableList<Animal> cargarFiltroEspecie() {
         ObservableList<Animal> listaAnimales;
-        List<Animal> FiltradoParam;
-        FiltradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsBySpecies_XML(Animal.class, comboFiltrarEspecie.getValue().toString()));
+        List<Animal> filtradoParam;
 
-        listaAnimales = FXCollections.observableArrayList(FiltradoParam);
+        // Obtener los animales filtrados por especie
+        filtradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsBySpecies_XML(Animal.class, comboFiltrarEspecie.getValue().toString()));
+
+        // Crear una lista observable de animales filtrados
+        listaAnimales = FXCollections.observableArrayList(filtradoParam);
+
+        // Mostrar los animales filtrados en la tabla
         tableAnimal.setItems(listaAnimales);
         tableAnimal.refresh();
+
         return listaAnimales;
     }
 
+    /**
+     * Carga y filtra los animales por zona. Obtiene los animales que se
+     * encuentran en la zona especificada y los muestra en la tabla.
+     *
+     * @return Una lista observable de animales filtrados por zona.
+     */
     public ObservableList<Animal> cargarFiltroAnimales() {
         ObservableList<Animal> listaAnimales;
         List<Animal> filtradoParam;
+
+        // Obtener los animales filtrados por zona
         filtradoParam = FXCollections.observableArrayList(fAnimal.getFactory().findAnimalsInAnArea_XML(Animal.class, zona.getId_zona().toString()));
+
+        // Crear una lista observable de animales filtrados
         listaAnimales = FXCollections.observableArrayList(filtradoParam);
+
+        // Mostrar los animales filtrados en la tabla
         tableAnimal.setItems(listaAnimales);
         tableAnimal.refresh();
+
+        // Mostrar una alerta si la tabla está vacía
         if (tableAnimal.getItems().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("TABLA VACIA");
             alert.setHeaderText(null);
-            alert.setContentText("No hay ningun animal en esa zona.");
+            alert.setContentText("No hay ningún animal en esa zona.");
             alert.showAndWait();
         }
+
         return listaAnimales;
     }
 
+    /**
+     * Valida los campos del animal antes de realizar la creación o
+     * modificación.
+     *
+     * @return true si los campos son válidos, false si hay algún error de
+     * validación.
+     */
     private boolean validarCamposAnimal() {
         String nombre = txtNombreAnimal.getText();
         String genero = txtGenero.getValue().toString();
@@ -712,26 +809,31 @@ public class AnimalController {
         String alimentacion = comboAlimentacion.getValue().toString();
         String zona = comboZona.getValue().toString();
 
+        //Comprobamos que el nombre no puede tener mas de 20 caracteres y no contiene numeros
         if (nombre.length() > 20 || !nombre.matches("^[^0-9]+$")) {
             mostrarAlerta("Error de validación en el nombre", "El nombre puede tener hasta 20 caracteres y no puede contener números.");
             return false;
         }
 
+        //Comprobamos que el genero solo puede tener los siguientes valores
         if (!genero.equals("Macho") && !genero.equals("Hembra")) {
-            mostrarAlerta("Error de validación en el genero", "El genero solo puede ser macho o hembra.");
+            mostrarAlerta("Error de validación en el género", "El género solo puede ser macho o hembra.");
             return false;
         }
 
+        //Comprobamos que la especie no puede tener mas de 20 caracteres y no contiene numeros
         if (especie.length() > 20 || !especie.matches("^[^0-9]+$")) {
             mostrarAlerta("Error de validación en la especie", "La especie puede tener hasta 20 caracteres y no puede contener números.");
             return false;
         }
 
+        //Comprobamos que la salud solo puede tener los siguientes valores
         if (!salud.equals("SANO") && !salud.equals("ENFERMO")) {
-            mostrarAlerta("Error de validación en salud", "La salud solo puede ser sano o enfermo.");
+            mostrarAlerta("Error de validación en la salud", "La salud solo puede ser sano o enfermo.");
             return false;
         }
 
+        //Comprobamos que lo introducido es un numero entero y esta entre 0 y 500
         try {
             int edadN = Integer.parseInt(edad);
             if (edadN < 0 || edadN > 500) {
@@ -740,39 +842,43 @@ public class AnimalController {
             }
         } catch (NumberFormatException e) {
             LOGGER.log(Level.SEVERE, null, e);
-            mostrarAlerta("Error de validación en la edad", "Solo puedes introcucir numeros enteros.");
+            mostrarAlerta("Error de validación en la edad", "Solo puedes introducir números enteros.");
             return false;
         }
 
+        //Comprobamos que lo introducido es un numero y esta entre 0 y 180000
         try {
-            Float pesoN = Float.parseFloat(peso);
+            float pesoN = Float.parseFloat(peso);
             if (pesoN < 0 || pesoN > 180000) {
-                mostrarAlerta("Error de validación en el peso", "El peso no puede ser superior a 180000kg ni menor a 0.");
+                mostrarAlerta("Error de validación en el peso", "El peso no puede ser superior a 180000 kg ni menor a 0.");
                 return false;
             }
         } catch (NumberFormatException e) {
             LOGGER.log(Level.SEVERE, null, e);
-            mostrarAlerta("Error de validación en el peso", "Solo puedes introcucir numeros.");
+            mostrarAlerta("Error de validación en el peso", "Solo puedes introducir números.");
             return false;
         }
 
+        //Comprobamos que lo introducido es un numero y esta entre 0 y 5
         try {
-            Float alturaN = Float.parseFloat(altura);
+            float alturaN = Float.parseFloat(altura);
             if (alturaN < 0 || alturaN > 5) {
-                mostrarAlerta("Error de validación en la altura", "La altura no puede ser superior a 5m ni menor a 0.");
+                mostrarAlerta("Error de validación en la altura", "La altura no puede ser superior a 5 m ni menor a 0.");
                 return false;
             }
         } catch (NumberFormatException e) {
             LOGGER.log(Level.SEVERE, null, e);
-            mostrarAlerta("Error de validación en la altura", "Solo puedes introcucir numeros.");
+            mostrarAlerta("Error de validación en la altura", "Solo puedes introducir números.");
             return false;
         }
 
+        //Comprobamos que la alimentación solo puede tener los siguientes valores
         if (!alimentacion.equals("HERBIVORO") && !alimentacion.equals("CARNIVORO") && !alimentacion.equals("OMNIVORO")) {
-            mostrarAlerta("Error de validación en la alimentacion", "La alimentacion solo puede ser herbivoro, carnivoro o omnivoro.");
+            mostrarAlerta("Error de validación en la alimentación", "La alimentación solo puede ser herbívoro, carnívoro o omnívoro.");
             return false;
         }
 
+        //Comprobamos que la zona no puede ser nula
         if (zona == null) {
             mostrarAlerta("Error de validación en la zona", "La zona no puede ser nula.");
             return false;
@@ -781,6 +887,7 @@ public class AnimalController {
         return true;
     }
 
+    //Metodo para mostrar alertas
     private void mostrarAlerta(String titulo, String contenido) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
@@ -789,9 +896,12 @@ public class AnimalController {
         alert.showAndWait();
     }
 
+    //Metodo para comprobar si el animal introducido ya existe
     private boolean animalExiste() {
-        // Buscar animal que sea igual a los ya introducidos
+        //Guardamos los animales de la bd en una lista
         List<Animal> listaAnimal = fAnimal.getFactory().findAll_XML(Animal.class);
+        
+        //Guardamos los datos a introducir en un Animal
         Animal animalACorregir = new Animal();
         animalACorregir.setNombre(txtNombreAnimal.getText());
         animalACorregir.setGenero(txtGenero.getValue().toString());
@@ -818,6 +928,7 @@ public class AnimalController {
                 break;
         }
 
+        // Buscar si el animal introducido es igual a alguno de la bd
         for (Animal a : listaAnimal) {
             if (a.getNombre().equals(animalACorregir.getNombre()) && a.getGenero().equals(animalACorregir.getGenero()) && a.getEspecie().equals(animalACorregir.getEspecie()) && a.getSalud().equals(animalACorregir.getSalud()) && a.getEdad().equals(animalACorregir.getEdad()) && a.getPeso().equals(animalACorregir.getPeso()) && a.getAltura().equals(animalACorregir.getAltura()) && a.getAlimentacion().equals(animalACorregir.getAlimentacion())) {
                 return true;

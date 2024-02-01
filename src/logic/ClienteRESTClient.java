@@ -101,12 +101,12 @@ public class ClienteRESTClient implements ClienteInterfaz {
 
     @Override
     public void RecuperarContra_XML(Object requestEntity) throws WebApplicationException {
-        webTarget.path("RecuperarContra").request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+        webTarget.path("recuperarContra").request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
     @Override
     public void RecuperarContra_JSON(Object requestEntity) throws WebApplicationException {
-        webTarget.path("RecuperarContra").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+        webTarget.path("recuperarContra").request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
     @Override
