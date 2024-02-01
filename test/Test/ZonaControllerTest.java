@@ -168,6 +168,11 @@ public class ZonaControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Método de prueba para comprobar la funcionalidad del menú de navegación.
+     *
+     * @author Ander
+     */
     @Test
     public void TestC_comprobar_menubar() {
         clickOn("#menuNavegar");
@@ -175,6 +180,12 @@ public class ZonaControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Método de prueba para verificar si se habilitan los botones y campos
+     * según el tipo de usuario.
+     *
+     * @author Ander
+     */
     @Test
     public void TestD_HabilitarBotones() {
         if (usuario.getTipo_usuario() == Privilegio.ADMIN) {
@@ -195,7 +206,8 @@ public class ZonaControllerTest extends ApplicationTest {
     }
 
     /**
-     * Test user creation.
+     * Método de prueba para crear una nueva zona.
+     *
      */
     @Test
     public void TestE_createZona() {
@@ -217,6 +229,12 @@ public class ZonaControllerTest extends ApplicationTest {
                 zonas.stream().filter(z -> z.getNombre().equals(nombre)).count(), 1);
     }
 
+    /**
+     * Método de prueba para intentar crear una zona que ya existe.
+     *
+     * @author Ander
+     *
+     */
     @Test
     public void TestF_createZonaExiste() {
         int rowCount = tableZona.getItems().size();
@@ -235,6 +253,11 @@ public class ZonaControllerTest extends ApplicationTest {
         assertEquals("No se ha añadido ninguna zona!!", rowCount, tableZona.getItems().size());
     }
 
+    /**
+     * Método de prueba para modificar una zona existente.
+     *
+     * @author Ander
+     */
     @Test
     public void TestG_modifyZona() {
 
@@ -280,6 +303,11 @@ public class ZonaControllerTest extends ApplicationTest {
                 zonas.stream().filter(z -> z.getNombre().equals(modifiedZone.getNombre()) && z.getDescripcion().equals(modifiedZone.getDescripcion())).count(), 1);
     }
 
+    /**
+     * Método de prueba para cancelar la eliminación de una zona.
+     *
+     * @author Ander
+     */
     @Test
     //@Ignore
     public void testH_cancelar_eliminar_zona() {
@@ -304,6 +332,11 @@ public class ZonaControllerTest extends ApplicationTest {
         assertEquals("A row has been deleted!!!", rowCount, tableZona.getItems().size());
     }
 
+    /**
+     * Método de prueba para eliminar una zona.
+     *
+     * @author Ander
+     */
     @Test
     public void testI_deleteZona() {
         // Verificar que la tabla tenga al menos una fila
@@ -329,6 +362,11 @@ public class ZonaControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Método de prueba para filtrar zonas por nombre.
+     *
+     * @author Ander
+     */
     @Test
     public void testJ_FiltrarNombre() {
         clickOn(comboFiltrar);
@@ -348,6 +386,11 @@ public class ZonaControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Método de prueba para filtrar zonas por tipo de animal.
+     *
+     * @author Ander
+     */
     @Test
     public void testK_FiltrarTipoAnimal() {
         txtFiltrar.clear();
@@ -368,6 +411,11 @@ public class ZonaControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Método de prueba para probar la validación de campos al crear una zona.
+     *
+     * @author Ander
+     */
     @Test
     public void testL_ProbrarErroresCampos() {
         txtFiltrar.clear();

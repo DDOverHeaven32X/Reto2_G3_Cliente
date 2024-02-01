@@ -293,6 +293,11 @@ public class RegistroController {
         }
     }
 
+    /**
+     * Este método altera la visibilidad del PIN de la contraseña.
+     *
+     * @param event Evento que desencadena la acción de revelar el PIN.
+     */
     private void revelarPin(MouseEvent event) {
         if (psw_pin.isVisible()) {
             psw_pin.setDisable(true);

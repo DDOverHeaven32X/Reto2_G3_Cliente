@@ -34,11 +34,11 @@ import model.Usuario;
  * @author Adrian
  */
 public class RecuperarContrasenaController {
-    
+
     private Usuario user;
-    
+
     private Stage stage;
-    
+
     private final ClienteFactoria clienfac = new ClienteFactoria();
 
     @FXML
@@ -51,8 +51,6 @@ public class RecuperarContrasenaController {
     private static final String patronEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,300}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(patronEmail);
 
-    
-    
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -68,8 +66,18 @@ public class RecuperarContrasenaController {
         btn_cancelar.setOnAction(this::cerrarVentana);
         btn_enviar.setOnAction(this::sendMail);
         stage.show();
-        
+
     }
+
+    /**
+     * Este método maneja el evento de enviar el correo electrónico para
+     * recuperar la contraseña.
+     *
+     * @param actionevent El evento de acción que desencadena el envío del
+     * correo electrónico.
+     *
+     * @author Diego
+     */
     private void sendMail(ActionEvent actionevent) {
         if (txt_email.getText().trim().length() >= 40) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -106,13 +114,12 @@ public class RecuperarContrasenaController {
                 return;
             }
         }
-        
+
         //Si todo sale bien
         Cliente clieNew = new Cliente();
         clieNew.setLogin(txt_email.getText());
         clienfac.getFactory().RecuperarContra_XML(clieNew);
-        
-        
+
         /*clieNew.setContraseña(contra_crypt_hex);
         clieNew.setId_user(user.getId_user());
         clieNew.setCod_postal(cli.getCod_postal());
@@ -126,7 +133,11 @@ public class RecuperarContrasenaController {
         clienfac.getFactory().cambiarContra_XML(clieNew);*/
     }
 
-     
+    /**
+     * Este método maneja el evento de cierre de la ventana.
+     *
+     * @author Diego
+     */
     private void cerrarVentana(Event event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -139,8 +150,9 @@ public class RecuperarContrasenaController {
         if (answer.get() == ButtonType.OK) {
             stage.close();
         }
-            
+
     }
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -148,5 +160,5 @@ public class RecuperarContrasenaController {
     public void setUser(Usuario user) {
         this.user = user;
     }
-    
+
 }

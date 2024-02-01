@@ -25,7 +25,7 @@ import model.Usuario;
 /**
  * FXML Controller class
  *
- * @author 2dam
+ * @author Diego, Ander, Adrian
  */
 public class MenuBarController {
 
@@ -58,6 +58,11 @@ public class MenuBarController {
     @FXML
     private Menu menuCerrarSesion;
 
+    /**
+     * Acción del menú para ver la ventana de administración de animales.
+     *
+     * @param event Evento que desencadena la acción.
+     */
     @FXML
     private void miAnimales(ActionEvent event) {
 
@@ -75,6 +80,11 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * Acción del menú para ver la ventana de administración de zonas.
+     *
+     * @param event Evento que desencadena la acción.
+     */
     @FXML
     private void miZonas(ActionEvent event) {
         try {
@@ -90,6 +100,11 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * Acción del menú para ver la ventana de administración de entradas.
+     *
+     * @param event Evento que desencadena la acción.
+     */
     @FXML
     private void miEntradas(ActionEvent event) {
         try {
@@ -106,6 +121,11 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * Acción del menú para volver a la ventana principal.
+     *
+     * @param event Evento que desencadena la acción.
+     */
     @FXML
     private void miPrincipal(ActionEvent event) {
         try {
@@ -122,6 +142,12 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * Acción del menú para cerrar la sesión actual y volver a la ventana de
+     * inicio de sesión.
+     *
+     * @param event Evento que desencadena la acción.
+     */
     @FXML
     private void miSesión(ActionEvent event) {
         try {
@@ -148,6 +174,12 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * Acción del menú para acceder a la sección de ayuda según la ventana
+     * actual.
+     *
+     * @param event Evento que desencadena la acción.
+     */
     @FXML
     private void miAyuda(ActionEvent event) {
         try {
@@ -184,10 +216,20 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * Establece el usuario actual en el controlador de la barra de menú.
+     *
+     * @param user Usuario actual.
+     */
     public void setUser(Usuario user) {
         this.user = user;
     }
 
+    /**
+     * Establece el cliente actual en el controlador de la barra de menú.
+     *
+     * @param clien Cliente actual.
+     */
     public void setClien(Cliente clien) {
         this.clien = clien;
     }
