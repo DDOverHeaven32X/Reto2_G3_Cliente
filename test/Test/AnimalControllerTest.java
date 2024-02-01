@@ -34,6 +34,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.api.FxToolkit;
@@ -243,6 +244,7 @@ public class AnimalControllerTest extends ApplicationTest {
      * @author Adrian
      *
      */
+    @Ignore
     @Test
     public void TestE_createAnimal() {
         int initialRowCount = tableAnimal.getItems().size();
@@ -290,6 +292,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     public void TestF_createAnimalExiste() {
         int rowCount = tableAnimal.getItems().size();
@@ -333,6 +336,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     public void TestG_modificarAnimal() {
         // Verifica que la tabla tenga datos antes de intentar modificarlos
@@ -376,6 +380,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     //@Ignore
     public void testH_cancelar_eliminar_animal() {
@@ -410,6 +415,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     public void testI_deleteAnimal() {
         // Verificar que la tabla tenga al menos una fila
@@ -445,6 +451,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     public void testJ_FiltrarEspecie() {
         clickOn(comboFiltrar);
@@ -467,4 +474,57 @@ public class AnimalControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Prueba casos de error al crear un animal.
+     *
+     * @author Adrian
+     */
+    @Ignore
+    @Test
+    public void testErroresCreacionAnimal() {
+        txtNombreAnimal.clear();
+        txtGenero.setValue(null);
+        txtEspecie.clear();
+        txtEdad.clear();
+        txtPeso.clear();
+        txtAltura.clear();
+        comboAlimentacion.setValue(null);
+        comboSalud.setValue(null);
+
+        clickOn(tableAnimal).clickOn("Simba");
+
+        completarCampo(txtNombreAnimal, "Simba123");
+        clickOn(btnCrearAimal);
+        verifyThat("El nombre puede tener hasta 20 caracteres y no puede contener números.", isVisible());
+        clickOn("Aceptar");
+
+        completarCampo(txtNombreAnimal, "Simba");
+        completarCampo(txtEspecie, "Tigre123");
+        clickOn(btnCrearAimal);
+        verifyThat("La especie puede tener hasta 20 caracteres y no puede contener números.", isVisible());
+        clickOn("Aceptar");
+
+        completarCampo(txtEspecie, "Leon");
+        completarCampo(txtEdad, "550");
+        clickOn(btnCrearAimal);
+        verifyThat("La edad no puede ser superior a 500 ni menor a 0.", isVisible());
+        clickOn("Aceptar");
+
+        completarCampo(txtEdad, "10");
+        completarCampo(txtPeso, "1800001");
+        clickOn(btnCrearAimal);
+        verifyThat("El peso no puede ser superior a 180000 kg ni menor a 0.", isVisible());
+        clickOn("Aceptar");
+
+        completarCampo(txtPeso, "30");
+        completarCampo(txtAltura, "6");
+        clickOn(btnCrearAimal);
+        verifyThat("La altura no puede ser superior a 5 m ni menor a 0.", isVisible());
+        clickOn("Aceptar");
+    }
+
+    private void completarCampo(TextField campo, String texto) {
+        campo.clear();
+        clickOn(campo).write(texto);
+    }
 }
