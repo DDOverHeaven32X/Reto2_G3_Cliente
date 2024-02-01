@@ -362,7 +362,7 @@ public class EntradaController {
         try {
             // Conversiones necesarias para hacer la inserción
             if (!validacionesCampos()) {
-                throw new IncorrectPatternException("Error en el patron de algun campo!");
+
             } else {
 
                 String precio = txtPrecioEntrada.getText();
@@ -401,9 +401,6 @@ public class EntradaController {
 
         } catch (CreateException ex) {
             LOGGER.severe(ex.getMessage());
-        } catch (IncorrectPatternException ex) {
-            Logger.getLogger(EntradaController.class.getName()).log(Level.SEVERE, null, ex);
-
         }
     }
 
@@ -427,8 +424,12 @@ public class EntradaController {
 
     /**
      * Método que valida si los campos no están vacios o contienen datos erronos
+     *
+     * @return
      */
     public boolean validacionesCampos() {
+
+        // Verificar campos vacíos
         boolean validacionesExitosas = true;
 
         // Verificar campos vacíos
@@ -440,30 +441,33 @@ public class EntradaController {
             alert.setContentText("Antes de realizar una acción, asegúrate de no dejar ningún campo vacío.");
 
             Optional<ButtonType> answer = alert.showAndWait();
-            
-
+            validacionesExitosas = false;  // Cambio: no se seguirá ejecutando el código después de esto
+            return validacionesExitosas;  // Cambio: salir del método aquí
         } else {
             // Si no hay campos vacíos, validar patrones
             try {
                 Double precio = Double.parseDouble(txtPrecioEntrada.getText());
                 if (precio <= 0 || precio >= 100) {
-                    mostrarAlerta("Error de Validación", "El precio de entrada debe estar entre 0 y 100, ambos no icluidos.");
+                    mostrarAlerta("Error de Validación", "El precio de entrada debe estar entre 0 y 100, ambos no incluidos.");
                     txtPrecioEntrada.setText("");
+                    dtpFecha.setValue(null);
+                    comboEntrada.setValue(null);
                     validacionesExitosas = false;
-                   
                 }
             } catch (NumberFormatException e) {
                 mostrarAlerta("Error de Validación", "Has introducido caracteres no válidos en el campo de Precio de Entrada.");
                 txtPrecioEntrada.setText("");
+                dtpFecha.setValue(null);
+                comboEntrada.setValue(null);
                 validacionesExitosas = false;
-                
             }
 
             if (dtpFecha.getValue() != null && dtpFecha.getValue().isBefore(java.time.LocalDate.now())) {
                 mostrarAlerta("Error de Validación", "No puedes ingresar fechas anteriores a la actual.");
+                txtPrecioEntrada.setText("");
                 dtpFecha.setValue(null);
+                comboEntrada.setValue(null);
                 validacionesExitosas = false;
-               
             }
         }
 
