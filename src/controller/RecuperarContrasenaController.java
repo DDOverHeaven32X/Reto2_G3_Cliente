@@ -168,22 +168,7 @@ public class RecuperarContrasenaController {
         }
 
 
-        //Si todo sale bien
-        Cliente clieNew = new Cliente();
-        clieNew.setLogin(txt_email.getText());
-        clienfac.getFactory().RecuperarContra_XML(clieNew);
-
-        /*clieNew.setContraseña(contra_crypt_hex);
-        clieNew.setId_user(user.getId_user());
-        clieNew.setCod_postal(cli.getCod_postal());
-        clieNew.setDireccion(cli.getDireccion());
-        clieNew.setLogin(cli.getLogin());
-        clieNew.setNombre_completo(cli.getNombre_completo());
-        clieNew.setTelefono(cli.getTelefono());
-        clieNew.setTipo_usuario(cli.getTipo_usuario());
-        clieNew.setN_tarjeta(cli.getN_tarjeta());
-        clieNew.setPin(cli.getPin());
-        clienfac.getFactory().cambiarContra_XML(clieNew);*/
+        
 
     }
 
