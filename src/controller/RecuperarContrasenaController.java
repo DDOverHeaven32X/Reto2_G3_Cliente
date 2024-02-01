@@ -6,6 +6,7 @@
 package controller;
 
 import chiper.Asimetricocliente;
+import static controller.RegistroController.LOGGER;
 import exception.UserNotFoundException;
 import java.net.URL;
 import java.security.PublicKey;
@@ -60,8 +61,6 @@ public class RecuperarContrasenaController {
     private static final String patronEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,300}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(patronEmail);
 
-    private static final Logger LOGGER = Logger.getLogger("/controller/RecuperarContrasenaController");
-
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -79,6 +78,17 @@ public class RecuperarContrasenaController {
         stage.show();
 
     }
+
+
+    /**
+     * Este método maneja el evento de enviar el correo electrónico para
+     * recuperar la contraseña.
+     *
+     * @param actionevent El evento de acción que desencadena el envío del
+     * correo electrónico.
+     *
+     * @author Diego
+     */
 
     private void sendMail(ActionEvent actionevent) {
         try {
@@ -157,7 +167,31 @@ public class RecuperarContrasenaController {
             LOGGER.severe("Patrón erroneo");
         }
 
+
+        //Si todo sale bien
+        Cliente clieNew = new Cliente();
+        clieNew.setLogin(txt_email.getText());
+        clienfac.getFactory().RecuperarContra_XML(clieNew);
+
+        /*clieNew.setContraseña(contra_crypt_hex);
+        clieNew.setId_user(user.getId_user());
+        clieNew.setCod_postal(cli.getCod_postal());
+        clieNew.setDireccion(cli.getDireccion());
+        clieNew.setLogin(cli.getLogin());
+        clieNew.setNombre_completo(cli.getNombre_completo());
+        clieNew.setTelefono(cli.getTelefono());
+        clieNew.setTipo_usuario(cli.getTipo_usuario());
+        clieNew.setN_tarjeta(cli.getN_tarjeta());
+        clieNew.setPin(cli.getPin());
+        clienfac.getFactory().cambiarContra_XML(clieNew);*/
+
     }
+
+    /**
+     * Este método maneja el evento de cierre de la ventana.
+     *
+     * @author Diego
+     */
 
     private void cerrarVentana(Event event) {
         Node source = (Node) event.getSource();

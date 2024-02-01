@@ -75,6 +75,12 @@ public class ConfirmarCompraController {
 
     private static final Logger LOGGER = Logger.getLogger("/controller/ConfirmarCompraController");
 
+    /**
+     * Inicializa la ventana de confirmación de compra.
+     *
+     * @param root La raíz del nodo de la ventana.
+     * @param user El usuario que realiza la compra.
+     */
     public void initiStage(Parent root, Usuario user) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -98,7 +104,11 @@ public class ConfirmarCompraController {
         //
     }
 
-    //Método para cerrar la ventana si no se desea comprar
+    /**
+     * Maneja el evento para salir de la ventana de confirmación.
+     *
+     * @param event El evento de acción que desencadena el cierre de la ventana.
+     */
     @FXML
     public void exitHandler(ActionEvent event) {
         Node source = (Node) event.getSource();
@@ -114,7 +124,11 @@ public class ConfirmarCompraController {
         }
     }
 
-    //Método que realiza la compra de una entrada mediante el id de la entrada y del cliente
+    /**
+     * Maneja el evento de compra de entrada.
+     *
+     * @param event El evento de acción que desencadena la compra de la entrada.
+     */
     @FXML
     public void comprarEntradaHandler(ActionEvent event) {
         //Datos de prueba: "5432123146788766", "7654"
@@ -198,18 +212,38 @@ public class ConfirmarCompraController {
 
     }
 
+    /**
+     * Establece el escenario de la ventana.
+     *
+     * @param stage El escenario de la ventana.
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Establece el usuario que realiza la compra.
+     *
+     * @param user El usuario que realiza la compra.
+     */
     public void setUser(Usuario user) {
         this.user = user;
     }
 
+    /**
+     * Establece el cliente que realiza la compra.
+     *
+     * @param client El cliente que realiza la compra.
+     */
     public void setClient(Cliente client) {
         this.client = client;
     }
 
+    /**
+     * Establece la entrada que se va a comprar.
+     *
+     * @param entr La entrada que se va a comprar.
+     */
     public void setEntr(Entrada entr) {
         this.entr = entr;
     }

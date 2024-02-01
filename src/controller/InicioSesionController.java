@@ -216,7 +216,7 @@ public class InicioSesionController {
                     client.setN_tarjeta(cliente.getN_tarjeta());
                     client.setPin(cliente.getPin());
                 }
-                
+
                 //Abre la ventana de Principal y pasa el dato del usuario a la ventana principal
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Principal.fxml"));
                 Parent root = loader.load();
@@ -329,9 +329,16 @@ public class InicioSesionController {
             LOGGER.log(Level.SEVERE, "Error al cargar la nueva vista", ex);
         }
     }
-    private void recuperarContraseñaHandler(){
+
+    /**
+     * Este método maneja el evento de hacer clic en el enlace de "Recuperar
+     * contraseña".
+     *
+     * @author Ander
+     */
+    private void recuperarContraseñaHandler() {
         try {
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/RecuperarContrasena.fxml"));
             Parent root = loader.load();
 

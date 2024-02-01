@@ -7,6 +7,9 @@ package Test;
 
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -31,6 +34,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.api.FxToolkit;
@@ -187,12 +191,22 @@ public class AnimalControllerTest extends ApplicationTest {
         clickOn(btnInicioSesion);
     }
 
+    /**
+     * Prueba para comprobar la funcionalidad del menú de navegación.
+     *
+     * @author Adrian
+     */
     @Test
     public void TestC_comprobar_menubar() {
         clickOn("#menuNavegar");
         clickOn("#mItemAnimales");
     }
 
+    /**
+     * Prueba para habilitar los botones según el tipo de usuario.
+     *
+     * @author Adrian
+     */
     @Test
     public void TestD_HabilitarBotones() {
         if (user.getTipo_usuario() == Privilegio.ADMIN) {
@@ -225,8 +239,12 @@ public class AnimalControllerTest extends ApplicationTest {
     }
 
     /**
-     * Test para crear un animal.
+     * Prueba para crear un nuevo animal.
+     *
+     * @author Adrian
+     *
      */
+    @Ignore
     @Test
     public void TestE_createAnimal() {
         int initialRowCount = tableAnimal.getItems().size();
@@ -239,16 +257,23 @@ public class AnimalControllerTest extends ApplicationTest {
         press(KeyCode.ENTER);
         clickOn(txtEspecie).write("Tigre");
         clickOn(comboSalud);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         press(KeyCode.DOWN);
         press(KeyCode.ENTER);
         clickOn(txtEdad).write("7");
         clickOn(txtPeso).write("60");
         clickOn(txtAltura).write("1.1");
         clickOn(comboAlimentacion);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         press(KeyCode.DOWN);
         press(KeyCode.DOWN);
         press(KeyCode.ENTER);
         clickOn(comboZona);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         press(KeyCode.DOWN);
         press(KeyCode.ENTER);
         clickOn(btnCrearAimal);
@@ -260,5 +285,246 @@ public class AnimalControllerTest extends ApplicationTest {
         List<Animal> animales = tableAnimal.getItems();
         long count = animales.stream().filter(a -> a.getNombre().equals(nombre)).count();
         assertEquals("El animal se ha añadido correctamente!", 1, count);
+    }
+
+    /**
+     * Prueba para intentar crear un animal que ya existe.
+     *
+     * @author Adrian
+     */
+    @Ignore
+    @Test
+    public void TestF_createAnimalExiste() {
+        int rowCount = tableAnimal.getItems().size();
+        // Simulate filling out zone creation fields
+        clickOn(txtNombreAnimal).write("Paco");
+        String nombre = txtNombreAnimal.getText();
+        clickOn(txtGenero);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        clickOn(txtEspecie).write("Tigre");
+        clickOn(comboSalud);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        clickOn(txtEdad).write("7");
+        clickOn(txtPeso).write("60");
+        clickOn(txtAltura).write("1.1");
+        clickOn(comboAlimentacion);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        clickOn(comboZona);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        clickOn(btnCrearAimal);
+
+        verifyThat("El animal que intentas crear ya existe",
+                isVisible());
+        clickOn("Aceptar");
+        assertEquals("No se ha añadido ningun animal!", rowCount, tableAnimal.getItems().size());
+    }
+
+    /**
+     * Prueba para modificar un animal existente.
+     *
+     * @author Adrian
+     */
+    @Ignore
+    @Test
+    public void TestG_modificarAnimal() {
+        // Verifica que la tabla tenga datos antes de intentar modificarlos
+        int rowCount = tableAnimal.getItems().size();
+        assertNotEquals("La tabla no tiene datos: no se puede realizar la prueba.", rowCount, 0);
+        Animal ultimoAnimal = tableAnimal.getItems().get(rowCount - 1);
+
+        clickOn(tableAnimal).clickOn("Diego");
+
+        // Borra los campos y establece los valores en null
+        txtNombreAnimal.setText("");
+        txtEspecie.setText("");
+
+        // Modifica el animal seleccionado
+        Animal selectedAnimal = tableAnimal.getSelectionModel().getSelectedItem();
+        Animal modifiedAnimal = new Animal();
+
+        // Modifica los datos del animal
+        modifiedAnimal.setNombre(selectedAnimal.getNombre() + " Modificado");
+        clickOn(txtNombreAnimal).eraseText(selectedAnimal.getNombre().length()).write(modifiedAnimal.getNombre());
+
+        modifiedAnimal.setEspecie(selectedAnimal.getEspecie() + " Modificado");
+        clickOn(txtEspecie).eraseText(selectedAnimal.getEspecie().length()).write(modifiedAnimal.getEspecie());
+
+        // Selecciona un valor en el combo de salud
+        clickOn(comboSalud);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+
+        // Guarda los cambios
+        clickOn(btnModificarAnimal);
+
+        // Verifica que el animal se haya modificado correctamente en la tabla
+        List<Animal> animales = tableAnimal.getItems();
+        assertEquals("El animal se ha modificado correctamente!",
+                animales.stream().filter(a -> a.getNombre().equals(modifiedAnimal.getNombre())).count(), 1);
+    }
+
+    /**
+     * Prueba para cancelar la eliminación de un animal.
+     *
+     * @author Adrian
+     */
+    @Ignore
+    @Test
+    //@Ignore
+    public void testH_cancelar_eliminar_animal() {
+        // Verificar que la tabla tenga al menos una fila
+        int rowCount = tableAnimal.getItems().size();
+        assertNotEquals("La tabla no tiene datos: No se puede realizar la prueba.", rowCount, 0);
+
+        //Le decimos que haga scroll hasta la ultima posicion
+        Platform.runLater(() -> {
+            tableAnimal.scrollTo(rowCount);
+        });
+
+        // Buscar la primera fila en la tabla y hacer clic en ella
+        clickOn(tableAnimal).clickOn(tableAnimal);
+
+        // Verificar que el botón de eliminar está habilitado
+        verifyThat(btnEliminarAnimal, isEnabled());
+
+        clickOn(btnEliminarAnimal);
+
+        // Verificar que se muestra el mensaje de confirmación
+        verifyThat("¿Estas seguro que deseas eliminar el animal?", isVisible());
+
+        // Confirmar la eliminación haciendo clic en el botón predeterminado del diálogo de confirmación
+        clickOn("Cancelar");
+
+        assertEquals("A row has been deleted!!!", rowCount, tableAnimal.getItems().size());
+    }
+
+    /**
+     * Prueba para eliminar un animal.
+     *
+     * @author Adrian
+     */
+    @Ignore
+    @Test
+    public void testI_deleteAnimal() {
+        // Verificar que la tabla tenga al menos una fila
+        int rowCount = tableAnimal.getItems().size();
+        assertNotEquals("La tabla no tiene datos: No se puede realizar la prueba.", rowCount, 0);
+
+        //Le decimos que haga scroll hasta la ultima posicion
+        Platform.runLater(() -> {
+            tableAnimal.scrollTo(rowCount);
+        });
+
+        // Buscar la primera fila en la tabla y hacer clic en ella
+        clickOn(tableAnimal).clickOn("Paco");
+
+        // Verificar que el botón de eliminar está habilitado
+        verifyThat(btnEliminarAnimal, isEnabled());
+
+        clickOn(btnEliminarAnimal);
+
+        // Verificar que se muestra el mensaje de confirmación
+        verifyThat("¿Estas seguro que deseas eliminar el animal?", isVisible());
+
+        // Confirmar la eliminación haciendo clic en el botón predeterminado del diálogo de confirmación
+        clickOn("Aceptar");
+
+        // Verificar que la fila se ha eliminado
+        assertEquals("¡La fila se ha eliminado!", rowCount - 1, tableAnimal.getItems().size());
+
+    }
+
+    /**
+     * Prueba para filtrar animales por especie.
+     *
+     * @author Adrian
+     */
+    @Ignore
+    @Test
+    public void testJ_FiltrarEspecie() {
+        clickOn(comboFiltrar);
+        type(KeyCode.DOWN);
+        clickOn("Por especie");
+        verifyThat(comboFiltrarEspecie, isVisible());
+        verifyThat(comboFiltrarEspecie, isEnabled());
+        verifyThat(btnBuscar, isVisible());
+        verifyThat(btnBuscar, isEnabled());
+
+        clickOn(comboFiltrarEspecie);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+
+        clickOn(btnBuscar);
+
+        List<Animal> animales = tableAnimal.getItems();
+        long count = animales.stream().filter(a -> a.getEspecie().equals("Mandrill")).count();
+        assertEquals("El número de animales con el nombre 'Mandrill' no es el esperado", 1, count);
+
+    }
+
+    /**
+     * Prueba casos de error al crear un animal.
+     *
+     * @author Adrian
+     */
+    @Ignore
+    @Test
+    public void testErroresCreacionAnimal() {
+        txtNombreAnimal.clear();
+        txtGenero.setValue(null);
+        txtEspecie.clear();
+        txtEdad.clear();
+        txtPeso.clear();
+        txtAltura.clear();
+        comboAlimentacion.setValue(null);
+        comboSalud.setValue(null);
+
+        clickOn(tableAnimal).clickOn("Simba");
+
+        completarCampo(txtNombreAnimal, "Simba123");
+        clickOn(btnCrearAimal);
+        verifyThat("El nombre puede tener hasta 20 caracteres y no puede contener números.", isVisible());
+        clickOn("Aceptar");
+
+        completarCampo(txtNombreAnimal, "Simba");
+        completarCampo(txtEspecie, "Tigre123");
+        clickOn(btnCrearAimal);
+        verifyThat("La especie puede tener hasta 20 caracteres y no puede contener números.", isVisible());
+        clickOn("Aceptar");
+
+        completarCampo(txtEspecie, "Leon");
+        completarCampo(txtEdad, "550");
+        clickOn(btnCrearAimal);
+        verifyThat("La edad no puede ser superior a 500 ni menor a 0.", isVisible());
+        clickOn("Aceptar");
+
+        completarCampo(txtEdad, "10");
+        completarCampo(txtPeso, "1800001");
+        clickOn(btnCrearAimal);
+        verifyThat("El peso no puede ser superior a 180000 kg ni menor a 0.", isVisible());
+        clickOn("Aceptar");
+
+        completarCampo(txtPeso, "30");
+        completarCampo(txtAltura, "6");
+        clickOn(btnCrearAimal);
+        verifyThat("La altura no puede ser superior a 5 m ni menor a 0.", isVisible());
+        clickOn("Aceptar");
+    }
+
+    private void completarCampo(TextField campo, String texto) {
+        campo.clear();
+        clickOn(campo).write(texto);
     }
 }

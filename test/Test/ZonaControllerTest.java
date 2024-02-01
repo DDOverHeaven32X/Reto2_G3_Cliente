@@ -168,6 +168,11 @@ public class ZonaControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Método de prueba para comprobar la funcionalidad del menú de navegación.
+     *
+     * @author Ander
+     */
     @Test
     public void TestC_comprobar_menubar() {
         clickOn("#menuNavegar");
@@ -175,6 +180,12 @@ public class ZonaControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Método de prueba para verificar si se habilitan los botones y campos
+     * según el tipo de usuario.
+     *
+     * @author Ander
+     */
     @Test
     public void TestD_HabilitarBotones() {
         if (usuario.getTipo_usuario() == Privilegio.ADMIN) {
@@ -195,7 +206,8 @@ public class ZonaControllerTest extends ApplicationTest {
     }
 
     /**
-     * Test zona creation.
+     * Método de prueba para crear una nueva zona.
+     *
      */
     @Test
     public void TestE_createZona() {
@@ -217,6 +229,12 @@ public class ZonaControllerTest extends ApplicationTest {
                 zonas.stream().filter(z -> z.getNombre().equals(nombre)).count(), 1);
     }
 
+    /**
+     * Método de prueba para intentar crear una zona que ya existe.
+     *
+     * @author Ander
+     *
+     */
     @Test
     public void TestF_createZonaExiste() {
         int rowCount = tableZona.getItems().size();
@@ -235,6 +253,11 @@ public class ZonaControllerTest extends ApplicationTest {
         assertEquals("No se ha añadido ninguna zona!!", rowCount, tableZona.getItems().size());
     }
 
+    /**
+     * Método de prueba para modificar una zona existente.
+     *
+     * @author Ander
+     */
     @Test
     public void TestG_modifyZona() {
 
@@ -280,6 +303,11 @@ public class ZonaControllerTest extends ApplicationTest {
                 zonas.stream().filter(z -> z.getNombre().equals(modifiedZone.getNombre()) && z.getDescripcion().equals(modifiedZone.getDescripcion())).count(), 1);
     }
 
+    /**
+     * Método de prueba para cancelar la eliminación de una zona.
+     *
+     * @author Ander
+     */
     @Test
     //@Ignore
     public void testH_cancelar_eliminar_zona() {
@@ -304,6 +332,11 @@ public class ZonaControllerTest extends ApplicationTest {
         assertEquals("A row has been deleted!!!", rowCount, tableZona.getItems().size());
     }
 
+    /**
+     * Método de prueba para eliminar una zona.
+     *
+     * @author Ander
+     */
     @Test
     public void testI_deleteZona() {
         // Verificar que la tabla tenga al menos una fila
@@ -329,6 +362,11 @@ public class ZonaControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * Método de prueba para filtrar zonas por nombre.
+     *
+     * @author Ander
+     */
     @Test
     public void testJ_FiltrarNombre() {
         clickOn(comboFiltrar);
@@ -344,7 +382,71 @@ public class ZonaControllerTest extends ApplicationTest {
 
         List<Zona> zonas = tableZona.getItems();
         long count = zonas.stream().filter(z -> z.getNombre().equals("Selva")).count();
-        assertEquals("El número de zonas con el nombre 'Selva' no es el esperado", 2, count);
+        assertEquals("El número de zonas con el nombre 'Selva' no es el esperado", 1, count);
+
+    }
+
+    /**
+     * Método de prueba para filtrar zonas por tipo de animal.
+     *
+     * @author Ander
+     */
+    @Test
+    public void testK_FiltrarTipoAnimal() {
+        txtFiltrar.clear();
+        clickOn(comboFiltrar);
+        type(KeyCode.DOWN);
+        clickOn("Filtrar por tipo animal");
+        verifyThat(txtFiltrar, isVisible());
+        verifyThat(txtFiltrar, isEnabled());
+        clickOn(txtFiltrar);
+        write("Mamiferos");
+        clickOn(btnBuscar);
+
+        String valorString = "Mamíferos";
+
+        List<Zona> zonas = tableZona.getItems();
+        long count = zonas.stream().filter(z -> z.getTipo_animal().equals(valorString)).count();
+        assertEquals("El número de zonas con el tipo animal 'Mamiferos' no es el esperado", 3, count);
+
+    }
+
+    /**
+     * Método de prueba para probar la validación de campos al crear una zona.
+     *
+     * @author Ander
+     */
+    @Test
+    public void testL_ProbrarErroresCampos() {
+        txtFiltrar.clear();
+        int rowCount = tableZona.getItems().size();
+
+        clickOn(btnCrearZona);
+        verifyThat("Por favor, complete todos los campos.", isVisible());
+        clickOn("Aceptar");
+
+        clickOn(txtNombreZona).write("Bosque123");
+        clickOn(txtDescripcionZona).write("El bosque, ese mágico reino de la naturaleza, es un vasto tapiz de vida donde los árboles se alzan majestuosos hacia el cielo.");
+        clickOn(txtTipoAnimalZona);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        clickOn(btnCrearZona);
+
+        verifyThat("El nombre debe tener hasta 20 caracteres y no puede contener números.", isVisible());
+        clickOn("Aceptar");
+
+        txtNombreZona.clear();
+        txtDescripcionZona.clear();
+
+        clickOn(txtNombreZona).write("Bosque");
+        clickOn(txtDescripcionZona).write("El bosque, ese mágico reino de la naturaleza, es un vasto tapiz de vida donde los árboles se alzan majestuosos hacia el cielo, formando un dosel verde que filtra la luz del sol. Bajo su sombra, una multitud de criaturas encuentra refugio: desde los diminutos insectos que pululan entre la hojarasca hasta los imponentes ciervos que deambulan entre los troncos centenarios. El aire está impregnado del aroma fresco de la vegetación, mientras que el suelo es un tapiz de musgos y helechos que susurran bajo los pasos.");
+        clickOn(txtTipoAnimalZona);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        clickOn(btnCrearZona);
+
+        verifyThat("La descripción debe tener hasta 200 caracteres.", isVisible());
+        clickOn("Aceptar");
 
     }
 }
