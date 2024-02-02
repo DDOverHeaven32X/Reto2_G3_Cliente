@@ -15,8 +15,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
+ * Controlador que carga la ventana del controlador de ayuda de Zona
  *
- * @author 2dam
+ * @author Ander
  */
 public class AyudaZonaController {
 
@@ -29,7 +30,6 @@ public class AyudaZonaController {
 
     public void initStage(Parent root) {
 
-        //init the scene with the root you got from singInController
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);

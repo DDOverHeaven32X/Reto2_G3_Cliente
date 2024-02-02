@@ -61,6 +61,11 @@ public class RecuperarContrasenaController {
     private static final String patronEmail = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,300}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(patronEmail);
 
+    /**
+     * Método que inicializa la ventana con sus valores predeterminados
+     *
+     * @param root
+     */
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -79,7 +84,6 @@ public class RecuperarContrasenaController {
 
     }
 
-
     /**
      * Este método maneja el evento de enviar el correo electrónico para
      * recuperar la contraseña.
@@ -89,7 +93,6 @@ public class RecuperarContrasenaController {
      *
      * @author Diego
      */
-
     private void sendMail(ActionEvent actionevent) {
         try {
             if (txt_email.getText().trim().length() >= 40) {
@@ -131,15 +134,16 @@ public class RecuperarContrasenaController {
             //Si todo sale bien
             List<Usuario> listaUser;
             listaUser = userfac.getFactory().findLogin_XML(Usuario.class, txt_email.getText());
-
+            //Comprueba si existe un usuario con el correo introducido
             if (listaUser.isEmpty()) {
                 throw new UserNotFoundException();
             }
+            //Si existe recupera el cliente con dicho producto
             Cliente clieNew = new Cliente();
 
             clieNew.setLogin(txt_email.getText());
             Cliente cli = clienfac.getFactory().find_XML(Cliente.class, listaUser.get(0).getId_user().toString());
-
+            //Setea todos sus datos
             clieNew.setId_user(cli.getId_user());
             clieNew.setCod_postal(cli.getCod_postal());
             clieNew.setDireccion(cli.getDireccion());
@@ -149,7 +153,7 @@ public class RecuperarContrasenaController {
             clieNew.setTipo_usuario(cli.getTipo_usuario());
             clieNew.setN_tarjeta(cli.getN_tarjeta());
             clieNew.setPin(cli.getPin());
-
+            //Realiza el envio de correo y cambia la contraseña
             clienfac.getFactory().RecuperarContra_XML(clieNew);
             clienfac.getFactory().cambiarContra_XML(clieNew);
 
@@ -167,9 +171,6 @@ public class RecuperarContrasenaController {
             LOGGER.severe("Patrón erroneo");
         }
 
-
-        
-
     }
 
     /**
@@ -177,7 +178,6 @@ public class RecuperarContrasenaController {
      *
      * @author Diego
      */
-
     private void cerrarVentana(Event event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -193,10 +193,20 @@ public class RecuperarContrasenaController {
 
     }
 
+    /**
+     * Setter de stage
+     *
+     * @param stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Setter de user
+     *
+     * @param user
+     */
     public void setUser(Usuario user) {
         this.user = user;
     }

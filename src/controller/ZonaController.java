@@ -65,7 +65,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * eliminar zonas. También proporciona funcionalidad para filtrar y generar
  * informes.
  *
- * @author 2dam
+ * @author Ander
  */
 public class ZonaController {
 
@@ -162,7 +162,7 @@ public class ZonaController {
             txtNombreZona.textProperty().addListener(this::cambioTexto);
         }
 
-        //Cargamos la combo con los valores posibles 
+        //Cargamos la combo con los valores posibles
         txtTipoAnimalZona.getItems().addAll("Peces", "Anfibios", "Arácnidos", "Artrópodos", "Mamíferos", "Aves", "Reptiles", "Insectos");
 
         //Asignacion de botones
@@ -343,6 +343,8 @@ public class ZonaController {
                         zona.setNombre(nombre);
                         zona.setDescripcion(descripcion);
                         zona.setTipo_animal(tipoAnimal);
+                        admin.setId_user(user.getId_user());
+                        zona.setAdmin(admin);
                         if (zonaFact != null) {
                             zonaFact.getFactory().edit_XML(zona);
                         } else {
@@ -669,14 +671,14 @@ public class ZonaController {
         try {
             LOGGER.info("Comenzando la impresion...");
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/report/ZonaReport.jrxml"));
-            //Data for the report: a collection of UserBean passed as a JRDataSource 
-            //implementation 
+            //Data for the report: a collection of UserBean passed as a JRDataSource
+            //implementation
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Zona>) this.tableZona.getItems());
             //Map of parameter to be passed to the report
             Map<String, Object> parameters = new HashMap<>();
             //Fill report with data
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-            //Create and show the report window. The second parameter false value makes 
+            //Create and show the report window. The second parameter false value makes
             //report window not to close app.
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
@@ -710,6 +712,11 @@ public class ZonaController {
 
     }
 
+    /**
+     * Setter de usuario
+     *
+     * @param user
+     */
     void setUsuario(Usuario user) {
         this.user = user;
     }

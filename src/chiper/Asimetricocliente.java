@@ -16,18 +16,23 @@ import java.util.Arrays;
 import javax.crypto.Cipher;
 
 /**
+ * Clase que se encarga de cifrar la contraseña del cliente de forma asimetrica
+ * usando la clave publica de este
  *
  * @author Diego.
  */
 public class Asimetricocliente {
 
-    //private static final String OUTPUT_PATH = "C:\\Cifrado\\UserCredentialC.properties";
-    //esta es la linea original
+    //Ruta de la clave
     private static final String PUBLIC_KEY_PATH = "./src/cipher/publicKey.der";
-    
-    
+
+    /**
+     * Método que carga la llave publica
+     *
+     * @return
+     */
     public PublicKey loadPublicKey() {
-        // Load Public Key from file
+
         try {
             byte[] keyBytes = fileReader(PUBLIC_KEY_PATH);
             X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
@@ -39,14 +44,17 @@ public class Asimetricocliente {
         }
     }
 
-    /*public void keyGenerator() {
-        Chiper.GenerarClaves gc = new Chiper.GenerarClaves();
-        gc.keyGenerator("C:\\Cifrado");
-    }*/
+    /**
+     * Método que se encarga de cifrar la contraseña usando la clave pública
+     *
+     * @param message
+     * @param publicKey
+     * @return
+     */
     public byte[] encryptAndSaveData(String message, PublicKey publicKey) {
         byte[] encryptedData = null;
         try {
-            
+
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             encryptedData = cipher.doFinal(message.getBytes());
@@ -57,12 +65,18 @@ public class Asimetricocliente {
         return encryptedData;
     }
 
+    /**
+     * Método que lee la llave pública
+     *
+     * @param path
+     * @return
+     */
     private byte[] fileReader(String path) {
         byte[] ret = null;
         try {
-            
-           InputStream in= getClass().getResourceAsStream("publicKey.der");
-           ret = toByteArray(in);
+
+            InputStream in = getClass().getResourceAsStream("publicKey.der");
+            ret = toByteArray(in);
         } catch (IOException e) {
             e.printStackTrace();
         }

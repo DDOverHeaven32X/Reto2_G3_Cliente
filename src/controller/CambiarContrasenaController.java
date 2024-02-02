@@ -78,19 +78,12 @@ public class CambiarContrasenaController {
     private Usuario user;
     private Stage stage;
 
-    /**
-     * Initializes the controller class.
-     *
-     * @param root
-     * @param user
-     */
     public void initStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setResizable(false);
         stage.setScene(scene);
         stage.setTitle("Cambiar Contraseña");
-        
 
         //Inicialicazion de los elementos de la ventana
         btn_cancelar.setDisable(false);
@@ -109,8 +102,7 @@ public class CambiarContrasenaController {
         btn_verContraNueva.setOnMouseClicked(event -> revelarContra2(event));
         btn_verContraNueva2.setOnMouseClicked(event -> revelarContra3(event));
         btn_cancelar.setOnAction(this::cerrarVentana);
-        
-        
+
         stage.show();
     }
 
@@ -120,15 +112,15 @@ public class CambiarContrasenaController {
      * @param actionEvent
      */
     public void cambiarContra(ActionEvent actionEvent) {
-        
+        //Comprobaciones de las contraseñas para que sean corectas
         try {
-            if ( pswContraseña1.getText().equals(pswContraseña2.getText())
+            if (pswContraseña1.getText().equals(pswContraseña2.getText())
                     || pswContraseña1.getText().isEmpty() || pswContraseña2.getText().isEmpty()) {
                 throw new IllegalArgumentException("La contraseña nueva no debe ser igual a la anterior y no debe ser nula o vacía");
             } else if (!pswContraseña2.getText().equals(pswContraseña3.getText())
                     || pswContraseña2.getText().isEmpty() || pswContraseña3.getText().isEmpty()) {
                 throw new IllegalArgumentException("Las contraseñas no coinciden y no deben ser nulas o vacías");
-            } 
+            }
 
         } catch (IllegalArgumentException ex) {
             String mensaje = ex.getMessage();
@@ -168,13 +160,11 @@ public class CambiarContrasenaController {
             }
         }
 
-
-
         Asimetricocliente asi = new Asimetricocliente();
         PublicKey publicKey;
         publicKey = asi.loadPublicKey();
         //Buscamos el cliente que ha solicitado el cambio de contraseña y sobreescribimos los datos cambiados por el
-        String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(pswContraseña2.getText(), publicKey));       
+        String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(pswContraseña2.getText(), publicKey));
         Cliente cli = clienfac.getFactory().find_XML(Cliente.class, user.getId_user().toString());
         Cliente clieNew = new Cliente();
         clieNew.setContraseña(contra_crypt_hex);
@@ -187,7 +177,7 @@ public class CambiarContrasenaController {
         clieNew.setTipo_usuario(cli.getTipo_usuario());
         clieNew.setN_tarjeta(cli.getN_tarjeta());
         clieNew.setPin(cli.getPin());
-        
+
         clienfac.getFactory().cambiarContra_XML(clieNew);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
@@ -199,7 +189,12 @@ public class CambiarContrasenaController {
             stage.close();
         }
     }
-    
+
+    /**
+     * Método que revela las contraseñas
+     *
+     * @param event
+     */
     private void revelarContra(MouseEvent event) {
         if (pswContraseña1.isVisible()) {
             pswContraseña1.setDisable(true);
@@ -233,6 +228,7 @@ public class CambiarContrasenaController {
             img_ojo21.setImage(new Image(pswContraseña1.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         }
     }
+
     private void revelarContra2(MouseEvent event) {
         if (pswContraseña2.isVisible()) {
             pswContraseña2.setDisable(true);
@@ -266,6 +262,7 @@ public class CambiarContrasenaController {
             img_ojo211.setImage(new Image(pswContraseña2.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         }
     }
+
     private void revelarContra3(MouseEvent event) {
         if (pswContraseña3.isVisible()) {
             pswContraseña3.setDisable(true);
@@ -299,6 +296,12 @@ public class CambiarContrasenaController {
             img_ojo212.setImage(new Image(pswContraseña3.isVisible() ? "/imagenes/ojo.png" : "/imagenes/ojo2.png"));
         }
     }
+
+    /**
+     * Método que cierra la ventana
+     *
+     * @param event
+     */
     private void cerrarVentana(Event event) {
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -311,10 +314,8 @@ public class CambiarContrasenaController {
         if (answer.get() == ButtonType.OK) {
             stage.close();
         }
-            
+
     }
-    
-    
 
     public void setStage(Stage stage) {
         this.stage = stage;

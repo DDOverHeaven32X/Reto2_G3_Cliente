@@ -56,6 +56,11 @@ public class PrincipalController {
 
     private static final Logger LOGGER = Logger.getLogger("/controlador/CambiarContrasenaController");
 
+    /**
+     * Método que inicializa la ventana con sus datos predeterminados
+     *
+     * @param root
+     */
     public void initiStage(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -85,18 +90,36 @@ public class PrincipalController {
 
     }
 
+    /**
+     * Setter de stage
+     *
+     * @param stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Setter de User
+     *
+     * @param user
+     */
     public void setUser(Usuario user) {
         this.user = user;
     }
 
+    /**
+     * Setter de client
+     *
+     * @param clien
+     */
     public void setClien(Cliente clien) {
         this.clien = clien;
     }
 
+    /**
+     * Método que lleva al cliente a la ventana de cambio de contraseña
+     */
     private void handleLblContraClick() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CambiarContrasena.fxml"));
@@ -136,6 +159,11 @@ public class PrincipalController {
 
     }
 
+    /**
+     * Setter de la clas SesionUsuario
+     *
+     * @param user
+     */
     public void setSesionUsuario(Usuario user) {
         this.user = user;
     }

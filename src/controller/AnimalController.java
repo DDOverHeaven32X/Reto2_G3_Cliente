@@ -460,6 +460,8 @@ public class AnimalController {
                         break;
                 }
                 animal.setZona((Zona) comboZona.getValue());
+                admin.setId_user(user.getId_user());
+                animal.setAdmin(admin);
                 if (fAnimal != null) {
                     fAnimal.getFactory().edit_XML(animal);
                 } else {
@@ -900,7 +902,7 @@ public class AnimalController {
     private boolean animalExiste() {
         //Guardamos los animales de la bd en una lista
         List<Animal> listaAnimal = fAnimal.getFactory().findAll_XML(Animal.class);
-        
+
         //Guardamos los datos a introducir en un Animal
         Animal animalACorregir = new Animal();
         animalACorregir.setNombre(txtNombreAnimal.getText());

@@ -371,14 +371,14 @@ public class EntradaControllerTest extends ApplicationTest {
         clickOn("Filtrar por fecha");
 
         verifyThat(dtpFecha, isEnabled());
-        clickOn("#dtpFiltradoFecha").write("24/12/2023");
+        clickOn("#dtpFiltradoFecha").write("24/05/2024");
         clickOn(btnBuscar);
 
         Node row = lookup(".table-row-cell").nth(0).query();
         assertNotNull("Row is null: table has not that row. ", row);
         clickOn(row);
 
-        Date fecha = Date.from(LocalDate.of(2023, 12, 24).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date fecha = Date.from(LocalDate.of(2024, 05, 24).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         List<Entrada> entradas = tblEntrada.getItems();
         assertEquals("La entrada no se ha encontrado",
@@ -392,7 +392,7 @@ public class EntradaControllerTest extends ApplicationTest {
     public void testI_ComprarEntrada() {
         //Vamos a comprar la entrada 4
         cambiarAClient();
-        clickOn(tblEntrada).clickOn("24.12.2023");
+        clickOn(tblEntrada).clickOn("17.05.2024");
         clickOn("#btnComprar");
 
         txt_contraReve1 = lookup("#txt_contraRevel").query();
@@ -416,8 +416,8 @@ public class EntradaControllerTest extends ApplicationTest {
             Logger.getLogger(EntradaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        clickOn(txt_contraReve1).write("1212121212121212");
-        clickOn(pswPin).write("1111");
+        clickOn(txt_contraReve1).write("5432123146788766");
+        clickOn(pswPin).write("7654");
 
         clickOn("#btn_confirmar");
 

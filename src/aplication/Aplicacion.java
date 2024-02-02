@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 /**
+ * Clase aplicacion del proyecto, se encarga de cargar la ventana de inicio de
+ * sesión
  *
  * @author Diego, Ander, Adrian.
  */

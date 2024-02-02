@@ -145,6 +145,13 @@ public class EntradaController {
 
     private Stage stage;
 
+    /**
+     * Método que carga la ventana y establece todos sus elementos al iniciarse
+     *
+     * @param root
+     * @param user
+     * @param cliente
+     */
     public void initiStage(Parent root, Usuario user, Cliente cliente) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -334,7 +341,13 @@ public class EntradaController {
         return listEntrada;
     }
 
-    //Método que vacia los campos si hay algúna alteracion en la ventana
+    /**
+     * Método que vacia los campos si hay algúna alteracion en la ventana
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     @FXML
     private void cambioTexto(ObservableValue observable, Object oldValue, Object newValue) {
         if (tblEntrada.getSelectionModel().getSelectedItem() == null) {
@@ -346,7 +359,9 @@ public class EntradaController {
         }
     }
 
-    //Método que resetea
+    /**
+     * Método que resetea
+     */
     @FXML
     private void refreshTableIfFilterEmpty() {
         if (txtFiltrar.getText().trim().isEmpty() || (dtpFiltradoFecha.getValue() == null) || dtpFiltradoFecha.getValue().toString().trim().isEmpty()) {
@@ -356,7 +371,11 @@ public class EntradaController {
         }
     }
 
-    //Método para relalizar el CRUD de POST en la tabla
+    /**
+     * Método para relalizar el CRUD de POST en la tabla
+     *
+     * @param event
+     */
     @FXML
     private void handleCreateButtonAction(ActionEvent event) {
         try {
@@ -474,6 +493,12 @@ public class EntradaController {
         return validacionesExitosas;
     }
 
+    /**
+     * Método que muestra una alerta en caso de ser necesario
+     *
+     * @param titulo
+     * @param contenido
+     */
     private void mostrarAlerta(String titulo, String contenido) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(null);
@@ -487,7 +512,11 @@ public class EntradaController {
         }
     }
 
-    //Método para relalizar el CRUD de PUT en la tabla
+    /**
+     * Método que realiza la modificacion de la ventana
+     *
+     * @param event
+     */
     @FXML
     private void handleModifyButtonAction(ActionEvent event) {
 
@@ -502,11 +531,13 @@ public class EntradaController {
                 LocalDate fecha = dtpFecha.getValue();
                 Date fechaBuena = Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 //Escogemos el Id para indicar al programa cual entrada debe modificar
-
+                Admin admin = new Admin();
+                admin.setId_user(user.getId_user());
                 entrada.setId_entrada(tblEntrada.getSelectionModel().getSelectedItem().getId_entrada());
                 entrada.setPrecio(precioReal);
                 entrada.setTipo_entrada(comboEntrada.getValue().toString());
                 entrada.setFecha_entrada(fechaBuena);
+                entrada.setAdmin(admin);
                 if (factoryEnt != null) {
                     factoryEnt.getFactory().edit_XML(entrada);
                 } else {
@@ -522,7 +553,11 @@ public class EntradaController {
         }
     }
 
-    //Método para relalizar el CRUD de DELETE en la tabla
+    /**
+     * Método para relalizar el CRUD de DELETE en la tabla
+     *
+     * @param event
+     */
     @FXML
     private void handleDeleteButtonAction(ActionEvent event) {
         try {
@@ -551,7 +586,13 @@ public class EntradaController {
         }
     }
 
-    //Método que incrusta los datos de la tabla a los campos de parametrización
+    /**
+     * Método que incrusta los datos de la tabla a los campos de parametrización
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     @FXML
     private void handleUsersTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue) {
 
@@ -572,7 +613,12 @@ public class EntradaController {
         }
     }
 
-    //Método de busqueda del botón, sirve para realizar las consultas parametrizadas
+    /**
+     * Método de busqueda del botón, sirve para realizar las consultas
+     * parametrizadas
+     *
+     * @param actionEvent
+     */
     @FXML
     private void handleSearchButton(ActionEvent actionEvent) {
         switch (cbcFiltro.getValue().toString()) {
@@ -585,7 +631,12 @@ public class EntradaController {
         }
     }
 
-    //Método que se encarga de realizar la búsqueda de entradas por un precio fijado
+    /**
+     * Método que se encarga de realizar la búsqueda de entradas por un precio
+     * fijado
+     *
+     * @return
+     */
     @FXML
     private ObservableList<Entrada> cargarFiltro1() {
         ObservableList<Entrada> listaEntradas;
@@ -602,7 +653,10 @@ public class EntradaController {
         }
     }
 
-    //Método que se encarga de realizar la búsqueda de entradas por una fecha fijada
+    /**
+     * Método que se encarga de realizar la búsqueda de entradas por una fecha
+     * fijada
+     */
     @FXML
     private ObservableList<Entrada> cargarFiltro2() {
         ObservableList<Entrada> listaEntradas;
@@ -621,7 +675,9 @@ public class EntradaController {
 
     }
 
-    //Método que muestra las entradas compradas de un cliente
+    /**
+     * Método que muestra las entradas compradas de un cliente
+     */
     @FXML
     private ObservableList<Entrada> entradasClient() {
         ObservableList<Entrada> listaEntradas;
@@ -672,6 +728,11 @@ public class EntradaController {
         return listaEntradas;
     }
 
+    /**
+     * Método que se encarga de capturar la entrada seleccionada para comprar
+     *
+     * @param event
+     */
     @FXML
     public void handlerCompraEntrada(ActionEvent event) {
 
@@ -707,7 +768,9 @@ public class EntradaController {
         }
     }
 
-    //Método que imprime los datos de la tabla a un informe JasperReport
+    /**
+     * Método que imprime los datos de la tabla a un informe JasperReport
+     */
     @FXML
     private void handleImprimirAction(ActionEvent event) {
         try {
@@ -725,6 +788,11 @@ public class EntradaController {
         }
     }
 
+    /**
+     * Método que cierra la ventana
+     *
+     * @param event
+     */
     private void handleCloseRequest(WindowEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(null);
@@ -740,20 +808,39 @@ public class EntradaController {
 
     }
 
-    //Esto a mejorar
+    /**
+     * Método que llama al método entradasClient()
+     *
+     * @param event
+     */
     @FXML
     private void handlerEntradasClient(ActionEvent event) {
         entradasClient();
     }
 
+    /**
+     * Setter de stage
+     *
+     * @param stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Setter de user
+     *
+     * @param user
+     */
     public void setUser(Usuario user) {
         this.user = user;
     }
 
+    /**
+     * Setter de cliente
+     *
+     * @param clien
+     */
     public void setClien(Cliente clien) {
         this.clien = clien;
     }

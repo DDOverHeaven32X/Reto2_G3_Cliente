@@ -27,7 +27,7 @@ import model.SesionUsuario;
 import model.Usuario;
 
 /**
- * FXML Controller class
+ * Controlador del Menu de la aplicación, se encarga de la navegación.
  *
  * @author Diego, Ander, Adrian
  */

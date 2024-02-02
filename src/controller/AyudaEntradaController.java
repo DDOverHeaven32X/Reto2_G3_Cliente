@@ -33,7 +33,6 @@ public class AyudaEntradaController {
 
     public void initStage(Parent root) {
 
-        //init the scene with the root you got from singInController
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);

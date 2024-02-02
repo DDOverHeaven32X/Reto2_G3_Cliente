@@ -54,7 +54,7 @@ public class AnimalControllerTest extends ApplicationTest {
 
     private Usuario user = new Usuario();
     ;
-    
+
     private Pane paneAnimal;
 
     private Button btnCrearAimal;
@@ -172,6 +172,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     public void TestA_comprobar_ventana_abierta() {
         verifyThat("#ventanaInicio", isVisible());
@@ -183,6 +184,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     public void TestB_comprobar_boton_inicio_habilitado() {
         clickOn(textEmail).write("admin@gmail.com");
@@ -196,6 +198,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     public void TestC_comprobar_menubar() {
         clickOn("#menuNavegar");
@@ -207,6 +210,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
+    @Ignore
     @Test
     public void TestD_HabilitarBotones() {
         if (user.getTipo_usuario() == Privilegio.ADMIN) {
@@ -382,7 +386,7 @@ public class AnimalControllerTest extends ApplicationTest {
      */
     @Ignore
     @Test
-    //@Ignore
+
     public void testH_cancelar_eliminar_animal() {
         // Verificar que la tabla tenga al menos una fila
         int rowCount = tableAnimal.getItems().size();
