@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+
+<MenuBar fx:id="menuBar" prefHeight="44.0" prefWidth="1000.0" style="-fx-background-color: #4CAF50; -fx-padding: 0px 0px; -fx-color: brown;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuBarController">
+   <menus>
+      <Menu fx:id="menuPrincipal" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 89px;" text="PRINCIPAL">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#miPrincipal" style="-fx-padding: 2px 98px;" text="Inicio" />
+         </items></Menu>
+      <Menu fx:id="menuNavegar" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="NAVEGAR">
+         <items>
+            <MenuItem fx:id="mItemAnimales" mnemonicParsing="false" onAction="#miAnimales" style="-fx-padding: 2px 85px;" text="Animales" />
+            <MenuItem fx:id="mItemZonas" mnemonicParsing="false" onAction="#miZonas" style="-fx-padding: 2px 85px;" text="Zonas" />
+            <MenuItem fx:id="mItemEntradas" mnemonicParsing="false" onAction="#miEntradas" style="-fx-padding: 2px 85px;" text="Entradas" />
+         </items>
+      </Menu>
+      <Menu fx:id="menuAyuda" mnemonicParsing="false" style="-fx-font-size: 14px; -fx-padding: 12px 90px;" text="AYUDA">
+         <items>
+            <MenuItem fx:id="mItemDocumentacion" mnemonicParsing="false" onAction="#miAyuda" style="-fx-padding: 2px 56px;" text="Ayuda Ventana" />
+         </items></Menu>
+      <Menu fx:id="menuCerrarSesion" mnemonicParsing="false" onAction="#miSesión" style="-fx-padding: 12px 90px; -fx-font-size: 14px;" text="CERRAR SESION">
+         <items>
+            <MenuItem fx:id="mItemCerrarSesion" mnemonicParsing="false" style="-fx-padding: 0px 91px;" text="Cerrar Sesion" />
+         </items></Menu>
+   </menus>
+</MenuBar>

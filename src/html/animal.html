@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Animal</title>
+        <style type="text/css">
+            body{
+                background-color: beige;
+                align-items: center;
+            }
+            div.cuerpo{
+                align-content: center;
+            }
+            img{
+                width: 700px;
+                height: 500px;
+            }
+            hr{
+                border-collapse: collapse;
+                border: 2px solid #B28336;
+                border-radius: 5px;
+            }
+            p.destaca{
+                color: #04CD00;
+            }
+            h2.admin,h2.client{
+                text-align: center;
+                color: #03B500;
+                font-size: 42px;
+            }
+            p{
+                text-align: center;
+                color: #B28336;
+                font-size: 18px;
+            }
+
+            nav{
+                align-items: center;
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+                margin-bottom: 20px;
+                margin-top: 20px;
+            }
+            
+            .v img{
+                height: 250px;
+                align-items: center;
+            }
+            
+            .cliente,.administrador{
+                color: #04CD00;
+                text-decoration: none;
+                font-size: 24px;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .cliente:hover,.administrador:hover{
+                background-color: #F0D19E;
+            }
+
+            header p {
+                font-size: 18px;
+                color: #B28336;
+            }
+            h1{
+                font-size: 42px;
+                color: #B28336;
+            }
+        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <header>
+            <h1 align="Center" >ANIMALES</h1>
+            <p align="Center">Bienvenido a la ventana de ayuda</p>
+        </header>
+        <hr>
+        <div class="cuerpo">
+            <nav>
+                <a class="cliente" href="#client">Ayuda para Clientes</a>
+                <a class="administrador" href="#admin">Ayuda para Administradores</a>
+            </nav>
+            <hr>
+            <h2 id="client" class="client">Ayuda Cliente</h2>
+            <center><p class="destaca">Fig 1: Ventana Animal</p><img src ="../imagenes/AyudaAnimal.PNG" alt="ventana"></center>
+            <p>Imágen de como se ve la ventana en modo Cliente, permite mirar los distintos animales, ver animales con diferentes filtrados y generar informes</p>
+            <br>
+            <center><p class="destaca">Fig 2: Visualizacion de un Animal</p><img src ="../imagenes/AyudaAnimal2.PNG" alt="ventana informada"><div class="v"><img src ="../imagenes/AyudaAnimal6.PNG" alt="ventana"></div></center>
+            <p>Si se pulsa una de las filas de la tabla, se mostrara la información del animal seleccionado en el panel de arriba.</p>
+            <br>
+            <center><p class="destaca">Fig 3: Filtro por Especie</p><img src ="../imagenes/AyudaAnimal3.PNG" alt="filtro especie"></center>
+            <p>Si se pulsa "Filtrar" y se seleciona "Filtrar por especie" se mostrará una caja con todas las especies de la tabla junto a un botón "buscar" en la que al seleccionar una de las especies y posteriormente pulsar en el boton de buscar la tabla se recargara con todos los animales de dicha especie.
+            Si deseas ver todos los animales de nuevo simplemente en la caja donde pone filtrar selecciona la opcion en blanco y la tabla se recargara.</p>
+            <br>
+            <center><p class="destaca">Fig 4: Filtro por Alimentación</p><img src ="../imagenes/AyudaAnimal4.PNG" alt="filtro alimentacion"></center>
+            <p>Si se pulsa "Filtrar" y se seleciona "Filtrar por alimentacion" se mostrará una caja con los tipos de alimentación junto a un botón "buscar" en la que al seleccionar una de las alimentaciones y posteriormente pulsar en el boton de buscar la tabla se recargara con todos los animales de dicha alimentación.
+            Si deseas ver todos los animales de nuevo simplemente en la caja donde pone filtrar selecciona la opcion en blanco y la tabla se recargara.</p>
+            <br>
+            <center><p class="destaca">Fig 5: Informe</p><img src ="../imagenes/AyudaAnimal5.PNG" alt="informe"></center>
+            <p>Si se pulsa "Informe" se puede ver una versión más detallada de los animales, la cual se puede guardar o imprimir a gusto.</p>
+            <br>
+            <hr>
+            <nav>
+                <a class="cliente" href="#client">Ayuda para Clientes</a>
+                <a class="administrador" href="#admin">Ayuda para Administradores</a>
+            </nav>
+            <hr>
+            <h2 id="admin" class="admin">Ayuda Administrador</h2>
+            <center><p class="destaca">Fig 1: Ventana</p><img src ="../imagenes/AyudaAnimal7.PNG" alt="ventana"></center>
+            <p>Imágen de como se ve la ventana en modo Administrador, permite mirar los distintos Animales, crear, modificar y borrarlas</p>
+            <br>
+            <center><p class="destaca">Fig 2: Crear Animales</p><img src ="../imagenes/AyudaAnimal8.PNG" alt="ejemplo crear"></center>
+            <p>Si rellenas los campos con datos validos y correctos, al pulsarle al botón crear se creará un nuevo animal</p>
+            <br>
+            <center><p class="destaca">Fig 2.1: Datos erróneos</p><img src ="../imagenes/AyudaAnimal11.PNG" alt="error"></center>
+            <p><i>En caso de introducir datos con formatos incorrectos y darle a crear muestra una ventana diciendote donde ha sucedido y cual es el formato correcto.</i></p>
+            <br>
+            <center><p class="destaca">Fig 3: Borrado</p><img src ="../imagenes/AyudaAnimal10.PNG" alt="borrado"></center>
+            <p>Para borrar un animal, seleccione el animal a borrar y luego pulse el botón de "Eliminar" para borrarlo, antes de ejecutar la accion se le preguntara si esta seguro, si responde "Aceptar" se borrará la entrada</p>
+            <br>
+            <center><p class="destaca">Fig 4: Modificar</p><img src ="../imagenes/AyudaAnimal9.PNG" alt="modifcar"></center>
+            <p>Para modificar un animal, pulse el animal que desea modificar, los parametros del animal se colocarán en los campos y allí se podrán
+                modifcar a gusto, una vez modifcados los campos pulse "Modificar" para hacer la acción, asegurate de no añadir datos erroneos a la hora de
+                modificar. En la imagen anterior todavia no se ha pulsado el boton de modificar, si nos fijamos los datos que estan rodeados no son iguales, pero al pulsar modificar los datos de la tabla pasarian a ser los mismos del panel.</p>
+            <br>
+            <center><p class="destaca">Fig 5: Filtro</p><img src ="../imagenes/AyudaAnimal12.png" alt="filtrar"></center>
+            <p>Puedes filtrar las entradas por "Especie" y "Alimentación", para volver a mostrar todos los animales otra vez una vez hecho el filtro unicamente deberiamos pulsar en el espacio en blanco de la caja filtrar.</p>
+            <br>
+            <center><p class="destaca">Fig 6: Informe</p><img src ="../imagenes/AyudaAnimal5.PNG" alt="informe"></center>
+            <p>Si se pulsa "Informe" se puede ver una versión más detallada de los animales, la cual se puede guardar o imprimir a gusto</p>
+            <br>
+        </div>        
+    </body>
+</html>

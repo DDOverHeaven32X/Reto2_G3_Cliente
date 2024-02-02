@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Entradas</title>
+        <style type="text/css">
+            body{
+                background-color: #FAA137;
+                align-items: center;
+                margin: 50px;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            div.cuerpo{
+                margin: 20px;
+                margin-top: 30px;
+                align-content: center;
+            }
+            img{
+                
+                width: 700px;
+                height: 500px;
+            }
+            hr{
+                border-collapse: collapse;
+                border: 2px solid white;
+                border-radius: 5px;
+            }
+            p.destaca{
+                color: #3EFA18;
+            }
+            p.client{
+                color: #3EFA18;
+            }
+            p.admin{
+                color: #3EFA18;
+            }
+            p{
+                text-align: center;
+            }
+            
+        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <hr>
+        <h1 align="Center">Entradas</h1>
+        <hr>
+        <div class="cuerpo">
+            <p>Bienvenido a la ventana de ayuda, elige que tipo de ayuda necesitas:</p>
+            <Center><a href="#admin">Pulsa para ver la ayuda para administradores</a></center>
+            
+            <br>
+            <p id="client" class="client">Ayuda Cliente</p>
+            
+            <hr>
+            <center><p class="destaca">Fig 1: Ventana Entrada</p><img src ="../imagenes/Captura1.PNG" alt="ventana"></center>
+            <p>Imágen de como se ve la ventana en modo Cliente, permite mirar las distintas entradas, comprarlas y mirar cuales han sido adquridas</p>
+            <br>
+            <center><p class="destaca">Fig 2: Filtro por dinero</p><img src ="../imagenes/Captura 2.PNG" alt="filtro dinero"></center>
+            <p>Si se pulsa "Filtrar" y se seleciona "Filtrar por dinero" se mostrará una caja de texto con un botón "buscar" en donde se puede introducir 
+            una cantidad númerica para buscar entradas que equivalgan dicho precio;  vacia el campo y la tabla volverá a la normalidad</p>
+            <br>
+            <center><p class="destaca">Fig 3: Filtro por fecha</p><img src ="../imagenes/Captura 3.PNG" alt="filtro fecha"></center>
+            <p>Si se pulsa "Filtrar" y se seleciona "Filtrar por fecha" se mostrará un calendario con un botón "buscar" en donde se puede introducir 
+                una fecha para buscar entradas para la fecha selecionada, para volver a cargar la tabla vacia la fecha y pulsa <b>enter</b> para refrescar la tabla</p>
+            <br>
+            <center><p class="destaca">Fig 4: Tus Entradas</p><img src ="../imagenes/Captura 4.PNG" alt="muestra entradas"></center>
+            <p>Si se pulsa sobre "Tus entradas" podrás ver las entradas que has comprado, ten en cuenta que si no has comprado ninguna entrada se te
+            indicará de tal mediante una ventana emergente</p>
+            <br>
+            <center><p class="destaca">Fig 5: Ventana de compra</p><img src ="../imagenes/Captura 5.PNG" alt="ventana compra"></center>
+            <p>En esta aplicacion puedes comprar las distintas entradas que están disponibles, para ello primero <b>debes seleccionar</b> la entrada
+            que deseas comprar, luego pulsa sobre "Comprar" para que te lleve a la ventana de confirmacion de compra, aqui introduces tus creedenciales
+            de tu tarjeta bancaria, si los datos son correctos pulsa "Confirmar" para realizar la compra, una vez veas el mensaje de confirmacion puedes
+            salir de esta ventana pulsando "Cancelar".</p>
+            <br>
+            <center><p class="destaca">Fig 5.1: Ventana de confirmacion</p><img src ="../imagenes/Captura 6.PNG" alt="ventana compra confirm"></center>
+            <p><i>Ejemplo de una compra realizada satisfactoriamente</i></p>
+            <br>
+            <center><p class="destaca">Fig 5.2: Muestra compra</p><img src ="../imagenes/Captura 7.PNG" alt="ventana compra ejemplo"></center>
+            <p><i>La entrada comprada podrá ser vista mediante el botón "Tus entradas" o pulsando Click derecho y seleccionando "Tus entradas" dentro
+                de la tabla</i></p>
+            <br>
+            <center><p class="destaca">Fig 6: Informe</p><img src ="../imagenes/Captura 8.PNG" alt="informe"></center>
+            <p>Si se pulsa "Informe" se puede ver una versión más detallada de las entradas, la cual se puede guardar o imprimir a gusto</p>
+            <br>
+            <Center><a href="#client">Pulsa para ver la ayuda para Clientes</a></Center>
+            <p id="admin" class="admin">Ayuda Administrador</p>
+            <hr>
+            <center><p class="destaca">Fig 1: Ventana</p><img src ="../imagenes/Captura 11.png" alt="ventana"></center>
+            <p>Imágen de como se ve la ventana en modo Administrador, permite mirar las distintas entradas, crear, modificar y borrarlas</p>
+            <br>
+            <center><p class="destaca">Fig 2: Crear entrada</p><img src ="../imagenes/Captura 10.png" alt="ejemplo crear"></center>
+            <p>Si rellenas los campos con datos validos y correctos, al pulsarle al botón crear se creará una nueva entrada</p>
+            <br>
+            <center><p class="destaca">Fig 2.1: Datos erróneos</p><img src ="../imagenes/Captura 12.png" alt="error"></center>
+            <p><i>Muestra de un posible error al insertar datos en los campos disponibles</i></p>
+            <br>
+            <center><p class="destaca">Fig 3: Borrado</p><img src ="../imagenes/Captura 14.png" alt="borrado"></center>
+            <p>Para borrar una entrada, seleccione la entrada a borrar y luego pulse el botón de "Eliminar" para borrar la ventana, se le preguntará antes 
+            si desea borrar la entrada, si responde "Aceptar" se borrará la entrada</p>
+            <br>
+            <center><p class="destaca">Fig 4: Modificar</p><img src ="../imagenes/Captura 15.png" alt="modifcar"></center>
+            <p>Para modificar una entrada, pulse la entrada que desea modificar, los parametros de la entrada se colocarán en los campos y allí se podrán
+            modifcar a gusto, una vez modifcados los campos pulse "Modificar" para hacer la acción, asegurate de no añadir datos erroneos a la hora de
+            modificar. <i><b>Observa como la entrada de 6 tiene parámetros diferentes respecto al ejemplo anterior</b></i></p>
+            <br>
+            <center><p class="destaca">Fig 5: Filtro</p><img src ="../imagenes/Captura 13.png" alt="filtrar"></center>
+            <p>Puedes filtrar las entradas por "Precio" y "Fecha", para volver a mostrar los datos otra vez una vez hecho el filtro, en el precio, vacia
+                el campo y la tabla volverá a la normalidad, en el caso de las fechas vacia la fecha y pulsa <b>enter</b> para refrescar la tabla</p>
+            <br>
+            <center><p class="destaca">Fig 6: Informe</p><img src ="../imagenes/Captura 8.PNG" alt="informe"></center>
+            <p>Si se pulsa "Informe" se puede ver una versión más detallada de las entradas, la cual se puede guardar o imprimir a gusto</p>
+            <br>
+        </div>        
+    </body>
+</html>

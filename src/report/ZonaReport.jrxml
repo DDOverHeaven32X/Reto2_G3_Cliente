@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="40e1e1d3-37b6-41b6-a198-8b7dc2e6900a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="tipo_animal" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="105" y="21" width="317" height="28" uuid="79871270-c115-4459-98d0-c7eedb48a91f"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFORME SOBRE LAS ZONAS ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="10" width="435" height="20" uuid="dcf6f691-0eae-4609-834f-06be0e2ce690"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Aqui se muestra toda la informacion de la tabla animales:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="17" y="11" width="88" height="34" uuid="d6b77022-b471-448d-b97c-f278cc2a9571"/>
+				<textElement>
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="11" width="132" height="34" uuid="0526ef6b-44b4-4dab-bc68-54f79c89c884"/>
+				<textElement>
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[TIPO DE ANIMAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="326" y="11" width="141" height="34" uuid="a12cd0a2-c31e-4079-bb7e-cd2b8ff5168d"/>
+				<textElement>
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="28" y="24" width="100" height="20" uuid="fca9f11d-9cc2-4a35-aedf-46c29e68c4b6"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="151" y="24" width="100" height="20" uuid="34d10238-1b3f-4c0f-b2f4-dafdc58c838b"/>
+				<textFieldExpression><![CDATA[$F{tipo_animal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="326" y="24" width="188" height="86" uuid="b0c4bfb0-1f92-49ca-92ba-0925b7ab2c4d"/>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="375" y="34" width="180" height="20" uuid="32569ff8-1adb-475f-8e5d-d97c5bd881ef"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Informe hecho por la administración.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

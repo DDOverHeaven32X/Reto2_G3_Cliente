@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="847155e1-f98b-40de-86e7-f73c7483db22">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="id_entrada" class="java.lang.Integer"/>
+	<field name="fecha_entrada" class="java.util.Date"/>
+	<field name="tipo_entrada" class="java.lang.String"/>
+	<field name="precio" class="java.lang.Float"/>
+	
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="126" y="11" width="296" height="54" uuid="1e8c7e8b-ae4a-40cc-a97b-f2e1e3ecd010"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="36"/>
+				</textElement>
+				<text><![CDATA[ENTRADAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="435" height="20" uuid="3d2cb249-950e-400e-8789-5edd58204459"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Aqui se muestra toda la informacion de la tabla entradas:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="12" width="100" height="20" uuid="6b4198be-59f3-42fe-9d1e-bfa367d92227"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Id Entrada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="12" width="76" height="20" uuid="5657edf1-c514-47c2-a365-543efa24165d"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Fecha entrada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="172" y="12" width="61" height="20" uuid="3f552b93-c188-425f-beca-b9f03893c839"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Tipo entrada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="233" y="12" width="40" height="20" uuid="9214e1f6-a92a-49ce-8c3f-2e350ce9e297"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>			
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="11" width="100" height="20" uuid="cb69a9bd-8fe2-4817-bbeb-6061fe153334"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{id_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="11" width="76" height="20" uuid="78e6ca15-f930-499b-a11b-575aa2043b4c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fecha_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="173" y="11" width="60" height="20" uuid="c56a417f-914a-4470-a3da-141b84434fdd"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipo_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="233" y="11" width="40" height="20" uuid="47b262c3-33ea-44fd-94d9-b804f6e8c70e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="375" y="34" width="180" height="20" uuid="0542e307-0576-4bab-aec8-428501fe77dd"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Informe hecho por la administración.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
