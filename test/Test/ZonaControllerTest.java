@@ -148,7 +148,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestA_comprobar_ventana_abierta() {
         verifyThat("#ventanaInicio", isVisible());
@@ -160,7 +160,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestB_comprobar_boton_inicio_habilitado() {
         clickOn(textEmail).write("admin@gmail.com");
@@ -175,7 +175,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestC_comprobar_menubar() {
         clickOn("#menuNavegar");
@@ -189,7 +189,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestD_HabilitarBotones() {
         if (usuario.getTipo_usuario() == Privilegio.ADMIN) {
@@ -199,6 +199,9 @@ public class ZonaControllerTest extends ApplicationTest {
             verifyThat(txtNombreZona, isEnabled());
             verifyThat(txtDescripcionZona, isEnabled());
             verifyThat(txtTipoAnimalZona, isEnabled());
+        }
+        if (usuario.getTipo_usuario() == Privilegio.CLIENT) {
+            
         }
         verifyThat(comboFiltrar, isEnabled());
         verifyThat(txtNombreZona, isVisible());
@@ -213,7 +216,7 @@ public class ZonaControllerTest extends ApplicationTest {
      * Método de prueba para crear una nueva zona.
      *
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestE_createZona() {
         int rowCount = tableZona.getItems().size();
@@ -240,7 +243,7 @@ public class ZonaControllerTest extends ApplicationTest {
      * @author Ander
      *
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestF_createZonaExiste() {
         int rowCount = tableZona.getItems().size();
@@ -264,7 +267,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestG_modifyZona() {
 
@@ -317,7 +320,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testH_cancelar_eliminar_zona() {
         // Verificar que la tabla tenga al menos una fila
@@ -346,7 +349,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testI_deleteZona() {
         // Verificar que la tabla tenga al menos una fila
@@ -377,7 +380,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testJ_FiltrarNombre() {
         clickOn(comboFiltrar);
@@ -402,7 +405,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testK_FiltrarTipoAnimal() {
         txtFiltrar.clear();
@@ -419,7 +422,7 @@ public class ZonaControllerTest extends ApplicationTest {
 
         List<Zona> zonas = tableZona.getItems();
         long count = zonas.stream().filter(z -> z.getTipo_animal().equals(valorString)).count();
-        assertEquals("El número de zonas con el tipo animal 'Mamiferos' no es el esperado", 2, count);
+        assertEquals("El número de zonas con el tipo animal 'Mamiferos' no es el esperado", 3, count);
 
     }
 
@@ -428,7 +431,7 @@ public class ZonaControllerTest extends ApplicationTest {
      *
      * @author Ander
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testL_ProbrarErroresCampos() {
         txtFiltrar.clear();

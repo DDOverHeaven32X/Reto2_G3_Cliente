@@ -14,9 +14,11 @@ import exception.UpdateException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -74,7 +76,7 @@ public class ZonaController {
     private Zona zona = new Zona();
     private Admin admin = new Admin();
     private Usuario user;
-
+    private final ZonaFactoria fZona = new ZonaFactoria();
     private List<Zona> listaZonas;
 
     @FXML
@@ -107,6 +109,8 @@ public class ZonaController {
     private TableColumn tbcDescripion;
     @FXML
     private ComboBox comboFiltrar;
+    @FXML
+    private ComboBox comboZona;
     @FXML
     private TextField txtFiltrar;
     @FXML
@@ -157,6 +161,8 @@ public class ZonaController {
         //Ponemos el foco al inicio de la ventana
         txtNombreZona.requestFocus();
 
+        comboZona.setVisible(false);
+        comboZona.setDisable(true);
         //Metodo para el cambio de texto
         if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
             txtNombreZona.textProperty().addListener(this::cambioTexto);
@@ -182,6 +188,8 @@ public class ZonaController {
             // Llamar al método refreshTableIfFilterEmpty cuando el texto cambie
             refreshTableIfFilterEmpty();
         });
+
+        cargarComboZona();
 
         //Menu de contexto unicamente si eres admin
         if (user.getTipo_usuario().equals(Privilegio.ADMIN)) {
@@ -212,11 +220,28 @@ public class ZonaController {
 
         comboFiltrar.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                if (comboFiltrar.getValue().toString() != null) {
+                if (comboFiltrar.getValue().toString().equals("Filtrar por nombre")) {
+                    comboZona.setDisable(false);
+                    comboZona.setVisible(true);
+                    btnBuscar.setDisable(false);
+                    btnBuscar.setVisible(true);
+
+                    txtFiltrar.setText("");
+                    txtFiltrar.setDisable(true);
+                    txtFiltrar.setVisible(false);
+
+                } else if (comboFiltrar.getValue().toString().equals("Filtrar por tipo animal")) {
                     txtFiltrar.setDisable(false);
                     txtFiltrar.setVisible(true);
                     btnBuscar.setDisable(false);
                     btnBuscar.setVisible(true);
+
+                    comboZona.setValue(null);
+                    comboZona.setDisable(true);
+                    comboZona.setVisible(false);
+
+                } else {
+                    refreshTableIfFilterEmpty();
                 }
             }
 
@@ -482,13 +507,15 @@ public class ZonaController {
     //Método de busqueda del botón, sirve para realizar las consultas parametrizadas
     @FXML
     private void handleSearchButton(ActionEvent actionEvent) {
-        if (!txtFiltrar.getText().trim().isEmpty()) {
+        if (!txtFiltrar.getText().trim().isEmpty() || comboZona.getValue() != null) {
             switch (comboFiltrar.getValue().toString()) {
                 case ("Filtrar por nombre"):
                     cargarFiltroNombre();
+                    txtFiltrar.setText("");
                     break;
                 case ("Filtrar por tipo animal"):
                     cargarFiltroTipoAnimal();
+                    comboZona.setValue(null);
                     break;
             }
         } else {
@@ -514,7 +541,7 @@ public class ZonaController {
         List<Zona> FiltradoParam;
         FiltradoParam
                 = FXCollections.observableArrayList(zonaFact.getFactory().filtrarZonaPorNombre_XML(Zona.class,
-                        txtFiltrar.getText()));
+                        comboZona.getValue().toString()));
 
         listaZonas = FXCollections.observableArrayList(FiltradoParam);
         tableZona.setItems(listaZonas);
@@ -710,6 +737,40 @@ public class ZonaController {
             event.consume();
         }
 
+    }
+
+    /**
+     * Carga todas las zonas disponibles en el combo de zonas. Obtiene todas las
+     * zonas de la base de datos y las carga en el combo de zonas.
+     */
+    @FXML
+    private void cargarComboZona() {
+        try {
+
+            List<Zona> todasLasZonas = fZona.getFactory().findAll_XML(Zona.class);
+
+            comboZona.getItems().clear();
+
+            Set<String> nombresUnicos = new HashSet<>();
+
+            for (Zona zona : todasLasZonas) {
+                String nombreZona = zona.getNombre().trim();
+
+                if (!nombresUnicos.contains(nombreZona)) {
+                    nombresUnicos.add(nombreZona);
+
+                    comboZona.getItems().add(nombreZona);
+                }
+            }
+        } catch (Exception e) {
+            // Manejar excepciones
+            LOGGER.log(Level.SEVERE, null, e);
+            // Mostrar un mensaje de error al usuario
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setContentText("Error al cargar el filtro de zonas.");
+            alert.showAndWait();
+        }
     }
 
     /**

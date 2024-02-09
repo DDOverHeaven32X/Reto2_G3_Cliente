@@ -54,5 +54,6 @@
       <TextField fx:id="txtFiltrar" layoutX="776.0" layoutY="325.0" prefHeight="25.0" prefWidth="159.0" />
       <Button fx:id="btnBuscar" layoutX="887.0" layoutY="373.0" mnemonicParsing="false" text="Buscar" />
       <Button fx:id="btnInforme" layoutX="797.0" layoutY="629.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" text="Informe" />
+      <ComboBox fx:id="comboZona" layoutX="776.0" layoutY="325.0" prefHeight="25.0" prefWidth="168.0" />
    </children>
 </Pane>

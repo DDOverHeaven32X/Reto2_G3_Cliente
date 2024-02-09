@@ -172,7 +172,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestA_comprobar_ventana_abierta() {
         verifyThat("#ventanaInicio", isVisible());
@@ -184,7 +184,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestB_comprobar_boton_inicio_habilitado() {
         clickOn(textEmail).write("admin@gmail.com");
@@ -198,7 +198,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestC_comprobar_menubar() {
         clickOn("#menuNavegar");
@@ -210,7 +210,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestD_HabilitarBotones() {
         if (user.getTipo_usuario() == Privilegio.ADMIN) {
@@ -248,7 +248,7 @@ public class AnimalControllerTest extends ApplicationTest {
      * @author Adrian
      *
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestE_createAnimal() {
         int initialRowCount = tableAnimal.getItems().size();
@@ -340,7 +340,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
-    @Ignore
+    //@Ignore
     @Test
     public void TestG_modificarAnimal() {
         // Verifica que la tabla tenga datos antes de intentar modificarlos
@@ -384,7 +384,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
-    @Ignore
+    //@Ignore
     @Test
 
     public void testH_cancelar_eliminar_animal() {
@@ -419,7 +419,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testI_deleteAnimal() {
         // Verificar que la tabla tenga al menos una fila
@@ -455,7 +455,7 @@ public class AnimalControllerTest extends ApplicationTest {
      *
      * @author Adrian
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testJ_FiltrarEspecie() {
         clickOn(comboFiltrar);
@@ -468,13 +468,14 @@ public class AnimalControllerTest extends ApplicationTest {
 
         clickOn(comboFiltrarEspecie);
         press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
         press(KeyCode.ENTER);
 
         clickOn(btnBuscar);
 
         List<Animal> animales = tableAnimal.getItems();
-        long count = animales.stream().filter(a -> a.getEspecie().equals("Mandrill")).count();
-        assertEquals("El número de animales con el nombre 'Mandrill' no es el esperado", 1, count);
+        long count = animales.stream().filter(a -> a.getEspecie().equals("Piton")).count();
+        assertEquals("El número de animales con la especie 'Mandrill' no es el esperado", 1, count);
 
     }
 

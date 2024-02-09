@@ -113,53 +113,18 @@ public class CambiarContrasenaController {
      */
     public void cambiarContra(ActionEvent actionEvent) {
         //Comprobaciones de las contraseñas para que sean corectas
-        try {
-            if (pswContraseña1.getText().equals(pswContraseña2.getText())
-                    || pswContraseña1.getText().isEmpty() || pswContraseña2.getText().isEmpty()) {
-                throw new IllegalArgumentException("La contraseña nueva no debe ser igual a la anterior y no debe ser nula o vacía");
-            } else if (!pswContraseña2.getText().equals(pswContraseña3.getText())
-                    || pswContraseña2.getText().isEmpty() || pswContraseña3.getText().isEmpty()) {
-                throw new IllegalArgumentException("Las contraseñas no coinciden y no deben ser nulas o vacías");
-            }
 
-        } catch (IllegalArgumentException ex) {
-            String mensaje = ex.getMessage();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            alert.setTitle("Error en la contraseña");
-            alert.setContentText(mensaje);
-            Optional<ButtonType> answer = alert.showAndWait();
+        
 
-            if (answer.isPresent() && answer.get() == ButtonType.OK) {
-                pswContraseña1.clear();
-                txt_contraReve1.clear();
-                pswContraseña2.clear();
-                txt_contraReve2.clear();
-                pswContraseña3.clear();
-                txt_contraReve3.clear();
-                alert.close();
-                return;
-            }
-        } catch (Exception ex) {
-            String mensaje = ex.getMessage();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText(null);
-            alert.setTitle("Error en la contraseña");
-            alert.setContentText(mensaje);
-            Optional<ButtonType> answer = alert.showAndWait();
-
-            if (answer.isPresent() && answer.get() == ButtonType.OK) {
-                pswContraseña1.clear();
-                txt_contraReve1.clear();
-                pswContraseña2.clear();
-                txt_contraReve2.clear();
-                pswContraseña3.clear();
-                txt_contraReve3.clear();
-                alert.close();
-                return;
-            }
+        if (!pswContraseña2.getText().equals(pswContraseña3.getText())
+                || pswContraseña2.getText().isEmpty() || pswContraseña3.getText().isEmpty()) {
+            mostrarAlerta("Contraseña incorrecta", "Las contraseñas no coinciden o están vacías.");
+            return;
         }
-
+        if (!client.getContrasena().equals(pswContraseña1.getText())) {
+            mostrarAlerta("Contraseña incorrecta", "La contraseña es incorrecta.");
+            return;
+        }
         Asimetricocliente asi = new Asimetricocliente();
         PublicKey publicKey;
         publicKey = asi.loadPublicKey();
@@ -167,7 +132,7 @@ public class CambiarContrasenaController {
         String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(pswContraseña2.getText(), publicKey));
         Cliente cli = clienfac.getFactory().find_XML(Cliente.class, user.getId_user().toString());
         Cliente clieNew = new Cliente();
-        clieNew.setContraseña(contra_crypt_hex);
+        clieNew.setContrasena(contra_crypt_hex);
         clieNew.setId_user(user.getId_user());
         clieNew.setCod_postal(cli.getCod_postal());
         clieNew.setDireccion(cli.getDireccion());
@@ -188,6 +153,17 @@ public class CambiarContrasenaController {
         if (answer.get() == ButtonType.OK) {
             stage.close();
         }
+    }
+
+    // Si todas las validaciones pasan, entonces la contraseña es correcta
+// Aquí deberías realizar el cambio de contraseña o cualquier otra acción necesaria
+// Método para mostrar una alerta
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     /**

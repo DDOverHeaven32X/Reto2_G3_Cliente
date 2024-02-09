@@ -349,49 +349,51 @@ public class RegistroController {
         try {
             //Comprobamos que el nombre no excede de 15 carácteres
             if (txt_nombre.getText().trim().length() > 15) {
-                txt_nombre.setText("");
+                txt_nombre.requestFocus();
+                txt_nombre.selectAll();
                 throw new IncorrectPatternException("El nombre de usuario es demasiado largo.");
 
             }
             //Comprobamos el formato del correo y si no excecde de 40 carácteres
             email = txt_email.getText();
             if (!emailMatcher.matcher(email).matches() || email.length() > 40) {
-                txt_email.setText("");
+                txt_email.requestFocus();
+
                 throw new IncorrectPatternException("El formato no está permitido (ej, xxx@xxx.xxx) y no debe tener mas de 40 caracteres.");
             }
             //Comprobamos que la contraseña se alfanumerica, tenga mayúsculas, minúsculas y tenga más de 8 carácteres
             contraseña = psw_contra.getText();
             if ((!(passwordMatcher.matcher(contraseña).matches()) || contraseña.length() < 8) && (!passwordMatcher.matcher(txt_contraReve.getText()).matches() || txt_contraReve.getText().length() < 8)) {
-                psw_contra.setText("");
-                txt_contraReve.setText("");
+                psw_contra.requestFocus();
+
                 throw new IncorrectPatternException("Formato erroneo, introduce más 8 carácteres alfanuméricos"
                         + " añade una minuscula o mayúscula al menos.");
                 //Comprobamos que las contraseñas coinciden
             } else if ((!psw_contra.getText().equals(psw_contraRepe.getText())) && (!passwordMatcher.matcher(txt_contraRepeReve.getText()).matches() || txt_contraRepeReve.getText().length() < 8)) {
-                psw_contraRepe.setText("");
-                txt_contraRepeReve.setText("");
+                psw_contraRepe.requestFocus();
+
                 //throw new IncorrectCredentialException("Las contraseñas no coinciden.");
             }
             //Comprobamos que el código postal tenga un formato de 5 digitos
             zip = txt_zip.getText();
             if (!(zipMatcher.matcher(zip).matches())) {
-                txt_zip.setText("");
+                txt_zip.requestFocus();
                 throw new IncorrectPatternException("El formato no está permitido, (ej, 45320).");
             }
             //Comprobamos que el teléfono tiene el patrón estándar español de 9 digitos
             telefono = "+34" + txt_tele.getText();
             if (!(phoneMatcher.matcher(telefono).matches())) {
-                txt_tele.setText("");
+                txt_tele.requestFocus();
                 throw new IncorrectPatternException("El formato no está permitido, (ej, +34 643 567 453/ 945 564 234).");
             }
             if (!(tarjetaMatcher.matcher(txt_tarjeta.getText()).matches())) {
-                txt_tarjeta.setText("");
+                txt_tarjeta.requestFocus();
                 throw new IncorrectPatternException("La tarjeta debe contener extactamente 16 caracteres numericos.");
             }
 
             if (!(pinMatcher.matcher(psw_pin.getText()).matches())) {
                 txt_pinReve.setText("");
-                psw_pin.setText("");
+                psw_pin.requestFocus();
                 throw new IncorrectPatternException("El pin debe contener 4 exactamente caracteres numericos.");
             }
             /*
@@ -421,7 +423,7 @@ public class RegistroController {
 
             String contra_crypt_hex = javax.xml.bind.DatatypeConverter.printHexBinary(asi.encryptAndSaveData(psw_contra.getText(), publicKey));
             System.out.println(contra_crypt_hex);
-            clie.setContraseña(contra_crypt_hex);
+            clie.setContrasena(contra_crypt_hex);
             clie.setDireccion(txt_direccion.getText());
             clie.setCod_postal(codPostal);
             clie.setTelefono(telefono);
@@ -462,17 +464,17 @@ public class RegistroController {
                 event.consume();
             }
             //Control de excepciones
-        }catch(ProcessingException | ConnectException e){
+        } catch (ProcessingException | ConnectException e) {
             txt_nombre.requestFocus();
             lbl_error.setVisible(true);
             lbl_error.setText("La conexión al servidor falló, intentelo de nuevo o más tarde");
             LOGGER.severe(e.getMessage());
-        }catch (IncorrectPatternException e) {
+        } catch (IncorrectPatternException e) {
             txt_nombre.requestFocus();
             lbl_error.setVisible(true);
             lbl_error.setText(e.getMessage());
             LOGGER.severe(e.getMessage());
-        }catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(RegistroController.class.getName()).log(Level.SEVERE, null, ex);
         }
 

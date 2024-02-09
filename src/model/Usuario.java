@@ -14,7 +14,7 @@ public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id_user;
     private String nombre_completo;
-    private String contraseña;
+    private String contrasena;
     private String login;
     private String direccion;
     private Integer cod_postal;
@@ -37,12 +37,12 @@ public class Usuario implements Serializable {
         this.nombre_completo = nombre_completo;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getContrasena() {
+        return contrasena;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public String getLogin() {

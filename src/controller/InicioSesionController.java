@@ -181,11 +181,11 @@ public class InicioSesionController {
                 Usuario user = new Usuario();
                 Cliente client = new Cliente();
                 user.setLogin(textEmail.getText());
-                user.setContraseña(pswContraseña.getText());
+                user.setContrasena(pswContraseña.getText());
                 if (pswContraseña.isVisible()) {
-                    user.setContraseña(pswContraseña.getText());
+                    user.setContrasena(pswContraseña.getText());
                 } else {
-                    user.setContraseña(txt_contraReve.getText());
+                    user.setContrasena(txt_contraReve.getText());
                 }
                 publicKey = asi.loadPublicKey();
 
